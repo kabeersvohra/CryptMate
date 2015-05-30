@@ -13,7 +13,10 @@ $db = new Database("localhost", "root", "NFzdWEmbSyQswrE9", "safecrypt");
 
 $status = $db->connect();
 
+if (!isset($_SESSION)) session_start();
+
 ?>
 
+<!DOCTYPE html>
 <html>
     <head>

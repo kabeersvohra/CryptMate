@@ -16,12 +16,14 @@ include 'header.php';
 
 <?php
 
-$hash = $db->newEncryption("", $_POST["password"], $_POST["subdomain"], $_POST["hostname"], $_POST["tld"]);
+$hash = $db->newEncryption($_SESSION["Token"], $_POST["password"], $_POST["subdomain"], $_POST["hostname"], $_POST["tld"]);
 
 switch($hash)
 {
     case "tokenerror":
         echo "Token is invalid, please sign in again or if you are having further issues please contact us";
+        break;
     default:
         echo "Generated hash is $hash";
+        break;
 }

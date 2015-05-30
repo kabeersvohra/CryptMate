@@ -13,18 +13,30 @@ include 'header.php';
 </head>
 <body>
 
-<form action="action_crypt.php" method="POST">
+<form action="action_crypt.php" method="POST" autocomplete="off">
     Website:
     <br>
-    <input type="text" name="subdomain" placeholder="www"> .
-    <input type="text" name="hostname" placeholder="example"> .
-    <input type="text" name="tld" placeholder="com">
+
+    <input type="text" style="display:none;">
+    <input type="text" name="subdomain" placeholder="www" autocomplete="off"> .
+
+    <input type="text" style="display:none;">
+    <input type="text" name="hostname" placeholder="example" autocomplete="off"> .
+
+    <input type="text" style="display:none;">
+    <input type="text" name="tld" placeholder="com" autocomplete="off">
+
     <br>
     Password:
     <br>
-    <input type="password" name="password">
+
+    <input type="text" style="display:none;">
+    <input type="password" name="password" autocomplete="off">
+
     <br>
+
     <input type="submit" name="submit">
+
 </form>
 
 </body>
