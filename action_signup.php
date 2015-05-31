@@ -15,4 +15,4 @@ include 'header.php';
 
 <?php
 
-$_SESSION["token"] = $db->createUser($_POST["username"], $_POST["password"]);
+$_SESSION["token"] = $db->createUser($_POST["username"], $_POST["password"], $_POST["email"]);

@@ -18,6 +18,10 @@ include 'header.php';
     <br>
     <input type="text" name="username">
     <br>
+    Email:
+    <br>
+    <input type="email" name="email">
+    <br>
     Password:
     <br>
     <input type="password" name="password">
