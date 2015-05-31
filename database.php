@@ -329,6 +329,11 @@ class database {
         if($result)
         {
             $this->sendPasswordReset($passwordhash, $email, $username);
+            return true;
+        }
+        else
+        {
+            return false;
         }
 
     }
@@ -353,7 +358,7 @@ class database {
 
         To cancel the password reset request:
 
-        http://www.safecrypt.me/resetpassword.php?email=' . $email . '&cancelreset' . $cancel . '
+        http://www.safecrypt.me/resetpassword.php?email=' . $email . '&cancelreset=true
 
         Thanks!
 
@@ -363,4 +368,53 @@ class database {
         $headers = 'From: admin@safecrypt.me' . "\r\n";
         mail($to, $subject, $message, $headers);
     }
+
+    public function remindUsername($email)
+    {
+        $sql1 =
+            "SELECT $this->key_username
+             FROM $this->table_user
+             WHERE $this->key_email = ?;";
+
+        $stmt1 = $this->connection->prepare($sql1);
+        $stmt1->bind_param("s", $token);
+        $stmt1->execute();
+        $stmt1->bind_result($username);
+        $result = $stmt1->fetch();
+        $stmt1->close();
+
+        if ($result)
+        {
+            $this->sendUsername($email, $username);
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+
+    private function sendUsername($email, $username)
+    {
+        $to      = $email;
+        $subject = 'SafeCrypt Username Reminder';
+        $message = '
+        Dear ' . $username . '
+
+        Somebody has requested a username reminder for your account
+
+        If this was you, your username is ' . $username . '
+
+        If this was not you, please ignore this email.
+
+        Thanks!
+
+        SafeCrypt
+        ';
+
+        $headers = 'From: admin@safecrypt.me' . "\r\n";
+        mail($to, $subject, $message, $headers);
+    }
+
+
 }
