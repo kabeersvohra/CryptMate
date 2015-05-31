@@ -6,7 +6,7 @@
  * Time: 16:51
  */
 
-include 'header.php';
+include_once 'header.php';
 
 $domains = $db->getKeyedDomains($_SESSION["token"]);
 ?>

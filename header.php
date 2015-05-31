@@ -6,7 +6,7 @@
  * Time: 14:06
  */
 
-include 'database.php';
+include_once 'database.php';
 
 $status = true;
 $db = new Database("localhost", "root", "NFzdWEmbSyQswrE9", "safecrypt");

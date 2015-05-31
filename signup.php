@@ -6,7 +6,7 @@
  * Time: 15:24
  */
 
-include 'header.php';
+include_once 'header.php';
 
 ?>
     <title>Sign Up</title>

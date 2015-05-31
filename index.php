@@ -6,7 +6,7 @@
  * Time: 11:28
  */
 
-include 'header.php';
+include_once 'header.php';
 
 ?>
         <title>SafeCrypt.me</title>
