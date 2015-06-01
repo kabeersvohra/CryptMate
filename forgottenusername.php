@@ -8,7 +8,7 @@
 
 ?>
 
-<form action="action_forgotusername.php" method="post">
+<form action="action_forgotusername" method="post">
     Please enter your email address: <br>
     Email:
     <input type="email" name="email" autocomplete="off">

@@ -13,7 +13,7 @@ include_once 'header.php';
 </head>
 <body>
 
-<form action="action_signup.php" method="POST">
+<form action="action_signup" method="POST">
     Username:
     <br>
     <input type="text" name="username">

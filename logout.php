@@ -6,6 +6,15 @@
  * Time: 16:19
  */
 
-$_SESSION["token"] = null;
+if (!isset($_SESSION)) session_start();
+$loggedin = isset($_SESSION["token"]);
+if ($loggedin)
+    unset($_SESSION["token"]);
 
-echo "You have logged out successfully";
+include_once 'header.php';
+
+if ($loggedin)
+    echo "You have logged out successfully";
+else
+    echo "You are not logged in, please log in";
+

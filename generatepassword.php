@@ -16,7 +16,7 @@ $domains = $db->getKeyedDomains($_SESSION["token"]);
 </head>
 <body>
 
-<form action="action_generate.php" method="post">
+<form action="action_generate" method="post">
     <select name="domain">
         <?php foreach($domains as $domain): ?>
             <option value="<?php echo $domain; ?>"><?php echo $domain; ?></option>

@@ -8,7 +8,7 @@
 
 ?>
 
-<form action="action_resend.php" method="post">
+<form action="action_resend" method="post">
     Please enter your email address or your username: <br>
 Email:
     <input type="email" name="email" autocomplete="off">

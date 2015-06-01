@@ -9,7 +9,7 @@
 
 ?>
 
-<form action="action_forgotten.php" method="post">
+<form action="action_forgotten" method="post">
     Please enter your email address and username: <br>
     Email:
     <input type="email" name="email" autocomplete="off">
