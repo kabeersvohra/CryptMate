@@ -4,7 +4,7 @@
 
 <nav class="navbar navbar-default navbar-fixed-top topnav" role="navigation">
         <div class="container topnav">
-            <a class="navbar-brand" href="/SafeCrypt">SafeCrypt</a>
+            <a class="navbar-brand" href="/">SafeCrypt</a>
             <ul class="nav navbar-nav navbar-right">
                 <?php
                     if (isset($_SESSION["token"]))
