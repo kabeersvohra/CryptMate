@@ -107,7 +107,7 @@ You can use your account after you have activated
 it by clicking on the url below.
 
 Please click this link to activate your account:
-https://www.safecrypt.me/verifyemail.php?email=' . $email . '&hash=' . $hash . '
+http://www.safecrypt.me/verifyemail.php?email=' . $email . '&hash=' . $hash . '
 
 Enjoy!
 
@@ -122,27 +122,17 @@ SafeCrypt';
         $verified = intval(true);
 
         $sql1 =
-            "SELECT *
-             FROM $this->table_user
+            "UPDATE $this->table_user
+             SET $this->key_emailverification = $verified
              WHERE $this->key_email = ? AND $this->key_emailhash = ?;";
 
-        $stmt1 = $this->connection->prepare($sql2);
+        $stmt1 = $this->connection->prepare($sql1);
         $stmt1->bind_param("ss", $email, $hash);
-        $stmt1->execute();
-        $result = $stmt1->fetch();
+        $result = $stmt1->execute();
         $stmt1->close();
 
         if ($result)
         {
-            $sql2 =
-                "UPDATE $this->table_user
-                 SET $this->key_emailverification = $verified
-                 WHERE $this->key_email = ? AND $this->key_emailhash = ?;";
-
-            $stmt2 = $this->connection->prepare($sql2);
-            $stmt2->bind_param("ss", $email, $hash);
-            $stmt2->execute();
-            $stmt2->close();
             return true;
         }
         else
@@ -156,7 +146,7 @@ SafeCrypt';
     {
 
         $sql =
-            "SELECT $this->key_salt, $this->key_iterationcount, $this->key_hash, $this->key_token, $this->key_emailverification
+            "SELECT $this->key_salt, $this->key_iterationcount, $this->key_hash, $this->key_token
              FROM $this->table_user
              WHERE $this->key_username = ?;";
 
@@ -164,16 +154,11 @@ SafeCrypt';
         $stmt = $this->connection->prepare($sql);
         $stmt->bind_param("s", $username);
         $stmt->execute();
-        $stmt->bind_result($salt, $iterationcount, $hash, $token, $emailverified);
+        $stmt->bind_result($salt, $iterationcount, $hash, $token);
         $result = $stmt->fetch();
         $stmt->close();
-        $emailverified = $emailverified == 1;
 
-        if(!$emailverified)
-        {
-            return "unverified";
-        }
-        elseif(!$result)
+        if(!$result)
         {
             return "username";
         }
@@ -185,30 +170,7 @@ SafeCrypt';
         {
             return "password";
         }
-    }
 
-    public function getLoggedinUser($token)
-    {
-        $sql1 =
-            "SELECT $this->key_username
-             FROM $this->table_user
-             WHERE $this->key_token = ?;";
-
-        $stmt1 = $this->connection->prepare($sql1);
-        $stmt1->bind_param("s", $token);
-        $stmt1->execute();
-        $stmt1->bind_result($username);
-        $result = $stmt1->fetch();
-        $stmt1->close();
-
-        if($result)
-        {
-            return $username;
-        }
-        else
-        {
-            return false;
-        }
     }
 
     public function newWebsite ($token, $password, $subdomain, $hostname, $tld)
@@ -360,19 +322,10 @@ SafeCrypt';
 
         $stmt1 = $this->connection->prepare($sql1);
         $stmt1->bind_param("ssss",$passwordhash, $email, $username);
-        $stmt1->execute();
-        $result = $stmt1->fetch();
+        $result = $stmt1->execute();
 
         if($result)
         {
-            $sql2 =
-                "UPDATE $this->table_user
-                 SET $this->key_passwordhash = ?
-                 WHERE $this->key_email = ? AND $this->key_username = ?;";
-
-            $stmt2 = $this->connection->prepare($sql2);
-            $stmt2->bind_param("ssss",$passwordhash, $email, $username);
-            $stmt2->execute();
             $this->sendPasswordReset($passwordhash, $email, $username);
             return true;
         }
@@ -389,24 +342,26 @@ SafeCrypt';
 
         $to      = $email;
         $subject = 'SafeCrypt Password Reset';
-        $message = 'Dear ' . $username . '
+        $message = '
+        Dear ' . $username . '
 
-Somebody has requested a password reset for your account
+        Somebody has requested a password reset for your account
 
-If this was you please click the link below to reset your password:
+        If this was you please click the link below to reset your password:
 
-https://www.safecrypt.me/resetpassword.php?email=' . $email . '&hash=' . $passwordhash . '
+        http://www.safecrypt.me/resetpassword.php?email=' . $email . '&hash=' . $passwordhash . '
 
-If this was not you, please click the link below to cancel this request
-or you can simply leave it and continue using your account as normal.
+        If this was not you, please click the link below to cancel this request
+        or you can simply leave it and continue using your account as normal.
 
-To cancel the password reset request:
+        To cancel the password reset request:
 
-https://www.safecrypt.me/resetpassword.php?email=' . $email . '&cancelreset=true
+        http://www.safecrypt.me/resetpassword.php?email=' . $email . '&cancelreset=true
 
-Thanks!
+        Thanks!
 
-SafeCrypt';
+        SafeCrypt
+        ';
 
         $headers = 'From: admin@safecrypt.me' . "\r\n";
         mail($to, $subject, $message, $headers);
@@ -420,10 +375,11 @@ SafeCrypt';
              WHERE $this->key_email = ?;";
 
         $stmt1 = $this->connection->prepare($sql1);
-        $stmt1->bind_param("s", $email);
+        $stmt1->bind_param("s", $token);
         $stmt1->execute();
         $stmt1->bind_result($username);
         $result = $stmt1->fetch();
+        var_dump($username, $email, $result, $sql1);
         $stmt1->close();
 
         if ($result)

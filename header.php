@@ -6,37 +6,26 @@
  * Time: 14:06
  */
 
+include_once 'database.php';
+
+$status = true;
+$db = new Database("localhost",
+    "XAbGnfREj3YGbl9U",
+    "jxki3u6ugPlyoS1YhqRQk6UNQwBVXfcIc1A6H6w16NpHYf8rIgZP0nkPr8FvDAiL",
+    "safecrypt");
+
+$status = $db->connect();
+
 if (!isset($_SESSION)) session_start();
 
-//if (empty($_SERVER["HTTPS"]) || $_SERVER["HTTPS"] !== "on")
-//{
-//    header("Location: https://" . $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"]);
-//    exit();
-//}
+if (empty($_SERVER["HTTPS"]) || $_SERVER["HTTPS"] !== "on")
+{
+    header("Location: https://" . $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"]);
+    exit();
+}
 
 ?>
 
 <!DOCTYPE html>
 <html>
     <head>
-
-        <meta charset="utf-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <meta name="description" content="">
-        <meta name="author" content="">
-
-        <link href="css/bootstrap.min.css" rel="stylesheet">
-        <link href="css/landing-page.css" rel="stylesheet">
-        <link href="css/main.css" rel="stylesheet">
-
-        <link href="font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
-        <link href="http://fonts.googleapis.com/css?family=Lato:300,400,700,300italic,400italic,700italic" rel="stylesheet" type="text/css">
-
-    </head>
-
-<?php
-include_once 'navbar.php'
-?>
-
-<head>
