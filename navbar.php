@@ -22,6 +22,9 @@
                         <a style="color: #777">Logged in as <?php echo $user; ?> </a>
                     </li>
                     <li>
+                        <a href="dashboard.php">Dashboard</a>
+                    </li>
+                    <li>
                         <a href="logout.php">Logout</a>
                     </li>
                 <?php endif; ?>

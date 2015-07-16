@@ -1,42 +1,36 @@
-<?php
-/**
- * Created by PhpStorm.
- * User: Kabeer
- * Date: 29/05/2015
- * Time: 21:51
- */
-include_once 'header.php';
+<div class="col-sm-6 col-sm-offset-3">
+    <form class="form-horizontal" role="form" id="form" method="post" action="action_domain.php">
+        <div class="form-group">
+            <label class="control-label col-sm-12" style="text-align: center; padding-bottom: 10px;">Website</label>
+            <div class="col-sm-4" style="margin-right: -2px;">
+                <input type="text" name="subdomain" placeholder="www" class="form-control" id="subdomain" style="text-align: center;">
+            </div>
+            <div style="float: left"> . </div>
+            <div class="col-sm-4" style="margin-left: -2px; margin-right: -2px;">
+                <input type="text" name="hostname" placeholder="example" class="form-control" id="hostname" style="text-align: center;">
+            </div>
+            <div style="float: left"> . </div>
+            <div class="col-sm-4" style="margin-left: -2px;">
+                <input type="text" name="tld" placeholder="com" class="form-control" id="tld" style="text-align: center;">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label col-sm-12" for="password" style="text-align: center; padding-top: 30px; padding-bottom: 10px;">Password</label>
+            <div class="col-sm-12">
+                <input type="password" name="password" class="form-control" id="password" name="password" style="text-align: center;">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label col-sm-12" for="confirmpassword" style="text-align: center; padding-top: 30px; padding-bottom: 10px;">Confirm Password</label>
+            <div class="col-sm-12">
+                <input type="password" name="confirmpassword" class="form-control" id="password" name="password" style="text-align: center;">
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-sm-12" style="text-align: center; padding-top: 20px;">
+                <button type="submit" class="btn btn-default">Submit</button>
+            </div>
+        </div>
+    </form>
+</div>
 
-?>
-
-    <title>New Domain</title>
-</head>
-<body>
-
-<form action="action_domain" method="POST" autocomplete="off">
-    Website:
-    <br>
-
-    <input type="text" style="display:none;">
-    <input type="text" name="subdomain" placeholder="www" autocomplete="off"> .
-
-    <input type="text" style="display:none;">
-    <input type="text" name="hostname" placeholder="example" autocomplete="off"> .
-
-    <input type="text" style="display:none;">
-    <input type="text" name="tld" placeholder="com" autocomplete="off">
-
-    <br>
-    Password:
-    <br>
-
-    <input type="text" style="display:none;">
-    <input type="password" name="password" autocomplete="off">
-
-    <br>
-
-    <input type="submit" name="submit">
-
-</form>
-
-</body>
