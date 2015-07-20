@@ -126,7 +126,7 @@ SafeCrypt';
              FROM $this->table_user
              WHERE $this->key_email = ? AND $this->key_emailhash = ?;";
 
-        $stmt1 = $this->connection->prepare($sql2);
+        $stmt1 = $this->connection->prepare($sql1);
         $stmt1->bind_param("ss", $email, $hash);
         $stmt1->execute();
         $result = $stmt1->fetch();
@@ -169,22 +169,14 @@ SafeCrypt';
         $stmt->close();
         $emailverified = $emailverified == 1;
 
-        if(!$emailverified)
-        {
-            return "unverified";
-        }
-        elseif(!$result)
-        {
+        if (!$result)
             return "username";
-        }
+        elseif(!$emailverified)
+            return "unverified";
         elseif (hash_pbkdf2($this->hashingAlgo, $password, $salt, $iterationcount) == $hash)
-        {
             return $token;
-        }
         else
-        {
             return "password";
-        }
     }
 
     public function getLoggedinUser($token)
@@ -228,21 +220,32 @@ SafeCrypt';
         $stmt1->close();
 
         if(!$result)
-        {
             return "tokenerror";
-        }
 
         $salt = mcrypt_create_iv(256, MCRYPT_DEV_URANDOM);
         $iterationCount = ITERATIONCOUNT;
 
         $sql2 =
+            "SELECT 1
+             FROM $this->table_keys
+             WHERE $this->key_userid = ? AND $this->key_domain = ?;";
+        $stmt2 = $this->connection->prepare($sql2);
+        $stmt2->bind_param("is", $userid, $domain);
+        $stmt2->execute();
+        $result = $stmt1->fetch();
+        $stmt2->close();
+
+        if($result)
+            return "domainused";
+
+        $sql3 =
             "INSERT INTO $this->table_keys ($this->key_userid, $this->key_domain, $this->key_username, $this->key_salt, $this->key_iterationcount)
              VALUES (?, ?, ?, ?, ?);";
 
-        $stmt2 = $this->connection->prepare($sql2);
-        $stmt2->bind_param("isssi", $userid, $domain, $username, $salt, $iterationCount);
-        $stmt2->execute();
-        $stmt2->close();
+        $stmt3 = $this->connection->prepare($sql3);
+        $stmt3->bind_param("isssi", $userid, $domain, $username, $salt, $iterationCount);
+        $stmt3->execute();
+        $stmt3->close();
 
         return hash_pbkdf2($this->hashingAlgo, $password, $salt, $iterationCount);
     }
@@ -274,7 +277,12 @@ SafeCrypt';
         $stmt2 = $this->connection->prepare($sql2);
         $stmt2->bind_param("s", $userid);
         $stmt2->execute();
-        $array = $stmt2->get_result()->fetch_array();
+        $result = $stmt2->get_result();
+        $array = [];
+        for ($i = 0; $i < $result->num_rows; $i++)
+        {
+            array_push($array, $result->fetch_array()['Domain']);
+        }
         $stmt2->close();
 
         return $array;

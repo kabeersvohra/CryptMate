@@ -14,12 +14,74 @@ include_once 'header.php';
 <body>
 
 <div class="container mainbody">
+
+    <?php
+    if (isset($_SESSION["error"]))
+    {
+        switch ($_SESSION["error"])
+        {
+            case "unverified":
+                echo
+                "<div class='alert alert-danger' role='alert'>
+                    <span class='glyphicon glyphicon-exclamation-sign' aria-hidden='true'></span>
+                    <span class='sr-only'>Error:</span>
+                    Account is unverifed, please verify and try again. If you need to request a new email verification, please click <a href='resendemailverification.php'>here</a>.
+                 </div>";
+                break;
+            case "password":
+                echo
+                "<div class='alert alert-danger' role='alert'>
+                    <span class='glyphicon glyphicon-exclamation-sign' aria-hidden='true'></span>
+                    <span class='sr-only'>Error:</span>
+                    Password is incorrect. Forgotten your password? Please click <a href='forgottenpassword.php'>here</a>.
+                 </div>";
+                break;
+            case "username":
+                echo
+                "<div class='alert alert-danger' role='alert'>
+                    <span class='glyphicon glyphicon-exclamation-sign' aria-hidden='true'></span>
+                    <span class='sr-only'>Error:</span>
+                    Account is not created yet. If you need to create an account, please click <a href='signup.php'>here</a>.
+                 </div>";
+                break;
+            default:
+                echo
+                "<div class='alert alert-danger' role='alert'>
+                    <span class='glyphicon glyphicon-exclamation-sign' aria-hidden='true'></span>
+                    <span class='sr-only'>Error:</span>
+                    Unexpected error, please try again.
+                 </div>";
+                break;
+        }
+
+        unset($_SESSION["error"]);
+    }
+    elseif (isset($_SESSION["success"]))
+    {
+        if ($_SESSION["success"])
+            echo
+            "<div class='alert alert-success' role='alert'>
+                <span class='glyphicon glyphicon-ok' aria-hidden='true'></span>
+                <span class='sr-only'>Success:</span>
+                Login success!
+             </div>";
+        unset($_SESSION["success"]);
+    }
+    ?>
+
     <div class="col-sm-6 col-sm-offset-3">
         <form class="form-horizontal" role="form" id="form" method="post" action="action_login.php">
             <div class="form-group">
                 <label class="control-label col-sm-12" for="username" style="text-align: center; padding-bottom: 10px;">Username</label>
                 <div class="col-sm-12">
-                    <input type="text" class="form-control" id="username" name="username" style="text-align: center;">
+                    <input type="text" class="form-control" id="username" name="username" style="text-align: center;"
+                        value="<?php
+                            if (isset($_SESSION["errorusername"]))
+                            {
+                                echo $_SESSION["errorusername"];
+                                unset($_SESSION["errorusername"]);
+                            }
+                        ?>">
                 </div>
             </div>
             <div class="form-group">

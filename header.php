@@ -8,16 +8,10 @@
 
 if (!isset($_SESSION)) session_start();
 
-//if (empty($_SERVER["HTTPS"]) || $_SERVER["HTTPS"] !== "on")
-//{
-//    header("Location: https://" . $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"]);
-//    exit();
-//}
-
 ?>
 
 <!DOCTYPE html>
-<html>
+<html xmlns="http://www.w3.org/1999/html">
     <head>
 
         <meta charset="utf-8">
@@ -34,6 +28,7 @@ if (!isset($_SESSION)) session_start();
         <link href="http://fonts.googleapis.com/css?family=Lato:300,400,700,300italic,400italic,700italic" rel="stylesheet" type="text/css">
 
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+        <script src="js/jquery.js"></script>
         <script src="js/bootstrap.min.js"></script>
 
     </head>
