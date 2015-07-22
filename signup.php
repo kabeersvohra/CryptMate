@@ -50,7 +50,7 @@ include_once 'header.php';
     </div>
 
     <div class="col-sm-12" style="text-align: center;padding-top: 20px;line-height: 30px;">
-        <p>Already signed up? Log in <a href="signup.php">here</a></p>
+        <p>Already signed up? Log in <a href="login.php">here</a></p>
     </div>
 
 </div>

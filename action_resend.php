@@ -6,15 +6,23 @@
  * Time: 16:07
  */
 
-include_once 'header.php';
+include_once 'connectDb.php';
 
-if (($_POST["email"] != "") || ($_POST["username"] != ""))
+if (!isset($_SESSION)) session_start();
+
+if ((!isset($_POST["email"])) || (!isset($_POST["username"])))
+{
+    header('Location: login.php');
+}
+else
 {
     if($db->resendVerification($_POST["email"], $_POST["username"])) {
-        echo "Email verification has been resent, please check your inbox";
+        $_SESSION["resendsuccess"] = true;
+        header('Location: resendemailverification.php');
     }
     else
     {
-        echo "Account not found in database, please check your credentials or make an account if you have not already done so.";
+        $_SESSION["resendsuccess"] = false;
+        header('Location: resendemailverification.php');
     }
 }

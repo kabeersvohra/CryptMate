@@ -16,9 +16,9 @@ include_once 'header.php';
 <div class="container mainbody">
 
     <?php
-    if (isset($_SESSION["error"]))
+    if (isset($_SESSION["loginerror"]))
     {
-        switch ($_SESSION["error"])
+        switch ($_SESSION["loginerror"])
         {
             case "unverified":
                 echo
@@ -54,7 +54,7 @@ include_once 'header.php';
                 break;
         }
 
-        unset($_SESSION["error"]);
+        unset($_SESSION["loginerror"]);
     }
     elseif (isset($_SESSION["success"]))
     {
@@ -76,10 +76,10 @@ include_once 'header.php';
                 <div class="col-sm-12">
                     <input type="text" class="form-control" id="username" name="username" style="text-align: center;"
                         value="<?php
-                            if (isset($_SESSION["errorusername"]))
+                            if (isset($_SESSION["loginerrorusername"]))
                             {
-                                echo $_SESSION["errorusername"];
-                                unset($_SESSION["errorusername"]);
+                                echo $_SESSION["loginerrorusername"];
+                                unset($_SESSION["loginerrorusername"]);
                             }
                         ?>">
                 </div>

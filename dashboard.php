@@ -52,21 +52,21 @@ include_once 'header.php';
 <script>
 
     function overviewClick() {
-        $("#main").load('/safecrypt/overview.php');
+        $("#main").load('/SafeCrypt/overview.php');
         $("#newdomainli").removeClass('active');
         $("#genpasswordli").removeClass('active');
         $("#overviewli").addClass('active');
     }
 
     function newDomainClick() {
-        $("#main").load('/safecrypt/newdomain.php');
+        $("#main").load('/SafeCrypt/newdomain.php');
         $("#overviewli").removeClass('active');
         $("#genpasswordli").removeClass('active');
         $("#newdomainli").addClass('active');
     }
 
     function generatePasswordClick() {
-        $("#main").load('/safecrypt/generatepassword.php');
+        $("#main").load('/SafeCrypt/generatepassword.php');
         $("#overviewli").removeClass('active');
         $("#newdomainli").removeClass('active');
         $("#genpasswordli").addClass('active');
