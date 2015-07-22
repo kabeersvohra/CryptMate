@@ -6,14 +6,10 @@
  * Time: 21:54
  */
 
-include_once 'header.php';
-?>
+include_once 'connectDb.php';
 
-    <title>Encrypted</title>
-</head>
-<body>
+if (!isset($_SESSION)) session_start();
 
-<?php
 if (isset($_POST["password"]) && isset($_POST["subdomain"]) && isset($_POST["hostname"]) && isset($_POST["tld"]))
 {
     //best course of action if website is already in db
@@ -31,7 +27,8 @@ if (isset($_POST["password"]) && isset($_POST["subdomain"]) && isset($_POST["hos
             header("location: dashboard.php#newdomain");
             break;
         default:
-            echo "Generated hash is $hash";
+            $_SESSION["domainsuccess"] = $hash;
+            header("location: dashboard.php#newdomain");
             break;
     }
 }

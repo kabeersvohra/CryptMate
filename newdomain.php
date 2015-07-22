@@ -1,14 +1,27 @@
 <?php
 
-    if (isset($_SESSION["domainerror"]))
+    include_once 'connectDb.php';
+
+    if (!isset($_SESSION)) session_start();
+
+    if (isset($_SESSION["domainsuccess"]))
     {
-        echo
-        "<div class='alert alert-danger' role='alert'>
+        $_SESSION["generatedpassword"] = $_SESSION["domainsuccess"];
+        unset($_SESSION["domainsuccess"]);
+        include_once 'generatedpassword.php';
+    }
+    else
+    {
+        if (isset($_SESSION["domainerror"]))
+        {
+            echo
+                "<div class='alert alert-danger' role='alert'>
             <span class='glyphicon glyphicon-exclamation-sign' aria-hidden='true'></span>
             <span class='sr-only'>Error:</span>
             " . $_SESSION["domainerror"] . "
         </div>";
-    }
+            unset($_SESSION["domainerror"]);
+        }
 
 ?>
 
@@ -48,3 +61,4 @@
     </form>
 </div>
 
+<?php } ?>
