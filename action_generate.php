@@ -6,15 +6,9 @@
  * Time: 19:53
  */
 
-include_once 'header.php';
-?>
+include_once 'connectDb.php';
 
-
-    <title>Generated Password</title>
-</head>
-<body>
-
-<?php
+if (!isset($_SESSION)) session_start();
 
 $hash = $db->generatePassword($_POST["domain"], $_POST["password"], $_SESSION["token"]);
 
