@@ -6,6 +6,19 @@
  * Time: 23:04
  */
 
-include_once 'header.php';
+include_once 'connectDb.php';
 
-$db->remindUsername($_POST["email"]);
+if (!isset($_SESSION)) session_start();
+
+if (isset($_POST["email"]))
+{
+    if ($db->remindUsername($_POST["email"]))
+    {
+        $_SESSION['forgottenusernamesuccessmsg'] = "Success!  Please check your email for further instructions";
+    }
+    else
+    {
+        $_SESSION['forgottenusernamefailuremsg'] = "The credentials provided were not found.  Please try again";
+    }
+    header('Location: forgottenusername.php');
+}

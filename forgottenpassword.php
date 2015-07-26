@@ -18,21 +18,27 @@ include_once 'header.php';
 
     <?php
 
-    if (isset($_SESSION['successmsg']))
+    if (isset($_SESSION['forgottenpasswordsuccessmsg']))
     {
-        echo '<p class="bg-success" style="text-align: center; padding: 15px; margin-bottom: 30px">';
-        echo $_SESSION['successmsg'];
-        echo '</p>';
+        echo
+            "<div class='alert alert-success' role='alert'>
+                <span class='glyphicon glyphicon-ok-sign' aria-hidden='true'></span>
+                <span class='sr-only'>Success:</span>
+                " . $_SESSION["forgottenpasswordsuccessmsg"] . "
+             </div>";
     }
-    elseif (isset($_SESSION['failuremsg']))
+    elseif (isset($_SESSION['forgottenpasswordfailuremsg']))
     {
-        echo '<p class="bg-danger" style="text-align: center; padding: 15px; margin-bottom: 30px">';
-        echo $_SESSION['failuremsg'];
-        echo '</p>';
+        echo
+            "<div class='alert alert-danger' role='alert'>
+                <span class='glyphicon glyphicon-exclamation-sign' aria-hidden='true'></span>
+                <span class='sr-only'>Error:</span>
+                " . $_SESSION["forgottenpasswordfailuremsg"] . "
+             </div>";
     }
 
-    unset($_SESSION['successmsg']);
-    unset($_SESSION['failuremsg']);
+    unset($_SESSION['forgottenpasswordsuccessmsg']);
+    unset($_SESSION['forgottenpasswordfailuremsg']);
 
     ?>
 
