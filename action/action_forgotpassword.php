@@ -6,7 +6,7 @@
  * Time: 12:26
  */
 
-include_once 'connectDb.php';
+include_once 'connectdatabase.php';
 
 if (!isset($_SESSION)) session_start();
 

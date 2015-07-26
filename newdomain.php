@@ -1,6 +1,6 @@
 <?php
 
-    include_once 'connectDb.php';
+    include_once 'connectdatabase.php';
 
     if (!isset($_SESSION)) session_start();
 
@@ -27,7 +27,7 @@
 ?>
 
 <div class="col-sm-6 col-sm-offset-3">
-    <form class="form-horizontal" role="form" id="form" method="post" action="action_domain.php">
+    <form class="form-horizontal" role="form" id="form" method="post" action="action/action_domain.php">
         <div class="form-group">
             <label class="control-label col-sm-12" style="text-align: center; padding-bottom: 10px;">Website</label>
             <div class="col-xs-4" style="margin-right: -2px;">
