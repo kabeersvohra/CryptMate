@@ -573,12 +573,17 @@ SafeCrypt';
              WHERE $this->key_userid = ? AND $this->key_domain = ?;";
 
         $stmt2 = $this->connection->prepare($sql2);
-        $stmt2->bind_param("ii", $userid, $domain);
+        $stmt2->bind_param("is", $userid, $domain);
         $stmt2->execute();
-        $result = $stmt2->fetch();
+        $result = $stmt2->affected_rows;
         $stmt2->close();
 
-        return $result;
+        return ($result == 1);
+    }
+
+    public function deleteAccount($token)
+    {
+        
     }
 
 

@@ -31,7 +31,6 @@ elseif (isset($_SESSION["deletedomainerror"]))
                         <span class='sr-only'>Error:</span>
                         " . $_SESSION["deletedomainerror"] . "
                     </div>";
-
     unset($_SESSION["deletedomainerror"]);
 }
 
