@@ -10,7 +10,6 @@ include_once 'header.php';
 
 ?>
 <title>Forgotten Username</title>
-<link href="css/login.css" rel="stylesheet">
 </head>
 <body>
 

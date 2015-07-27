@@ -1,7 +1,4 @@
 <?php
-
-    include_once 'connectdatabase.php';
-
     if (!isset($_SESSION)) session_start();
 
     if (isset($_SESSION["domainsuccess"]))
@@ -27,7 +24,7 @@
 ?>
 
 <div class="col-sm-6 col-sm-offset-3">
-    <form class="form-horizontal" role="form" id="form" method="post" action="action/action_domain.php">
+    <form class="form-horizontal" role="form" id="form" method="post" action="action/action_createdomain.php">
         <div class="form-group">
             <label class="control-label col-sm-12" style="text-align: center; padding-bottom: 10px;">Website</label>
             <div class="col-xs-4" style="margin-right: -2px;">
@@ -71,13 +68,13 @@
         <div class="form-group">
             <label class="control-label col-sm-12" for="password" style="text-align: center; padding-top: 30px; padding-bottom: 10px;">Password</label>
             <div class="col-sm-12">
-                <input type="password" name="password" class="form-control" id="password" name="password" style="text-align: center;">
+                <input type="password" name="password" class="form-control" id="password" autocomplete="off" style="text-align: center;">
             </div>
         </div>
         <div class="form-group">
             <label class="control-label col-sm-12" for="confirmpassword" style="text-align: center; padding-top: 30px; padding-bottom: 10px;">Confirm Password</label>
             <div class="col-sm-12">
-                <input type="password" name="confirmpassword" class="form-control" id="confirmpassword" name="confirmpassword" style="text-align: center;">
+                <input type="password" name="confirmpassword" class="form-control" id="confirmpassword" autocomplete="off" style="text-align: center;">
             </div>
         </div>
         <div class="form-group">

@@ -6,7 +6,7 @@
  * Time: 21:54
  */
 
-include_once 'connectdatabase.php';
+include_once '../connectdatabase.php';
 
 if (!isset($_SESSION)) session_start();
 
@@ -19,12 +19,13 @@ if ($_POST["password"] != $_POST["confirmpassword"])
     $_SESSION["domainerrorsubdomain"] = $_POST["subdomain"];
     $_SESSION["domainerrorhostname"] = $_POST["hostname"];
     $_SESSION["domainerrortld"] = $_POST["tld"];
-    header("location: dashboard.php#newdomain");
+    header("Location: ../dashboard.php#createdomain");
+    exit;
 }
 
     //best course of action if website is already in db
 
-    $hash = $db->newWebsite($_SESSION["token"], $_POST["password"], $_POST["subdomain"], $_POST["hostname"], $_POST["tld"]);
+    $hash = $db->createDomain($_SESSION["token"], $_POST["password"], $_POST["subdomain"], $_POST["hostname"], $_POST["tld"]);
 
     switch($hash)
     {
@@ -33,18 +34,25 @@ if ($_POST["password"] != $_POST["confirmpassword"])
             $_SESSION["domainerrorsubdomain"] = $_POST["subdomain"];
             $_SESSION["domainerrorhostname"] = $_POST["hostname"];
             $_SESSION["domainerrortld"] = $_POST["tld"];
-            header("location: dashboard.php#newdomain");
-            break;
+            header("Location: ../dashboard.php#createdomain");
+            exit;
         case "domainused":
             $_SESSION["domainerror"] = "Domain is already used";
             $_SESSION["domainerrorsubdomain"] = $_POST["subdomain"];
             $_SESSION["domainerrorhostname"] = $_POST["hostname"];
             $_SESSION["domainerrortld"] = $_POST["tld"];
-            header("location: dashboard.php#newdomain");
-            break;
+            header("Location: ../dashboard.php#createdomain");
+            exit;
+        case "domaininvalid":
+            $_SESSION["domainerror"] = "Domain is not valid, please check and try again";
+            $_SESSION["domainerrorsubdomain"] = $_POST["subdomain"];
+            $_SESSION["domainerrorhostname"] = $_POST["hostname"];
+            $_SESSION["domainerrortld"] = $_POST["tld"];
+            header("Location: ../dashboard.php#createdomain");
+            exit;
         default:
             $_SESSION["domainsuccess"] = $hash;
-            header("location: dashboard.php#newdomain");
-            break;
+            header("Location: ../dashboard.php#createdomain");
+            exit;
     }
 }

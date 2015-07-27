@@ -19,6 +19,7 @@ class database {
     private $table_user = "`user`";
 
     private $key_id = "`ID`";
+    private $key_name = "`Name`";
     private $key_username = "`Username`";
     private $key_hash = "`Hash`";
     private $key_salt = "`Salt`";
@@ -68,7 +69,7 @@ class database {
     }
 
 
-    public function createUser($username, $password, $email)
+    public function createUser($name, $username, $password, $email)
     {
         $sql1 =
             "SELECT 1
@@ -108,18 +109,18 @@ class database {
         $emailverification = intval(false);
         $iterationCount = ITERATIONCOUNT;
 
-        $this->sendEmailVerification($emailhash, $email, $username);
+        $this->sendEmailVerification($emailhash, $email, $name);
 
         $hash = hash_pbkdf2($this->hashingAlgo, $password, $salt, $iterationCount);
 
         $sql3 =
-            "INSERT INTO $this->table_user ($this->key_username, $this->key_hash, $this->key_salt,
+            "INSERT INTO $this->table_user ($this->key_name, $this->key_username, $this->key_hash, $this->key_salt,
                          $this->key_iterationcount, $this->key_token, $this->key_emailhash,
                          $this->key_emailverification, $this->key_email)
-             VALUES (?, ?, ?, ?, ?, ?, ?, ?);";
+             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);";
 
         $stmt3 = $this->connection->prepare($sql3);
-        $stmt3->bind_param("sssissis", $username, $hash, $salt, $iterationCount,
+        $stmt3->bind_param("ssssissis", $name, $username, $hash, $salt, $iterationCount,
             $token, $emailhash, $emailverification, $email);
         $stmt3->execute();
         $stmt3->close();
@@ -127,11 +128,11 @@ class database {
         return $token;
     }
 
-    private function sendEmailVerification($hash, $email, $username)
+    private function sendEmailVerification($hash, $email, $name)
     {
         $to      = $email;
         $subject = 'SafeCrypt Email Verification';
-        $message = 'Dear ' . $username . '
+        $message = 'Dear ' . $name . '
 
 Thanks for using our service!
 
@@ -235,9 +236,17 @@ SafeCrypt';
         }
     }
 
-    public function newWebsite ($token, $password, $subdomain, $hostname, $tld)
+    public function createDomain ($token, $password, $subdomain, $hostname, $tld)
     {
-        $domain = "$subdomain.$hostname.$tld";
+        if ($subdomain == "")
+            $domain = "$hostname.$tld";
+        else
+            $domain = "$subdomain.$hostname.$tld";
+
+        $domain = strtolower($domain);
+
+        if (!filter_var(gethostbyname($domain), FILTER_VALIDATE_IP))
+            return "domaininvalid";
 
         $sql1 =
             "SELECT $this->key_id, $this->key_username
@@ -271,11 +280,11 @@ SafeCrypt';
             return "domainused";
 
         $sql3 =
-            "INSERT INTO $this->table_keys ($this->key_userid, $this->key_domain, $this->key_username, $this->key_salt, $this->key_iterationcount)
-             VALUES (?, ?, ?, ?, ?);";
+            "INSERT INTO $this->table_keys ($this->key_userid, $this->key_domain, $this->key_salt, $this->key_iterationcount)
+             VALUES (?, ?, ?, ?);";
 
         $stmt3 = $this->connection->prepare($sql3);
-        $stmt3->bind_param("isssi", $userid, $domain, $username, $salt, $iterationCount);
+        $stmt3->bind_param("issi", $userid, $domain, $salt, $iterationCount);
         $stmt3->execute();
         $stmt3->close();
 
@@ -430,8 +439,6 @@ SafeCrypt';
 
     private function sendPasswordReset($passwordhash, $email, $username)
     {
-        $cancel = intval(true);
-
         $to      = $email;
         $subject = 'SafeCrypt Password Reset';
         $message = 'Dear ' . $username . '
@@ -460,20 +467,20 @@ SafeCrypt';
     public function remindUsername($email)
     {
         $sql1 =
-            "SELECT $this->key_username
+            "SELECT $this->key_name
              FROM $this->table_user
              WHERE $this->key_email = ?;";
 
         $stmt1 = $this->connection->prepare($sql1);
         $stmt1->bind_param("s", $email);
         $stmt1->execute();
-        $stmt1->bind_result($username);
+        $stmt1->bind_result($name);
         $result = $stmt1->fetch();
         $stmt1->close();
 
         if ($result)
         {
-            $this->sendUsername($email, $username);
+            $this->sendUsername($email, $name);
             return true;
         }
         else
@@ -482,15 +489,15 @@ SafeCrypt';
         }
     }
 
-    private function sendUsername($email, $username)
+    private function sendUsername($email, $name)
     {
         $to      = $email;
         $subject = 'SafeCrypt Username Reminder';
-        $message = 'Dear ' . $username . '
+        $message = 'Dear ' . $name . '
 
 Somebody has requested a username reminder for your account
 
-If this was you, your username is ' . $username . '
+If this was you, your username is ' . $name . '
 
 If this was not you, please ignore this email.
 
@@ -500,6 +507,78 @@ SafeCrypt';
 
         $headers = 'From: admin@safecrypt.me' . "\r\n";
         mail($to, $subject, $message, $headers);
+    }
+
+    public function getNumberDomains($token)
+    {
+        $sql1 =
+            "SELECT $this->key_id
+             FROM $this->table_user
+             WHERE $this->key_token = ?;";
+
+        $stmt1 = $this->connection->prepare($sql1);
+        $stmt1->bind_param("s", $token);
+        $stmt1->execute();
+        $stmt1->bind_result($userid);
+        $result = $stmt1->fetch();
+        $stmt1->close();
+
+        if(!$result)
+        {
+            return 0;
+        }
+
+        $sql2 =
+            "SELECT COUNT(*)
+             FROM $this->table_keys
+             WHERE $this->key_userid = ?";
+        $stmt2 = $this->connection->prepare($sql2);
+        $stmt2->bind_param("i", $userid);
+        $stmt2->execute();
+        $stmt2->bind_result($count);
+        $result = $stmt2->fetch();
+        $stmt2->close();
+
+        if (!$result)
+        {
+            return 0;
+        }
+        else
+        {
+            return $count;
+        }
+    }
+
+    public function deleteDomain($domain, $token)
+    {
+        $sql1 =
+            "SELECT $this->key_id
+             FROM $this->table_user
+             WHERE $this->key_token = ?;";
+
+        $stmt1 = $this->connection->prepare($sql1);
+        $stmt1->bind_param("s", $token);
+        $stmt1->execute();
+        $stmt1->bind_result($userid);
+        $result = $stmt1->fetch();
+        $stmt1->close();
+
+        if(!$result)
+        {
+            return false;
+        }
+
+        $sql2 =
+            "DELETE FROM $this->table_keys
+             WHERE $this->key_userid = ? AND $this->key_domain = ?;";
+
+        $stmt2 = $this->connection->prepare($sql2);
+        $stmt2->bind_param("ii", $userid, $domain);
+        $stmt2->execute();
+        $result = $stmt2->fetch();
+        $stmt2->close();
+
+        return $result;
     }
 
 

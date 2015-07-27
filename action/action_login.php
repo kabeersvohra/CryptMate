@@ -6,7 +6,7 @@
  * Time: 19:05
  */
 
-include_once 'connectdatabase.php';
+include_once '../connectdatabase.php';
 
 if (!isset($_SESSION)) session_start();
 
@@ -19,22 +19,22 @@ if (isset($_POST["username"]) && isset($_POST["password"]))
         case "unverified":
             $_SESSION["loginerror"] = "unverified";
             $_SESSION["loginerrorusername"] = $_POST["username"];
-            header('Location: login.php');
-            break;
+            header('Location: ../login.php');
+            exit;
         case "username":
             $_SESSION["loginerror"] = "username";
             $_SESSION["loginerrorusername"] = $_POST["username"];
-            header('Location: login.php');
-            break;
+            header('Location: ../login.php');
+            exit;
         case "password":
             $_SESSION["loginerror"] = "password";
             $_SESSION["loginerrorusername"] = $_POST["username"];
-            header('Location: login.php');
-            break;
+            header('Location: ../login.php');
+            exit;
         default:
             $_SESSION["token"] = $token;
             $_SESSION["success"] = true;
-            header('Location: login.php');
-            break;
+            header('Location: ../login.php');
+            exit;
     }
 }

@@ -6,7 +6,7 @@
  * Time: 23:04
  */
 
-include_once 'connectdatabase.php';
+include_once '../connectdatabase.php';
 
 if (!isset($_SESSION)) session_start();
 
@@ -20,5 +20,6 @@ if (isset($_POST["email"]))
     {
         $_SESSION['forgottenusernamefailuremsg'] = "The credentials provided were not found.  Please try again";
     }
-    header('Location: forgottenusername.php');
+    header('Location: ../forgottenusername.php');
+    exit;
 }
