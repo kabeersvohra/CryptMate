@@ -25,7 +25,7 @@ include_once 'header.php';
                 <li id="createdomainli"><a href="#createdomain" id="createdomain">Create Domain</a></li>
                 <li id="deletedomainli"><a href="#deletedomain" id="deletedomain">Delete Domain</a></li>
                 <li id="genpasswordli"><a href="#generatepassword" id="generatepassword">Generate Password</a></li>
-                <li id="editaccountli"><a href="#editaccount" id="editaccount">Edit Account</a></li>
+                <li id="changeemailli"><a href="#changeemail" id="changeemail">Change Email</a></li>
                 <li id="deleteaccountli"><a href="#deleteaccount" id="deleteaccount">Delete Account</a></li>
             </ul>
         </div>
@@ -60,7 +60,7 @@ include_once 'header.php';
         $("#deletedomainli").removeClass('active');
         $("#genpasswordli").removeClass('active');
         $("#deleteaccountli").removeClass('active');
-        $("#editaccountli").removeClass('active');
+        $("#changeemailli").removeClass('active');
         $("#overviewli").addClass('active');
     }
 
@@ -70,7 +70,7 @@ include_once 'header.php';
         $("#deletedomainli").removeClass('active');
         $("#genpasswordli").removeClass('active');
         $("#deleteaccountli").removeClass('active');
-        $("#editaccountli").removeClass('active');
+        $("#changeemailli").removeClass('active');
         $("#createdomainli").addClass('active');
     }
 
@@ -80,7 +80,7 @@ include_once 'header.php';
         $("#createdomainli").removeClass('active');
         $("#genpasswordli").removeClass('active');
         $("#deleteaccountli").removeClass('active');
-        $("#editaccountli").removeClass('active');
+        $("#changeemailli").removeClass('active');
         $("#deletedomainli").addClass('active');
     }
 
@@ -90,18 +90,18 @@ include_once 'header.php';
         $("#createdomainli").removeClass('active');
         $("#deletedomainli").removeClass('active');
         $("#deleteaccountli").removeClass('active');
-        $("#editaccountli").removeClass('active');
+        $("#changeemailli").removeClass('active');
         $("#genpasswordli").addClass('active');
     }
 
-    function editAccountClick() {
-        $("#main").load('/SafeCrypt/dashboard/editaccount.php');
+    function changeEmailClick() {
+        $("#main").load('/SafeCrypt/dashboard/changeemail.php');
         $("#overviewli").removeClass('active');
         $("#createdomainli").removeClass('active');
         $("#deletedomainli").removeClass('active');
         $("#genpasswordli").removeClass('active');
         $("#deleteaccountli").removeClass('active');
-        $("#editaccountli").addClass('active');
+        $("#changeemailli").addClass('active');
     }
 
     function deleteAccountClick() {
@@ -110,7 +110,7 @@ include_once 'header.php';
         $("#createdomainli").removeClass('active');
         $("#deletedomainli").removeClass('active');
         $("#genpasswordli").removeClass('active');
-        $("#editaccountli").removeClass('active');
+        $("#changeemailli").removeClass('active');
         $("#deleteaccountli").addClass('active');
     }
 
@@ -131,8 +131,8 @@ include_once 'header.php';
                 case "generatepassword":
                     generatePasswordClick();
                     break;
-                case "editaccount":
-                    editAccountClick();
+                case "changeemail":
+                    changeEmailClick();
                     break;
                 case "deleteaccount":
                     deleteAccountClick();
@@ -147,7 +147,7 @@ include_once 'header.php';
         $("#deletedomain").click(deleteDomainClick);
         $("#generatepassword").click(generatePasswordClick);
         $("#deleteaccount").click(deleteAccountClick);
-        $("#editaccount").click(editAccountClick);
+        $("#changeemail").click(changeEmailClick);
 
     });
 </script>

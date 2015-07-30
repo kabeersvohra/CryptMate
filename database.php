@@ -17,6 +17,7 @@ class database {
 
     private $table_keys = "`keys`";
     private $table_user = "`user`";
+    private $table_emailconfirmations = "`emailconfirmations`";
 
     private $key_id = "`ID`";
     private $key_name = "`Name`";
@@ -30,7 +31,13 @@ class database {
     private $key_emailhash = "`EmailHash`";
     private $key_emailverification = "`EmailVerified`";
     private $key_email = "`Email`";
+    private $key_email1 = "`Email1`";
+    private $key_email2 = "`Email2`";
     private $key_passwordhash = "`PasswordHash`";
+    private $key_hash1 = "`Hash1`";
+    private $key_hash2 = "`Hash2`";
+    private $key_verification1 = "`Verification1`";
+    private $key_verification2 = "`Verification2`";
 
     private $hashingAlgo = "sha256";
 
@@ -143,6 +150,44 @@ Please click this link to activate your account:
 https://www.safecrypt.me/verifyemail.php?email=' . $email . '&hash=' . $hash . '
 
 Enjoy!
+
+SafeCrypt';
+
+        $headers = 'From: admin@safecrypt.me' . "\r\n";
+        mail($to, $subject, $message, $headers);
+    }
+
+    private function sendCurrentEmailVerification($hash, $email, $name)
+    {
+        $to      = $email;
+        $subject = 'SafeCrypt Email Verification';
+        $message = 'Dear ' . $name . '
+
+To ensure the legitimacy of an email change on your account you must verify this email address as well as your new email address
+
+Please click this link to verify this email address:
+https://www.safecrypt.me/verifyemail.php?email=' . $email . '&hash=' . $hash . '
+
+Thanks!
+
+SafeCrypt';
+
+        $headers = 'From: admin@safecrypt.me' . "\r\n";
+        mail($to, $subject, $message, $headers);
+    }
+
+    private function sendNewEmailVerification($hash, $email, $name)
+    {
+        $to      = $email;
+        $subject = 'SafeCrypt Email Verification';
+        $message = 'Dear ' . $name . '
+
+To ensure the legitimacy of an email change on your account you must verify this email address as well as your previous email address
+
+Please click this link to verify this email address:
+https://www.safecrypt.me/verifyemail.php?email=' . $email . '&hash=' . $hash . '
+
+Thanks!
 
 SafeCrypt';
 
@@ -583,8 +628,123 @@ SafeCrypt';
 
     public function deleteAccount($token)
     {
-        
+        $sql1 =
+            "DELETE FROM $this->table_user
+             WHERE $this->key_token = ?;";
+
+        $stmt1 = $this->connection->prepare($sql1);
+        $stmt1->bind_param("s", $token);
+        $stmt1->execute();
+        $result = $stmt1->affected_rows;
+        $stmt1->close();
+        return ($result >= 1);
     }
 
+    public function getAccountDetails($token)
+    {
+        $sql1 =
+            "SELECT $this->key_name, $this->key_username, $this->key_email
+             FROM $this->table_user
+             WHERE $this->key_token = ?;";
+        $stmt1 = $this->connection->prepare($sql1);
+        $stmt1->bind_param("s", $token);
+        $stmt1->execute();
+        $stmt1->bind_result($name, $username, $email);
+        $stmt1->fetch();
+        $stmt1->close();
+        return
+            array(
+                "name" => $name,
+                "username" => $username,
+                "email" => $email
+            );
+    }
+
+    public function verifyNewEmail($email, $hash)
+    {
+        $sql1 =
+            "SELECT 1
+             FROM $this->table_user
+             WHERE $this->key_email = ? AND $this->key_token = ?;";
+        $stmt1 = $this->connection->prepare($sql1);
+        $stmt1->bind_param("ss", $currentemail, $token);
+        $stmt1->execute();
+        $result = $stmt1->fetch();
+        $stmt1->close();
+        if ($result)
+        {
+
+        }
+        else
+        {
+
+        }
+    }
+
+    public function isCurrentEmail($token, $currentemail)
+    {
+        $sql1 =
+            "SELECT 1
+             FROM $this->table_user
+             WHERE $this->key_email = ? AND $this->key_token = ?;";
+        $stmt1 = $this->connection->prepare($sql1);
+        $stmt1->bind_param("ss", $currentemail, $token);
+        $stmt1->execute();
+        $result = $stmt1->fetch();
+        $stmt1->close();
+
+        return $result;
+    }
+
+    public function changeEmail($token, $currentemail, $newemail)
+    {
+        $verified = intval(false);
+        $hash1 = md5(mcrypt_create_iv(32, MCRYPT_DEV_URANDOM));
+        $hash2 = md5(mcrypt_create_iv(32, MCRYPT_DEV_URANDOM));
+
+        $sql1 =
+            "DELETE FROM $this->table_emailconfirmations
+             WHERE $this->key_email1 = ?;";
+
+        $stmt1 = $this->connection->prepare($sql1);
+        $stmt1->bind_param("ssss", $currentemail);
+        $stmt1->execute();
+        $stmt1->close();
+
+        $sql2 =
+            "INSERT INTO $this->table_emailconfirmations
+                  ($this->key_token, $this->key_email1, $this->key_hash1, $this->key_verification1,
+                   $this->key_email2, $this->key_hash2, $this->key_verification2)
+             VALUES (?, ?, ?, ?, ?, ?, ?);";
+
+        $stmt2 = $this->connection->prepare($sql2);
+        $stmt2->bind_param("sssissi", $token, $currentemail, $hash1, $verified, $newemail, $hash2, $verified);
+        $stmt2->execute();
+        $result = $stmt2->fetch();
+        $stmt2->close();
+
+        if (!$result)
+            return false;
+
+        $sql3 =
+            "SELECT $this->key_name
+             FROM $this->table_user
+             WHERE $this->key_token = ?;";
+
+        $stmt3 = $this->connection->prepare($sql3);
+        $stmt3->bind_param("s", $token);
+        $stmt3->execute();
+        $stmt3->bind_result($name);
+        $result = $stmt3->fetch();
+        $stmt3->close();
+
+        if (!$result)
+            return false;
+
+        sendCurrentEmailVerification($hash1, $currentemail, $name);
+        sendNewEmailVerification($hash2, $newemail, $name);
+
+        return true;
+    }
 
 }
