@@ -34,7 +34,7 @@ if (!isset($_SESSION)) session_start();
     </head>
 
 <?php
-include_once 'navbar.php'
+include_once 'navbar.php';
 ?>
 
 <head>
