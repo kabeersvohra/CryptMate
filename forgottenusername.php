@@ -43,7 +43,7 @@ include_once 'header.php';
 
     <p style="text-align: center">Please enter your email address:</p>
     <div class="col-sm-6 col-sm-offset-3">
-        <form class="form-horizontal" role="form" id="form" method="post" action="action/action_forgotusername.php">
+        <form class="form-horizontal" role="form" id="form" method="post" action="action/forgotusername.php">
             <div class="form-group">
                 <label class="control-label col-sm-12" for="email" style="text-align: center; padding-bottom: 10px;">Email</label>
                 <div class="col-sm-12">
