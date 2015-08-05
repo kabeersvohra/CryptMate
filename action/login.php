@@ -34,6 +34,7 @@ if (isset($_POST["username"]) && isset($_POST["password"]))
         default:
             $_SESSION["token"] = $token;
             $_SESSION["success"] = true;
+            $_SESSION["subscriptionexpired"] = $db->getSubscriptionEnded($token);
             header('Location: ../login.php');
             exit;
     }
