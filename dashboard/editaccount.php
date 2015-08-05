@@ -22,7 +22,7 @@ $email = $assoc["email"];
             <label class="control-label col-sm-12" for="name" style="text-align: center; padding-bottom: 10px;">Name</label>
             <div class="col-sm-12">
                 <input type="text"
-                 value="<?php echo $name ?>"
+                 value="<?= $name ?>"
                  class="form-control" id="name" name="name" style="text-align: center;">
             </div>
         </div>
@@ -30,7 +30,7 @@ $email = $assoc["email"];
             <label class="control-label col-sm-12" for="username" style="text-align: center; padding-bottom: 10px;">Username</label>
             <div class="col-sm-12">
                 <input type="text"
-                 value="<?php echo $username ?>"
+                 value="<?= $username ?>"
                  class="form-control" id="username" name="username" style="text-align: center;">
             </div>
         </div>
@@ -38,7 +38,7 @@ $email = $assoc["email"];
             <label class="control-label col-sm-12" for="email" style="text-align: center; padding-bottom: 10px;">Email</label>
             <div class="col-sm-12">
                 <input type="text"
-                 value="<?php echo $email ?>"
+                 value="<?= $email ?>"
                  class="form-control" id="email" name="email" style="text-align: center;">
             </div>
         </div>
