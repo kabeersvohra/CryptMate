@@ -8,8 +8,7 @@
 
 if (!isset($_SESSION)) session_start();
 
-if(file_exists('../database/connectdatabase.php'))
-    include_once '../database/connectdatabase.php';
+include_once $_SERVER['DOCUMENT_ROOT'] . '/database/connectdatabase.php';
 
 ?>
 

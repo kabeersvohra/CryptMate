@@ -11,7 +11,7 @@ $loggedin = isset($_SESSION["token"]);
 if ($loggedin)
     unset($_SESSION["token"]);
 
-include_once 'header.php';
+include_once $_SERVER['DOCUMENT_ROOT'] . '/headers/header.php';
 ?>
 <head>
     <?php

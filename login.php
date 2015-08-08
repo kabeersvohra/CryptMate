@@ -6,7 +6,7 @@
  * Time: 15:24
  */
 
-include_once 'header.php';
+include_once $_SERVER['DOCUMENT_ROOT'] . 'headers/header.php';
 
 ?>
     <title>Login</title>
