@@ -9,7 +9,7 @@
 include_once 'header.php';
 
 ?>
-        <title>SafeCrypt.me</title>
+        <title>CryptMate</title>
 
     </head>
 
@@ -22,9 +22,9 @@ include_once 'header.php';
                 <div class="row">
                     <div class="col-lg-6">
                         <div class="intro-message">
-                            <h1>SafeCrypt</h1>
+                            <h1>CryptMate</h1>
                             <p>
-                                Here at SafeCrypt your security is our priority
+                                Here at CryptMate your security is our priority
                             </p>
                         </div>
                     </div>
@@ -82,7 +82,7 @@ include_once 'header.php';
                                 <a href="#contact">Contact</a>
                             </li>
                         </ul>
-                        <p class="copyright text-muted small">Copyright &copy; SafeCrypt 2015. All Rights Reserved</p>
+                        <p class="copyright text-muted small">Copyright &copy; CryptMate 2015. All Rights Reserved</p>
                     </div>
                 </div>
             </div>

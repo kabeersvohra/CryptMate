@@ -18,11 +18,18 @@ include_once 'header.php';
 <body>
 
 <div class="container-fluid">
-    <div class="row">
-        <? if($_SESSION["subscriptionexpired"]) :
-                include_once '/dashboard/managesubscription.php';
-           else : ?>
 
+        <?php
+            if($db->getSubscriptionEnded($_SESSION["token"]))
+            {
+                echo "<div class='row' style='padding-top: 20px;'>";
+                include_once 'dashboard/managesubscription.php';
+            }
+            else
+            {
+        ?>
+
+        <div class="row">
             <div class="col-sm-3 col-md-2 sidebar">
                 <ul class="nav nav-sidebar">
                     <li id="overviewli" class="active"><a href="#overview" id="overview">Overview</a></li>
@@ -41,14 +48,14 @@ include_once 'header.php';
                 <div class="row placeholders">
                     <div class="col-xs-6 col-sm-3 placeholder">
                         <div class="row" style="text-align: center">
-                            <img src="/SafeCrypt/img/domain.png" class="img-responsive col-xs-8 col-xs-offset-2" alt="Domains">
+                            <img src="img/domain.png" class="img-responsive col-xs-8 col-xs-offset-2" alt="Domains">
                         </div>
                         <h4>0</h4>
                         <span class="text-muted">Number of Domains</span>
                     </div>
                     <div class="col-xs-6 col-sm-3 placeholder">
                         <div class="row" style="text-align: center">
-                            <img src="/SafeCrypt/img/password.png" class="img-responsive col-xs-8 col-xs-offset-2" alt="Passwords">
+                            <img src="img/password.png" class="img-responsive col-xs-8 col-xs-offset-2" alt="Passwords">
                         </div>
                         <h4>0</h4>
                         <span class="text-muted">Number of Passwords</span>
@@ -59,7 +66,7 @@ include_once 'header.php';
             <script>
 
                 function overviewClick() {
-                    $("#main").load('/SafeCrypt/dashboard/overview.php');
+                    $("#main").load('dashboard/overview.php');
                     $("#createdomainli").removeClass('active');
                     $("#deletedomainli").removeClass('active');
                     $("#genpasswordli").removeClass('active');
@@ -71,7 +78,7 @@ include_once 'header.php';
                 }
 
                 function createDomainClick() {
-                    $("#main").load('/SafeCrypt/dashboard/createdomain.php');
+                    $("#main").load('dashboard/createdomain.php');
                     $("#overviewli").removeClass('active');
                     $("#deletedomainli").removeClass('active');
                     $("#genpasswordli").removeClass('active');
@@ -83,7 +90,7 @@ include_once 'header.php';
                 }
 
                 function deleteDomainClick() {
-                    $("#main").load('/SafeCrypt/dashboard/deletedomain.php');
+                    $("#main").load('dashboard/deletedomain.php');
                     $("#overviewli").removeClass('active');
                     $("#createdomainli").removeClass('active');
                     $("#genpasswordli").removeClass('active');
@@ -95,7 +102,7 @@ include_once 'header.php';
                 }
 
                 function generatePasswordClick() {
-                    $("#main").load('/SafeCrypt/dashboard/generatepassword.php');
+                    $("#main").load('dashboard/generatepassword.php');
                     $("#overviewli").removeClass('active');
                     $("#createdomainli").removeClass('active');
                     $("#deletedomainli").removeClass('active');
@@ -107,7 +114,7 @@ include_once 'header.php';
                 }
 
                 function changeEmailClick() {
-                    $("#main").load('/SafeCrypt/dashboard/changeemail.php');
+                    $("#main").load('dashboard/changeemail.php');
                     $("#overviewli").removeClass('active');
                     $("#createdomainli").removeClass('active');
                     $("#deletedomainli").removeClass('active');
@@ -119,7 +126,7 @@ include_once 'header.php';
                 }
 
                 function deleteAccountClick() {
-                    $("#main").load('/SafeCrypt/dashboard/deleteaccount.php');
+                    $("#main").load('dashboard/deleteaccount.php');
                     $("#overviewli").removeClass('active');
                     $("#createdomainli").removeClass('active');
                     $("#deletedomainli").removeClass('active');
@@ -131,7 +138,7 @@ include_once 'header.php';
                 }
 
                 function manageSubscriptionClick() {
-                    $("#main").load('/SafeCrypt/dashboard/managesubscription.php');
+                    $("#main").load('dashboard/managesubscription.php');
                     $("#overviewli").removeClass('active');
                     $("#createdomainli").removeClass('active');
                     $("#deletedomainli").removeClass('active');
@@ -143,7 +150,7 @@ include_once 'header.php';
                 }
 
                 function changePasswordClick() {
-                    $("#main").load('/SafeCrypt/dashboard/changepassword.php');
+                    $("#main").load('dashboard/changepassword.php');
                     $("#overviewli").removeClass('active');
                     $("#createdomainli").removeClass('active');
                     $("#deletedomainli").removeClass('active');
@@ -199,7 +206,7 @@ include_once 'header.php';
 
                 });
             </script>
-        <? endif; ?>
+        <?php } ?>
     </div>
 </div>
 

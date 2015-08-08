@@ -1,4 +1,4 @@
-9<?php
+<?php
 /**
  * Created by PhpStorm.
  * User: Kabeer
@@ -8,7 +8,8 @@
 
 if (!isset($_SESSION)) session_start();
 
-include_once '../connectdatabase.php';
+if(file_exists('../database/connectdatabase.php'))
+    include_once '../database/connectdatabase.php';
 
 ?>
 
@@ -16,7 +17,7 @@ include_once '../connectdatabase.php';
 
     <div class="row">
         <?php
-        if ($_SESSION["subscriptionexpired"])
+        if ($db->getSubscriptionEnded($_SESSION["token"]))
             echo "<p>Subscription ended:</p>";
         else
             echo "<p>Subscription ends:</p>";

@@ -6,7 +6,7 @@
  * Time: 19:05
  */
 
-include_once '../connectdatabase.php';
+include_once '../database/connectdatabase.php';
 
 if (!isset($_SESSION)) session_start();
 
@@ -34,7 +34,6 @@ if (isset($_POST["username"]) && isset($_POST["password"]))
         default:
             $_SESSION["token"] = $token;
             $_SESSION["success"] = true;
-            $_SESSION["subscriptionexpired"] = $db->getSubscriptionEnded($token);
             header('Location: ../login.php');
             exit;
     }
