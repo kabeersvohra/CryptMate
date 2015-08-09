@@ -394,11 +394,11 @@ CryptMate';
         $stmt2 = $this->connection->prepare($sql2);
         $stmt2->bind_param("s", $userid);
         $stmt2->execute();
-        $result = $stmt2->get_result();
+        $stmt2->bind_result($result);
         $array = [];
-        for ($i = 0; $i < $result->num_rows; $i++)
+        while ($stmt2->fetch())
         {
-            array_push($array, $result->fetch_array()['Domain']);
+            array_push($array, $result['Domain']);
         }
         $stmt2->close();
 
