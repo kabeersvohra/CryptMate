@@ -75,6 +75,7 @@ include_once $_SERVER['DOCUMENT_ROOT'] . '/headers/header.php';
                     $("#changepasswordli").removeClass('active');
                     $("#changeemailli").removeClass('active');
                     $("#overviewli").addClass('active');
+                    document.title = "Dashboard";
                 }
 
                 function createDomainClick() {
@@ -87,6 +88,7 @@ include_once $_SERVER['DOCUMENT_ROOT'] . '/headers/header.php';
                     $("#changepasswordli").removeClass('active');
                     $("#changeemailli").removeClass('active');
                     $("#createdomainli").addClass('active');
+                    document.title = "Create Domain";
                 }
 
                 function deleteDomainClick() {
@@ -99,6 +101,7 @@ include_once $_SERVER['DOCUMENT_ROOT'] . '/headers/header.php';
                     $("#changepasswordli").removeClass('active');
                     $("#changeemailli").removeClass('active');
                     $("#deletedomainli").addClass('active');
+                    document.title = "Delete Domain";
                 }
 
                 function generatePasswordClick() {
@@ -111,6 +114,7 @@ include_once $_SERVER['DOCUMENT_ROOT'] . '/headers/header.php';
                     $("#changepasswordli").removeClass('active');
                     $("#changeemailli").removeClass('active');
                     $("#genpasswordli").addClass('active');
+                    document.title = "Generate Password";
                 }
 
                 function changeEmailClick() {
@@ -123,6 +127,7 @@ include_once $_SERVER['DOCUMENT_ROOT'] . '/headers/header.php';
                     $("#changepasswordli").removeClass('active');
                     $("#deleteaccountli").removeClass('active');
                     $("#changeemailli").addClass('active');
+                    document.title = "Change Email";
                 }
 
                 function deleteAccountClick() {
@@ -135,6 +140,7 @@ include_once $_SERVER['DOCUMENT_ROOT'] . '/headers/header.php';
                     $("#changeemailli").removeClass('active');
                     $("#changepasswordli").removeClass('active');
                     $("#deleteaccountli").addClass('active');
+                    document.title = "Delete Account";
                 }
 
                 function manageSubscriptionClick() {
@@ -147,6 +153,7 @@ include_once $_SERVER['DOCUMENT_ROOT'] . '/headers/header.php';
                     $("#changepasswordli").removeClass('active');
                     $("#deleteaccountli").removeClass('active');
                     $("#managesubscriptionli").addClass('active');
+                    document.title = "Manage Subscription";
                 }
 
                 function changePasswordClick() {
@@ -159,6 +166,7 @@ include_once $_SERVER['DOCUMENT_ROOT'] . '/headers/header.php';
                     $("#changeemailli").removeClass('active');
                     $("#deleteaccountli").removeClass('active');
                     $("#changepasswordli").addClass('active');
+                    document.title = "Change Password";
                 }
 
                 $(window).bind("load", function() {

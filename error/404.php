@@ -5,7 +5,7 @@
  * Date: 31/05/2015
  * Time: 15:56
  */
-include_once $_SERVER['DOCUMENT_ROOT'] . '/headers/header.php';
+include_once 'header.php';
 
 ?>
 <title>404</title>
