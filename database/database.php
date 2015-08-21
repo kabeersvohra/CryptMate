@@ -374,6 +374,55 @@ CryptMate';
         return hash_pbkdf2($this->hashingAlgo, $password, $salt, $iterationCount);
     }
 
+    public function createDomainFromRest ($token, $password, $domain)
+    {
+        $domain = strtolower($domain);
+
+        if (!filter_var(gethostbyname($domain), FILTER_VALIDATE_IP))
+            return "domaininvalid";
+
+        $sql1 =
+            "SELECT $this->key_id, $this->key_username
+             FROM $this->table_user
+             WHERE $this->key_token = ?;";
+
+        $stmt1 = $this->connection->prepare($sql1);
+        $stmt1->bind_param("s", $token);
+        $stmt1->execute();
+        $stmt1->bind_result($userid, $username);
+        $result = $stmt1->fetch();
+        $stmt1->close();
+
+        if(!$result)
+            return "tokenerror";
+
+        $salt = $this->randomString(256);
+        $iterationCount = ITERATIONCOUNT;
+
+        $sql2 =
+            "SELECT 1
+             FROM $this->table_keys
+             WHERE $this->key_userid = ? AND $this->key_domain = ?;";
+        $stmt2 = $this->connection->prepare($sql2);
+        $stmt2->bind_param("is", $userid, $domain);
+        $stmt2->execute();
+        $result = $stmt2->fetch();
+        $stmt2->close();
+
+        if($result)
+            return "domainused";
+
+        $sql3 =
+            "INSERT INTO $this->table_keys ($this->key_userid, $this->key_domain, $this->key_salt, $this->key_iterationcount)
+             VALUES (?, ?, ?, ?);";
+
+        $stmt3 = $this->connection->prepare($sql3);
+        $stmt3->bind_param("issi", $userid, $domain, $salt, $iterationCount);
+        $stmt3->execute();
+        $stmt3->close();
+
+        return hash_pbkdf2($this->hashingAlgo, $password, $salt, $iterationCount);
+    }
 
     public function isKeyedDomain($token, $domain)
     {
