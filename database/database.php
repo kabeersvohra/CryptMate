@@ -338,6 +338,9 @@ CryptMate';
         if(!$result)
             return "tokenerror";
 
+        $salt = $this->randomString(256);
+        $iterationCount = ITERATIONCOUNT;
+
         $sql2 =
             "SELECT 1
              FROM $this->table_keys
@@ -352,16 +355,17 @@ CryptMate';
             return "domainused";
 
         $sql3 =
-            "INSERT INTO $this->table_keys ($this->key_userid, $this->key_domain)
-             VALUES (?, ?);";
+            "INSERT INTO $this->table_keys ($this->key_userid, $this->key_domain, $this->key_salt, $this->key_iterationcount)
+             VALUES (?, ?, ?, ?);";
 
         $stmt3 = $this->connection->prepare($sql3);
-        $stmt3->bind_param("is", $userid, $domain);
+        $stmt3->bind_param("issi", $userid, $domain, $salt, $iterationCount);
         $stmt3->execute();
         $stmt3->close();
 
-        return password_hash($password, $this->hashingAlgo);
+        return hash_pbkdf2($this->hashingAlgo, $password, $salt, $iterationCount);
     }
+
 
     public function createDomainFromRest ($token, $password, $domain)
     {
@@ -385,6 +389,9 @@ CryptMate';
         if(!$result)
             return "tokenerror";
 
+        $salt = $this->randomString(256);
+        $iterationCount = ITERATIONCOUNT;
+
         $sql2 =
             "SELECT 1
              FROM $this->table_keys
@@ -399,16 +406,17 @@ CryptMate';
             return "domainused";
 
         $sql3 =
-            "INSERT INTO $this->table_keys ($this->key_userid, $this->key_domain)
-             VALUES (?, ?);";
+            "INSERT INTO $this->table_keys ($this->key_userid, $this->key_domain, $this->key_salt, $this->key_iterationcount)
+             VALUES (?, ?, ?, ?);";
 
         $stmt3 = $this->connection->prepare($sql3);
-        $stmt3->bind_param("is", $userid, $domain);
+        $stmt3->bind_param("issi", $userid, $domain, $salt, $iterationCount);
         $stmt3->execute();
         $stmt3->close();
 
-        return password_hash($password, $this->hashingAlgo);
+        return hash_pbkdf2($this->hashingAlgo, $password, $salt, $iterationCount);
     }
+
 
     public function isKeyedDomain($token, $domain)
     {
@@ -500,7 +508,18 @@ CryptMate';
             return "tokenerror";
         }
 
-        return password_hash($password, $this->hashingAlgo);
+        $sql2 =
+            "SELECT $this->key_salt, $this->key_iterationcount
+             FROM $this->table_keys
+             WHERE $this->key_userid = ? AND $this->key_domain = ?;";
+
+        $stmt2 = $this->connection->prepare($sql2);
+        $stmt2->bind_param("is", $userid, $domain);
+        $stmt2->execute();
+        $stmt2->bind_result($salt, $iterationCount);
+        $stmt2->fetch();
+        $stmt2->close();
+        return hash_pbkdf2($this->hashingAlgo, $password, $salt, $iterationCount);
     }
 
     public function resendVerification($email, $username)
@@ -575,7 +594,6 @@ CryptMate';
         {
             return false;
         }
-
     }
 
     private function sendPasswordReset($passwordhash, $email, $username)
@@ -605,23 +623,68 @@ CryptMate';
         mail($to, $subject, $message, $headers);
     }
 
+    public function checkResetPassword($email, $passwordhash)
+    {
+        $sql1 =
+            "SELECT *
+             FROM $this->table_user
+             WHERE $this->key_email = ? AND $this->key_passwordhash = ?;";
+
+        $stmt1 = $this->connection->prepare($sql1);
+        $stmt1->bind_param("ss", $email, $passwordhash);
+        $stmt1->execute();
+        $result = $stmt1->fetch();
+        $stmt1->close();
+        return $result;
+    }
+
+
+    public function cancelResetPassword($email)
+    {
+        $sql1 =
+            "UPDATE $this->table_user
+             SET $this->key_passwordhash = NULL
+             WHERE $this->key_email = ?;";
+
+        $stmt1 = $this->connection->prepare($sql1);
+        $stmt1->bind_param("s", $email);
+        $stmt1->execute();
+        $stmt1->close();
+        return $stmt1->affected_rows == 1;
+    }
+
+    public function resetPassword($password, $hash, $email)
+    {
+        $sql1 =
+            "UPDATE $this->table_user
+             SET $this->key_password = ?
+             WHERE $this->key_email = ? AND $this->key_passwordhash = ?;";
+
+        $stmt1 = $this->connection->prepare($sql1);
+        $stmt1->bind_param("sss", password_hash($password, $this->hashingAlgo), $email, $hash);
+        $stmt1->execute();
+        $stmt1->close();
+        return $stmt1->affected_rows == 1;
+    }
+
+
     public function remindUsername($email)
     {
         $sql1 =
-            "SELECT $this->key_name
+            "SELECT $this->key_name, $this->key_username
              FROM $this->table_user
              WHERE $this->key_email = ?;";
 
         $stmt1 = $this->connection->prepare($sql1);
         $stmt1->bind_param("s", $email);
         $stmt1->execute();
-        $stmt1->bind_result($name);
+        $stmt1->bind_result($name, $username);
         $result = $stmt1->fetch();
         $stmt1->close();
 
         if ($result)
         {
-            $this->sendUsername($email, $name);
+            $this->sendUsername($email, $name, $username);
             return true;
         }
         else
@@ -630,7 +693,7 @@ CryptMate';
         }
     }
 
-    private function sendUsername($email, $name)
+    private function sendUsername($email, $name, $username)
     {
         $to      = $email;
         $subject = 'CryptMate Username Reminder';
@@ -638,7 +701,7 @@ CryptMate';
 
 Somebody has requested a username reminder for your account
 
-If this was you, your username is ' . $name . '
+If this was you, your username is ' . $username . '
 
 If this was not you, please ignore this email.
 
@@ -1062,6 +1125,37 @@ CryptMate';
         $stmt1->bind_param("s", $payer_token);
         $stmt1->execute();
         $stmt1->close();
+    }
+
+    private function randomString($length, $type = '') {
+        // Select which type of characters you want in your random string
+        switch($type) {
+            case 'num':
+                // Use only numbers
+                $salt = '1234567890';
+                break;
+            case 'lower':
+                // Use only lowercase letters
+                $salt = 'abcdefghijklmnopqrstuvwxyz';
+                break;
+            case 'upper':
+                // Use only uppercase letters
+                $salt = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+                break;
+            default:
+                // Use uppercase, lowercase, numbers, and symbols
+                $salt = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890';
+                break;
+        }
+        $rand = '';
+        $i = 0;
+        while ($i < $length) { // Loop until you have met the length
+            $num = rand() % strlen($salt);
+            $tmp = substr($salt, $num, 1);
+            $rand = $rand . $tmp;
+            $i++;
+        }
+        return $rand; // Return the random string
     }
 
 }
