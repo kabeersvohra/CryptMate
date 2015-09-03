@@ -155,10 +155,10 @@ class database {
             "INSERT INTO $this->table_user ($this->key_name, $this->key_username, $this->key_hash,
                          $this->key_token, $this->key_emailhash, $this->key_emailverification, $this->key_email,
                          $this->key_subscriptionend)
-             VALUES (?, ?, ?, ?, ?, ?, ?, ?, (NOW() + INTERVAL 1 MONTH));";
+             VALUES (?, ?, ?, ?, ?, ?, ?, (NOW() + INTERVAL 1 MONTH));";
 
         $stmt4 = $this->connection->prepare($sql4);
-        $stmt4->bind_param("sssissis", $name, $username, $hash, $token, $emailhash, $emailverification, $email);
+        $stmt4->bind_param("sssssis", $name, $username, $hash, $token, $emailhash, $emailverification, $email);
         $stmt4->execute();
         $stmt4->close();
 
@@ -353,10 +353,10 @@ CryptMate';
 
         $sql3 =
             "INSERT INTO $this->table_keys ($this->key_userid, $this->key_domain)
-             VALUES (?, ?, ?, ?);";
+             VALUES (?, ?);";
 
         $stmt3 = $this->connection->prepare($sql3);
-        $stmt3->bind_param("iss", $userid, $domain);
+        $stmt3->bind_param("is", $userid, $domain);
         $stmt3->execute();
         $stmt3->close();
 
@@ -400,10 +400,10 @@ CryptMate';
 
         $sql3 =
             "INSERT INTO $this->table_keys ($this->key_userid, $this->key_domain)
-             VALUES (?, ?, ?);";
+             VALUES (?, ?);";
 
         $stmt3 = $this->connection->prepare($sql3);
-        $stmt3->bind_param("issi", $userid, $domain);
+        $stmt3->bind_param("is", $userid, $domain);
         $stmt3->execute();
         $stmt3->close();
 
@@ -514,7 +514,7 @@ CryptMate';
              WHERE $this->key_email = ? OR $this->key_username = ?;";
 
         $stmt1 = $this->connection->prepare($sql1);
-        $stmt1->bind_param("ssss",$emailhash, $verified, $email, $username);
+        $stmt1->bind_param("ssss", $emailhash, $verified, $email, $username);
         $stmt1->execute();
         $stmt1->close();
 
