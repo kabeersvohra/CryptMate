@@ -315,7 +315,7 @@ CryptMate';
         }
     }
 
-    public function createDomain ($token, $password, $subdomain, $hostname, $tld)
+    public function createDomain ($token, $password, $subdomain, $hostname, $tld, $linkdomain)
     {
         if ($subdomain == "")
             $domain = "$hostname.$tld";
@@ -342,29 +342,43 @@ CryptMate';
         if(!$result)
             return "tokenerror";
 
-        $salt = $this->randomString(256);
+        if ($linkdomain == "")
+            $salt = $this->randomString(256);
+        else
+        {
+            $sql2 =
+                "SELECT $this->key_salt
+                 FROM $this->table_keys
+                 WHERE $this->key_userid = ? AND $this->key_domain = ?;";
+            $stmt2 = $this->connection->prepare($sql2);
+            $stmt2->bind_param("is", $userid, $linkdomain);
+            $stmt2->execute();
+            $stmt2->bind_result($salt);
+            $stmt2->fetch();
+            $stmt2->close();
+        }
 
-        $sql2 =
+        $sql3 =
             "SELECT 1
              FROM $this->table_keys
              WHERE $this->key_userid = ? AND $this->key_domain = ?;";
-        $stmt2 = $this->connection->prepare($sql2);
-        $stmt2->bind_param("is", $userid, $domain);
-        $stmt2->execute();
-        $result = $stmt2->fetch();
-        $stmt2->close();
+        $stmt3 = $this->connection->prepare($sql3);
+        $stmt3->bind_param("is", $userid, $domain);
+        $stmt3->execute();
+        $result = $stmt3->fetch();
+        $stmt3->close();
 
         if($result)
             return "domainused";
 
-        $sql3 =
+        $sql4 =
             "INSERT INTO $this->table_keys ($this->key_userid, $this->key_domain, $this->key_salt, $this->key_cost)
              VALUES (?, ?, ?, ?);";
 
-        $stmt3 = $this->connection->prepare($sql3);
-        $stmt3->bind_param("issi", $userid, $domain, $salt, $this->cost);
-        $stmt3->execute();
-        $stmt3->close();
+        $stmt4 = $this->connection->prepare($sql4);
+        $stmt4->bind_param("issi", $userid, $domain, $salt, $this->cost);
+        $stmt4->execute();
+        $stmt4->close();
 
         return str_replace(array("'", "\""), "!", password_hash($password, $this->generateHashingAlgo, [$salt, $this->cost]));
     }
