@@ -14,7 +14,7 @@
     <div class="panel-body">
         <div class="row">
             <div class="col-lg-12">
-                <form id="login-form" action="http://phpoll.com/login/process" method="post" role="form" style="display: block;">
+                <form id="login-form" action="" method="post" role="form" style="display: block;">
                     <div class="form-group">
                         <input type="text" name="username" id="username" tabindex="1" class="form-control" placeholder="Username" value="">
                     </div>
@@ -27,7 +27,7 @@
                     </div>
                     <div class="form-group">
                         <div class="row">
-                            <div class="col-sm-6 col-sm-offset-3">
+                            <div class="col-xs-6 col-xs-offset-3">
                                 <input type="submit" name="login-submit" id="login-submit" tabindex="4" class="form-control btn btn-login" value="Log In">
                             </div>
                         </div>
@@ -36,13 +36,13 @@
                         <div class="row">
                             <div class="col-lg-12">
                                 <div class="text-center">
-                                    <a href="http://phpoll.com/recover" tabindex="5" class="forgot-password">Forgot Password?</a>
+                                    <a tabindex="5" id="forgot-password">Forgot Password?</a>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </form>
-                <form id="register-form" action="http://phpoll.com/register/process" method="post" role="form" style="display: none;">
+                <form id="register-form" action="" method="post" role="form" style="display: none;">
                     <div class="form-group">
                         <input type="text" name="username" id="username" tabindex="1" class="form-control" placeholder="Username" value="">
                     </div>
@@ -57,8 +57,20 @@
                     </div>
                     <div class="form-group">
                         <div class="row">
-                            <div class="col-sm-6 col-sm-offset-3">
+                            <div class="col-xs-6 col-xs-offset-3">
                                 <input type="submit" name="register-submit" id="register-submit" tabindex="4" class="form-control btn btn-register" value="Register Now">
+                            </div>
+                        </div>
+                    </div>
+                </form>
+                <form id="forgot-form" action="" method="post" role="form" style="display: none;">
+                    <div class="form-group">
+                        <input type="text" name="username" id="username" tabindex="1" class="form-control" placeholder="Username" value="">
+                    </div>
+                    <div class="form-group">
+                        <div class="row">
+                            <div class="col-xs-6 col-xs-offset-3">
+                                <input type="submit" name="forgot-submit" id="forgot-submit" tabindex="4" class="form-control btn btn-register" value="Forgot">
                             </div>
                         </div>
                     </div>
