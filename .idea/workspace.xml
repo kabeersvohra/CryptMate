@@ -3,9 +3,6 @@
   <component name="ChangeListManager">
     <list default="true" id="f0864e9d-1f58-4082-8a08-bef90c808489" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/css/tempindex.css" afterPath="$PROJECT_DIR$/css/tempindex.css" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/js/tempindex.js" afterPath="$PROJECT_DIR$/js/tempindex.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/loginform.php" afterPath="$PROJECT_DIR$/loginform.php" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/tempindex.php" afterPath="$PROJECT_DIR$/tempindex.php" />
     </list>
     <ignored path="SafeCrypt.iws" />
@@ -28,17 +25,30 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="tempindex.php" pinned="false" current-in-tab="false">
+      <file leaf-file-name="tempindex.php" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/tempindex.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="416">
-              <caret line="71" column="58" selection-start-line="71" selection-start-column="58" selection-end-line="71" selection-end-column="58" />
+            <state relative-caret-position="238">
+              <caret line="47" column="53" selection-start-line="47" selection-start-column="53" selection-end-line="47" selection-end-column="53" />
               <folding>
                 <element signature="n#style#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
                 <element signature="n#style#0;n#div#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
                 <element signature="n#style#0;n#img#0;n#div#0;n#div#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
                 <element signature="n#style#0;n#div#1;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
-                <element signature="e#3543#3627#0#PHP" expanded="true" />
+                <element signature="e#3569#3653#0#PHP" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="loginform.php" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/loginform.php">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="17">
+              <caret line="1" column="24" selection-start-line="1" selection-start-column="24" selection-end-line="1" selection-end-column="24" />
+              <folding>
+                <element signature="n#style#0;n#form#1;n#div#0;n#div#0;n#div#1;n#div#0;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#form#2;n#div#0;n#div#0;n#div#1;n#div#0;n#!!top" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -54,11 +64,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="tempindex.css" pinned="false" current-in-tab="true">
+      <file leaf-file-name="tempindex.css" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/css/tempindex.css">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="484">
-              <caret line="72" column="0" selection-start-line="72" selection-start-column="0" selection-end-line="72" selection-end-column="0" />
+            <state relative-caret-position="1071">
+              <caret line="63" column="1" selection-start-line="63" selection-start-column="1" selection-end-line="63" selection-end-column="1" />
               <folding />
             </state>
           </provider>
@@ -82,8 +92,8 @@
       <list>
         <option value="$PROJECT_DIR$/css/tempindex.css" />
         <option value="$PROJECT_DIR$/js/tempindex.js" />
-        <option value="$PROJECT_DIR$/tempindex.php" />
         <option value="$PROJECT_DIR$/loginform.php" />
+        <option value="$PROJECT_DIR$/tempindex.php" />
       </list>
     </option>
   </component>
@@ -234,7 +244,7 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1463771671855</updated>
-      <workItem from="1464171889356" duration="5532000" />
+      <workItem from="1464171889356" duration="6552000" />
     </task>
     <task id="LOCAL-00001" summary="updates to tempindex">
       <created>1464180047890</created>
@@ -243,11 +253,25 @@
       <option name="project" value="LOCAL" />
       <updated>1464180047890</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="xs column design">
+      <created>1464184268413</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1464184268413</updated>
+    </task>
+    <task id="LOCAL-00003" summary="xs column design">
+      <created>1464185156476</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1464185156476</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="5532000" />
+    <option name="totallyTimeSpent" value="6552000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
@@ -286,7 +310,8 @@
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="updates to tempindex" />
-    <option name="LAST_COMMIT_MESSAGE" value="updates to tempindex" />
+    <MESSAGE value="xs column design" />
+    <option name="LAST_COMMIT_MESSAGE" value="xs column design" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager />
@@ -343,6 +368,14 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/css/tempindex.css">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1071">
+          <caret line="63" column="1" selection-start-line="63" selection-start-column="1" selection-end-line="63" selection-end-column="1" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/js/tempindex.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="85">
@@ -351,37 +384,28 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/tempindex.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="416">
-          <caret line="71" column="58" selection-start-line="71" selection-start-column="58" selection-end-line="71" selection-end-column="58" />
-          <folding>
-            <element signature="n#style#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#div#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#img#0;n#div#0;n#div#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#div#1;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
-            <element signature="e#3543#3627#0#PHP" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/loginform.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="580">
-          <caret line="71" column="55" selection-start-line="71" selection-start-column="55" selection-end-line="71" selection-end-column="55" />
+        <state relative-caret-position="17">
+          <caret line="1" column="24" selection-start-line="1" selection-start-column="24" selection-end-line="1" selection-end-column="24" />
           <folding>
-            <element signature="n#style#0;n#form#0;n#div#0;n#div#0;n#div#1;n#div#0;n#!!top" expanded="true" />
             <element signature="n#style#0;n#form#1;n#div#0;n#div#0;n#div#1;n#div#0;n#!!top" expanded="true" />
             <element signature="n#style#0;n#form#2;n#div#0;n#div#0;n#div#1;n#div#0;n#!!top" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/css/tempindex.css">
+    <entry file="file://$PROJECT_DIR$/tempindex.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="484">
-          <caret line="72" column="0" selection-start-line="72" selection-start-column="0" selection-end-line="72" selection-end-column="0" />
-          <folding />
+        <state relative-caret-position="238">
+          <caret line="47" column="53" selection-start-line="47" selection-start-column="53" selection-end-line="47" selection-end-column="53" />
+          <folding>
+            <element signature="n#style#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#div#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#img#0;n#div#0;n#div#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#div#1;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
+            <element signature="e#3569#3653#0#PHP" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
