@@ -11,12 +11,9 @@
     <link href="css/bootstrap.min.css" rel="stylesheet">
     <link href="css/landing-page.css" rel="stylesheet">
     <link href="css/main.css" rel="stylesheet">
-
+    <link href="css/navbar.css" rel="stylesheet">
+    <link href="css/tempdashboard.css" rel="stylesheet">
     <link href="css/font-awesome.min.css" rel="stylesheet" type="text/css">
-
-    <script src="js/jquery.js"></script>
-    <script src="js/tether.min.js"></script>
-    <script src="js/bootstrap.min.js"></script>
 
     <link rel="apple-touch-icon" sizes="57x57" href="/img/favicon/apple-touch-icon-57x57.png">
     <link rel="apple-touch-icon" sizes="60x60" href="/img/favicon/apple-touch-icon-60x60.png">
@@ -40,73 +37,97 @@
 
 </head>
 
-<link href="css/navbar.css" rel="stylesheet">
-
-<nav class="navbar navbar-fixed-top navbar-light bg-faded topnav" role="navigation" style="padding: 0px;">
-    <div class="container topnav">
-        <a class="navbar-brand" style="padding: 10px;" href="/"><div id="img" style="height: 30px;"></div></a>
-        <ul class="nav navbar-nav navbar-right" style="padding: 10px;">
-            <a class="nav-item nav-link" href="#" >Login</a>
-            <span class="fa fa-gear"></span>
-<!--            --><?php
-//            if (isset($_SESSION["token"]))
-//                $user = $db->getLoggedinUser($_SESSION["token"]);
-//            else
-//                $user = false;
-//
-//            if($user == false) :
-//                ?>
-<!--                <li>-->
-<!--                    <a href="login.php">Login</a>-->
-<!--                </li>-->
-<!--            --><?php //else : ?>
-<!--                <li>-->
-<!--                    <a style="color: #777">Logged in as --><?//= $user; ?><!-- </a>-->
-<!--                </li>-->
-<!--                <li>-->
-<!--                    <a href="dashboard.php">Dashboard</a>-->
-<!--                </li>-->
-<!--                <li>-->
-<!--                    <a href="logout.php">Logout</a>-->
-<!--                </li>-->
-<!--            --><?php //endif; ?>
-        </ul>
-    </div>
-    <!-- /.container -->
-</nav>
-
-<head>
-<title>Dashboard</title>
-
-</head>
 
 <body>
+<div id="maincontainer">
+    <nav class="navbar navbar-fixed-top navbar-light bg-faded topnav" role="navigation" style="padding: 0px;">
+        <div class="container topnav">
+            <a class="navbar-brand" style="padding: 10px;" href="/"><div id="img" style="height: 30px;"></div></a>
+            <ul class="nav navbar-nav navbar-right" style="padding: 10px; ">
+                <li><a class="nav-item nav-link" href="#" style="padding-right: 10px;">Login</a></li>
+                <li class="nav-item btn-group">
+                    <a class="dropdown-toggle nav-link" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <span class="fa fa-gear"></span> <span class="caret"></span>
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="dropdownMenu1" style="right: 0; left: auto;">
+                        <a class="dropdown-item" href="#">Action</a>
+                        <a class="dropdown-item" href="#">Another action</a>
+                        <a class="dropdown-item" href="#">Something else here</a>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </nav>
 
-<div class="container" style="margin-top: 70px;">
+    <div class="container" style="margin-top: 70px;">
 
-    <div class="col-xs-6">
-        <h1>Dashboard</h1>
+        <div class="col-xs-6">
+            <h1>Dashboard</h1>
+        </div>
+        <div class="col-xs-6" style="text-align: right; font-size: 30px;">
+            <p>
+                <a href="#createDomainModal" data-toggle="modal">
+                    <span class="fa fa-plus" style="color: black;"></span>
+                </a>
+            </p>
+        </div>
+
+        <div class="col-xs-12">
+            <table style="width: 100%;">
+                <tr style="text-align: center">
+                    <td style="padding: 10px;"><img src="img/favicon/favicon-16x16.png"/> </td>
+                    <td style="padding: 10px;">facebook.com</td>
+                    <td style="width: 100%"><input type="text" style="width: 100%"/></td>
+                    <td style="padding: 10px">
+                        <span class="fa fa-check" style="color: black;"></span>
+                    </td>
+                    <td style="padding-right: 10px;">
+                        <span class="fa fa-minus" style="color: black;"></span>
+                    </td>
+                </tr>
+            </table>
+        </div>
+
     </div>
-    <div class="col-xs-6" style="text-align: right; font-size: 30px;">
-        <p>
-            <a href="#">
-                <span class="fa fa-plus" style="color: black;"></span>
-            </a>
-        </p>
-    </div>
-
-    <div class="col-xs-12">
-        <table style="width: 100%;">
-            <tr style="text-align: center">
-                <td><img src="img/favicon/favicon-16x16.png"/> </td>
-                <td>facebook.com</td>
-                <td><input type="text"/></td>
-                <td><span class="fa fa-minus" style="color: black;"></span></td>
-            </tr>
-        </table>
-    </div>
-
-
 </div>
+
+
+<div class="modal fade" id="createDomainModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="exampleModalLabel">Create domain</h4>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="form-group">
+                        <label for="domain" class="control-label">Domain</label>
+                        <input type="url" class="form-control" id="domain">
+                    </div>
+                    <div class="form-group">
+                        <label for="password" class="control-label">Password</label>
+                        <input type="password" class="form-control" id="password">
+                    </div>
+                    <div class="form-group">
+                        <label for="confirmpassword" class="control-label">Confirm Password</label>
+                        <input type="password" class="form-control" id="confirmpassword">
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary">Submit</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+<script src="js/jquery.js"></script>
+<script src="js/tether.min.js"></script>
+<script src="js/bootstrap.min.js"></script>
+<script src="js/tempdashboard.js"></script>
 
 </body>

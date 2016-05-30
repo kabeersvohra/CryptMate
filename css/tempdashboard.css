@@ -1,0 +1,5 @@
+.blur {
+    -webkit-filter: blur(5px) grayscale(50%);
+}
+
+
