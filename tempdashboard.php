@@ -39,20 +39,20 @@
 
 
 <body>
-<div id="maincontainer">
-    <nav class="navbar navbar-fixed-top navbar-light bg-faded topnav" role="navigation" style="padding: 0px;">
+<div id="main">
+    <nav class="navbar navbar-fixed-top navbar-light bg-faded topnav" role="navigation" style="padding: 0;">
         <div class="container topnav">
             <a class="navbar-brand" style="padding: 10px;" href="/"><div id="img" style="height: 30px;"></div></a>
             <ul class="nav navbar-nav navbar-right" style="padding: 10px; ">
-                <li><a class="nav-item nav-link" href="#" style="padding-right: 10px;">Login</a></li>
+                <li><a class="nav-item nav-link" style="padding-right: 10px;">Login</a></li>
                 <li class="nav-item btn-group">
                     <a class="dropdown-toggle nav-link" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         <span class="fa fa-gear"></span> <span class="caret"></span>
                     </a>
-                    <div class="dropdown-menu" aria-labelledby="dropdownMenu1" style="right: 0; left: auto;">
-                        <a class="dropdown-item" href="#">Action</a>
-                        <a class="dropdown-item" href="#">Another action</a>
-                        <a class="dropdown-item" href="#">Something else here</a>
+                    <div class="dropdown-menu" style="right: 0; left: auto;">
+                        <a class="dropdown-item" href="#">Manage Subscription</a>
+                        <a class="dropdown-item" href="#">Manage Account</a>
+                        <a class="dropdown-item" href="#">Delete Account</a>
                     </div>
                 </li>
             </ul>
@@ -73,19 +73,26 @@
         </div>
 
         <div class="col-xs-12">
-            <table style="width: 100%;">
-                <tr style="text-align: center">
-                    <td style="padding: 10px;"><img src="img/favicon/favicon-16x16.png"/> </td>
-                    <td style="padding: 10px;">facebook.com</td>
-                    <td style="width: 100%"><input type="text" style="width: 100%"/></td>
-                    <td style="padding: 10px">
-                        <span class="fa fa-check" style="color: black;"></span>
-                    </td>
-                    <td style="padding-right: 10px;">
-                        <span class="fa fa-minus" style="color: black;"></span>
-                    </td>
-                </tr>
-            </table>
+
+                <?php $array = array("facebook.com", "google.com", "how-to-geek.com");
+                foreach($array as $domain){ ?>
+                    <table style="width: 100%; text-align: center;">
+                        <td style="padding: 10px;"><img src="http://www.google.com/s2/favicons?domain=<?php echo $domain; ?>"/> </td>
+                        <td style="padding: 10px; text-align: left; width: 100%"><?php echo $domain; ?></td>
+                        <td style="padding-right: 10px">
+                            <span class="fa fa-pencil" style="color: black; "></span>
+                        </td>
+                        <td style="padding-right: 10px;">
+                            <span class="fa fa-trash" style="color: black;"></span>
+                        </td>
+                    </table>
+                    <table style="width: 100%; text-align: center;">
+                        <td style="width: 100%; padding-left: 10px;"><input type="password" style="width: 100%; padding-left: 10px;" placeholder="Enter password"/></td>
+                        <td style="padding: 10px">
+                            <span class="fa fa-arrow-right" style="color: black;"></span>
+                        </td>
+                    </table>
+                <?php } ?>
         </div>
 
     </div>
@@ -97,7 +104,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title" id="exampleModalLabel">Create domain</h4>
+                <h4 class="modal-title" id="exampleModalLabel">Add domain</h4>
             </div>
             <div class="modal-body">
                 <form>
