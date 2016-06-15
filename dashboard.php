@@ -80,7 +80,7 @@
                 <?php $array = array("facebook.com", "google.com", "how-to-geek.com", "facebook.com", "google.com", "how-to-geek.com", "facebook.com", "google.com", "how-to-geek.com");
                 foreach($array as $domain){ ?>
                     <table style="width: 100%; text-align: center;">
-                        <td style="padding: 10px;"><img src="http://www.google.com/s2/favicons?domain=<?php echo $domain; ?>"/> </td>
+                        <td style="padding: 10px;"><img src="https://www.google.com/s2/favicons?domain=<?php echo $domain; ?>"/> </td>
                         <td style="padding: 10px; text-align: left; width: 100%"><?php echo $domain; ?></td>
                         <td style="padding-right: 10px">
                             <span class="fa fa-pencil" style="color: black; "></span>
