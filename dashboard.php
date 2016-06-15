@@ -38,7 +38,7 @@
 </head>
 
 <?php
-    $loggedin = false;
+    $loggedin = true;
 ?>
 
 <body>
