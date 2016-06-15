@@ -1,221 +1,157 @@
-<?php
-/**
- * Created by PhpStorm.
- * User: Kabeer
- * Date: 10/07/2015
- * Time: 17:54
- */
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/html">
+<head>
 
-include_once $_SERVER['DOCUMENT_ROOT'] . '/headers/header.php';
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
 
-?>
-<title>Dashboard</title>
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="css/landing-page.css" rel="stylesheet">
+    <link href="css/main.css" rel="stylesheet">
+    <link href="css/navbar.css" rel="stylesheet">
+    <link href="css/dashboard.css" rel="stylesheet">
+    <link href="css/font-awesome.min.css" rel="stylesheet" type="text/css">
 
-<link href="css/dashboard.css" rel="stylesheet">
+    <link rel="apple-touch-icon" sizes="57x57" href="/img/favicon/apple-touch-icon-57x57.png">
+    <link rel="apple-touch-icon" sizes="60x60" href="/img/favicon/apple-touch-icon-60x60.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="/img/favicon/apple-touch-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon/apple-touch-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="/img/favicon/apple-touch-icon-114x114.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="/img/favicon/apple-touch-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="/img/favicon/apple-touch-icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="/img/favicon/apple-touch-icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/img/favicon/apple-touch-icon-180x180.png">
+    <link rel="icon" type="image/png" href="/img/favicon/favicon-32x32.png" sizes="32x32">
+    <link rel="icon" type="image/png" href="/img/favicon/android-chrome-192x192.png" sizes="192x192">
+    <link rel="icon" type="image/png" href="/img/favicon/favicon-96x96.png" sizes="96x96">
+    <link rel="icon" type="image/png" href="/img/favicon/favicon-16x16.png" sizes="16x16">
+    <link rel="manifest" href="/img/favicon/manifest.json">
+    <link rel="shortcut icon" href="/img/favicon/favicon.ico">
+    <meta name="msapplication-TileColor" content="#2b5797">
+    <meta name="msapplication-TileImage" content="/img/favicon/mstile-144x144.png">
+    <meta name="msapplication-config" content="/img/favicon/browserconfig.xml">
+    <meta name="theme-color" content="#ffffff">
 
 </head>
 
+<?php
+    $loggedin = false;
+?>
+
 <body>
-
-<div class="container-fluid">
-
-        <?php
-            if($db->getSubscriptionEnded($_SESSION["token"]))
-            {
-                echo "<div class='row' style='padding-top: 20px;'>";
-                include_once $_SERVER['DOCUMENT_ROOT'] . '/dashboard/managesubscription.php';
-            }
-            else
-            {
-        ?>
-hnb 
-        <div class="row">
-            <div class="col-sm-3 col-md-2 sidebar">
-                <ul class="nav nav-sidebar">
-                    <li id="overviewli" class="active"><a href="#overview" id="overview">Overview</a></li>
-                    <li id="createdomainli"><a href="#createdomain" id="createdomain">Create Domain</a></li>
-                    <li id="deletedomainli"><a href="#deletedomain" id="deletedomain">Delete Domain</a></li>
-                    <li id="genpasswordli"><a href="#generatepassword" id="generatepassword">Generate Password</a></li>
-                    <li id="managesubscriptionli"><a href="#managesubscription" id="managesubscription">Manage Subscription</a></li>
-                    <li id="changeemailli"><a href="#changeemail" id="changeemail">Change Email</a></li>
-                    <li id="changepasswordli"><a href="#changepassword" id="changepassword">Change Password</a></li>
-                    <li id="deleteaccountli"><a href="#deleteaccount" id="deleteaccount">Delete Account</a></li>
-                </ul>
-            </div>
-            <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main" id="main">
-                     <h1 class="page-header" style="text-align: center">Dashboard</h1>
-
-                <div class="row placeholders">
-                    <div class="col-xs-6 col-sm-3 placeholder">
-                        <div class="row" style="text-align: center">
-                            <img src="img/domain.png" class="img-responsive col-xs-8 col-xs-offset-2" alt="Domains">
-                        </div>
-                        <h4>0</h4>
-                        <span class="text-muted">Number of Domains</span>
+<div id="main">
+    <nav class="navbar navbar-fixed-top navbar-light bg-faded topnav" role="navigation" style="padding: 0;">
+        <div class="container topnav">
+            <a class="navbar-brand" style="padding: 10px;" href="/"><div id="img" style="height: 30px;"></div></a>
+            <ul class="nav navbar-nav navbar-right" style="padding: 10px; ">
+                <li><a class="nav-item nav-link" style="padding-right: 10px;">Login</a></li>
+                <li class="nav-item btn-group">
+                    <a class="dropdown-toggle nav-link" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <span class="fa fa-gear"></span> <span class="caret"></span>
+                    </a>
+                    <div class="dropdown-menu" style="right: 0; left: auto;">
+                        <a class="dropdown-item" href="#">Manage Subscription</a>
+                        <a class="dropdown-item" href="#">Manage Account</a>
+                        <a class="dropdown-item" href="#">Delete Account</a>
                     </div>
-                    <div class="col-xs-6 col-sm-3 placeholder">
-                        <div class="row" style="text-align: center">
-                            <img src="img/password.png" class="img-responsive col-xs-8 col-xs-offset-2" alt="Passwords">
-                        </div>
-                        <h4>0</h4>
-                        <span class="text-muted">Number of Passwords</span>
-                    </div>
-                </div>
-            </div>
+                </li>
+            </ul>
+        </div>
+    </nav>
 
-            <script>
+    <div class="container" style="margin-top: 70px;">
 
-                function overviewClick() {
-                    $("#main").load('dashboard/overview.php');
-                    $("#createdomainli").removeClass('active');
-                    $("#deletedomainli").removeClass('active');
-                    $("#genpasswordli").removeClass('active');
-                    $("#managesubscriptionli").removeClass('active');
-                    $("#deleteaccountli").removeClass('active');
-                    $("#changepasswordli").removeClass('active');
-                    $("#changeemailli").removeClass('active');
-                    $("#overviewli").addClass('active');
-                    document.title = "Dashboard";
-                }
+        <div class="col-xs-6">
+            <h1>Dashboard</h1>
+        </div>
+        <div class="col-xs-6" style="text-align: right; font-size: 30px;">
+            <p>
+                <a href="#createDomainModal" data-toggle="modal">
+                    <span class="fa fa-plus" style="color: black;"></span>
+                </a>
+            </p>
+        </div>
 
-                function createDomainClick() {
-                    $("#main").load('dashboard/createdomain.php');
-                    $("#overviewli").removeClass('active');
-                    $("#deletedomainli").removeClass('active');
-                    $("#genpasswordli").removeClass('active');
-                    $("#managesubscriptionli").removeClass('active');
-                    $("#deleteaccountli").removeClass('active');
-                    $("#changepasswordli").removeClass('active');
-                    $("#changeemailli").removeClass('active');
-                    $("#createdomainli").addClass('active');
-                    document.title = "Create Domain";
-                }
+        <div class="col-xs-12">
 
-                function deleteDomainClick() {
-                    $("#main").load('dashboard/deletedomain.php');
-                    $("#overviewli").removeClass('active');
-                    $("#createdomainli").removeClass('active');
-                    $("#genpasswordli").removeClass('active');
-                    $("#managesubscriptionli").removeClass('active');
-                    $("#deleteaccountli").removeClass('active');
-                    $("#changepasswordli").removeClass('active');
-                    $("#changeemailli").removeClass('active');
-                    $("#deletedomainli").addClass('active');
-                    document.title = "Delete Domain";
-                }
+                <?php $array = array("facebook.com", "google.com", "how-to-geek.com", "facebook.com", "google.com", "how-to-geek.com", "facebook.com", "google.com", "how-to-geek.com");
+                foreach($array as $domain){ ?>
+                    <table style="width: 100%; text-align: center;">
+                        <td style="padding: 10px;"><img src="http://www.google.com/s2/favicons?domain=<?php echo $domain; ?>"/> </td>
+                        <td style="padding: 10px; text-align: left; width: 100%"><?php echo $domain; ?></td>
+                        <td style="padding-right: 10px">
+                            <span class="fa fa-pencil" style="color: black; "></span>
+                        </td>
+                        <td style="padding-right: 10px;">
+                            <span class="fa fa-trash" style="color: black;"></span>
+                        </td>
+                    </table>
+                    <table style="width: 100%; text-align: center;">
+                        <td style="width: 100%; padding-left: 10px;"><input type="password" style="width: 100%; padding-left: 10px;" placeholder="Enter password"/></td>
+                        <td style="padding: 10px">
+                            <span class="fa fa-arrow-right" style="color: black;"></span>
+                        </td>
+                    </table>
+                <?php } ?>
+        </div>
 
-                function generatePasswordClick() {
-                    $("#main").load('dashboard/generatepassword.php');
-                    $("#overviewli").removeClass('active');
-                    $("#createdomainli").removeClass('active');
-                    $("#deletedomainli").removeClass('active');
-                    $("#deleteaccountli").removeClass('active');
-                    $("#managesubscriptionli").removeClass('active');
-                    $("#changepasswordli").removeClass('active');
-                    $("#changeemailli").removeClass('active');
-                    $("#genpasswordli").addClass('active');
-                    document.title = "Generate Password";
-                }
-
-                function changeEmailClick() {
-                    $("#main").load('dashboard/changeemail.php');
-                    $("#overviewli").removeClass('active');
-                    $("#createdomainli").removeClass('active');
-                    $("#deletedomainli").removeClass('active');
-                    $("#genpasswordli").removeClass('active');
-                    $("#managesubscriptionli").removeClass('active');
-                    $("#changepasswordli").removeClass('active');
-                    $("#deleteaccountli").removeClass('active');
-                    $("#changeemailli").addClass('active');
-                    document.title = "Change Email";
-                }
-
-                function deleteAccountClick() {
-                    $("#main").load('dashboard/deleteaccount.php');
-                    $("#overviewli").removeClass('active');
-                    $("#createdomainli").removeClass('active');
-                    $("#deletedomainli").removeClass('active');
-                    $("#genpasswordli").removeClass('active');
-                    $("#managesubscriptionli").removeClass('active');
-                    $("#changeemailli").removeClass('active');
-                    $("#changepasswordli").removeClass('active');
-                    $("#deleteaccountli").addClass('active');
-                    document.title = "Delete Account";
-                }
-
-                function manageSubscriptionClick() {
-                    $("#main").load('dashboard/managesubscription.php');
-                    $("#overviewli").removeClass('active');
-                    $("#createdomainli").removeClass('active');
-                    $("#deletedomainli").removeClass('active');
-                    $("#genpasswordli").removeClass('active');
-                    $("#changeemailli").removeClass('active');
-                    $("#changepasswordli").removeClass('active');
-                    $("#deleteaccountli").removeClass('active');
-                    $("#managesubscriptionli").addClass('active');
-                    document.title = "Manage Subscription";
-                }
-
-                function changePasswordClick() {
-                    $("#main").load('dashboard/changepassword.php');
-                    $("#overviewli").removeClass('active');
-                    $("#createdomainli").removeClass('active');
-                    $("#deletedomainli").removeClass('active');
-                    $("#genpasswordli").removeClass('active');
-                    $("#managesubscriptionli").removeClass('active');
-                    $("#changeemailli").removeClass('active');
-                    $("#deleteaccountli").removeClass('active');
-                    $("#changepasswordli").addClass('active');
-                    document.title = "Change Password";
-                }
-
-                $(window).bind("load", function() {
-                    if(window.location.hash)
-                    {
-                        var hash = window.location.hash.substring(1);
-                        switch (hash) {
-                            case "overview":
-                                overviewClick();
-                                break;
-                            case "createdomain":
-                                createDomainClick();
-                                break;
-                            case "deletedomain":
-                                deleteDomainClick();
-                                break;
-                            case "generatepassword":
-                                generatePasswordClick();
-                                break;
-                            case "changepassword":
-                                changePasswordClick();
-                                break;
-                            case "changeemail":
-                                changeEmailClick();
-                                break;
-                            case "deleteaccount":
-                                deleteAccountClick();
-                                break;
-                            case "managesubscription":
-                                manageSubscriptionClick();
-                                break;
-                            default:
-                                break;
-                        }
-                    }
-
-                    $("#overview").click(overviewClick);
-                    $("#createdomain").click(createDomainClick);
-                    $("#deletedomain").click(deleteDomainClick);
-                    $("#generatepassword").click(generatePasswordClick);
-                    $("#managesubscription").click(manageSubscriptionClick);
-                    $("#deleteaccount").click(deleteAccountClick);
-                    $("#changeemail").click(changeEmailClick);
-                    $("#changepassword").click(changePasswordClick);
-
-                });
-            </script>
-        <?php } ?>
     </div>
 </div>
+
+
+<div class="modal fade" id="createDomainModal" tabindex="-1" role="dialog" aria-labelledby="createDomainModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="exampleModalLabel">Add domain</h4>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="form-group">
+                        <label for="domain" class="control-label">Domain</label>
+                        <input type="url" class="form-control" id="domain">
+                    </div>
+                    <div class="form-group">
+                        <label for="password" class="control-label">Password</label>
+                        <input type="password" class="form-control" id="password">
+                    </div>
+                    <div class="form-group">
+                        <label for="confirmpassword" class="control-label">Confirm Password</label>
+                        <input type="password" class="form-control" id="confirmpassword">
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary">Submit</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<?php if (!$loggedin) { ?>
+
+    <div class="modal" id="logInModal" tabindex="-1" role="dialog" aria-labelledby="logInModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="logInModalLabel">Login</h4>
+                </div>
+                <div class="modal-body">
+                    <?php include_once "loginform.php" ?>
+                </div>
+            </div>
+        </div>
+    </div>
+
+<?php } ?>
+
+<script src="js/jquery.js"></script>
+<script src="js/tether.min.js"></script>
+<script src="js/bootstrap.min.js"></script>
+<script src="js/dashboard.js"></script>
 
 </body>
