@@ -2,11 +2,9 @@
 <html xmlns="http://www.w3.org/1999/html">
 <head>
 
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="">
-    <meta name="author" content="">
+    <?php include("headers/header.php") ?>
+
+    <title>Dashboard</title>
 
     <link href="css/bootstrap.min.css" rel="stylesheet">
     <link href="css/landing-page.css" rel="stylesheet">
@@ -15,30 +13,19 @@
     <link href="css/dashboard.css" rel="stylesheet">
     <link href="css/font-awesome.min.css" rel="stylesheet" type="text/css">
 
-    <link rel="apple-touch-icon" sizes="57x57" href="/img/favicon/apple-touch-icon-57x57.png">
-    <link rel="apple-touch-icon" sizes="60x60" href="/img/favicon/apple-touch-icon-60x60.png">
-    <link rel="apple-touch-icon" sizes="72x72" href="/img/favicon/apple-touch-icon-72x72.png">
-    <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon/apple-touch-icon-76x76.png">
-    <link rel="apple-touch-icon" sizes="114x114" href="/img/favicon/apple-touch-icon-114x114.png">
-    <link rel="apple-touch-icon" sizes="120x120" href="/img/favicon/apple-touch-icon-120x120.png">
-    <link rel="apple-touch-icon" sizes="144x144" href="/img/favicon/apple-touch-icon-144x144.png">
-    <link rel="apple-touch-icon" sizes="152x152" href="/img/favicon/apple-touch-icon-152x152.png">
-    <link rel="apple-touch-icon" sizes="180x180" href="/img/favicon/apple-touch-icon-180x180.png">
-    <link rel="icon" type="image/png" href="/img/favicon/favicon-32x32.png" sizes="32x32">
-    <link rel="icon" type="image/png" href="/img/favicon/android-chrome-192x192.png" sizes="192x192">
-    <link rel="icon" type="image/png" href="/img/favicon/favicon-96x96.png" sizes="96x96">
-    <link rel="icon" type="image/png" href="/img/favicon/favicon-16x16.png" sizes="16x16">
-    <link rel="manifest" href="/img/favicon/manifest.json">
-    <link rel="shortcut icon" href="/img/favicon/favicon.ico">
-    <meta name="msapplication-TileColor" content="#2b5797">
-    <meta name="msapplication-TileImage" content="/img/favicon/mstile-144x144.png">
-    <meta name="msapplication-config" content="/img/favicon/browserconfig.xml">
-    <meta name="theme-color" content="#ffffff">
-
 </head>
 
 <?php
+    session_start();
     $loggedin = true;
+    $username = "Login";
+    $domains = array("facebook.com", "google.com", "how-to-geek.com", "facebook.com", "google.com", "how-to-geek.com", "facebook.com", "google.com", "how-to-geek.com");
+
+    if (isset($_SESSION['token']))
+    {
+        $username = "KVohra95";
+        //$domains = getDomains;
+    }
 ?>
 
 <body>
@@ -69,7 +56,7 @@
         </div>
         <div class="col-xs-6" style="text-align: right; font-size: 30px;">
             <p>
-                <a href="#createDomainModal" data-toggle="modal">
+                <a href="#createDomainModal" data-toggle="modal" title="Add domain">
                     <span class="fa fa-plus" style="color: black;"></span>
                 </a>
             </p>
@@ -77,16 +64,19 @@
 
         <div class="col-xs-12">
 
-                <?php $array = array("facebook.com", "google.com", "how-to-geek.com", "facebook.com", "google.com", "how-to-geek.com", "facebook.com", "google.com", "how-to-geek.com");
-                foreach($array as $domain){ ?>
+                <?php
+                foreach($domains as $domain){ ?>
                     <table style="width: 100%; text-align: center;">
                         <td style="padding: 10px;"><img src="https://www.google.com/s2/favicons?domain=<?php echo $domain; ?>"/> </td>
                         <td style="padding: 10px; text-align: left; width: 100%"><?php echo $domain; ?></td>
                         <td style="padding-right: 10px">
-                            <span class="fa fa-pencil" style="color: black; "></span>
+                            <span title="Regenerate salt" class="fa fa-cogs" style="color: black; "></span>
+                        </td>
+                        <td style="padding-right: 10px">
+                            <span title="Edit domain" class="fa fa-pencil" style="color: black; "></span>
                         </td>
                         <td style="padding-right: 10px;">
-                            <span class="fa fa-trash" style="color: black;"></span>
+                            <span title="Delete domain" class="fa fa-trash" style="color: black;"></span>
                         </td>
                     </table>
                     <table style="width: 100%; text-align: center;">

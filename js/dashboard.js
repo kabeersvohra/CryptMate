@@ -1,17 +1,21 @@
-$('#createDomainModal').on('show.bs.modal', function (e) {
-    $('#main').addClass('blur');
+var modalSelector = $(".modal");
+var logInModalSelector = $("#logInModal");
+var mainSelector = $("#main");
+
+modalSelector.on('show.bs.modal', function () {
+    mainSelector.addClass('blur');
 });
 
-$('#createDomainModal').on('hide.bs.modal', function (e) {
-    $('#main').removeClass('blur');
+modalSelector.on('hide.bs.modal', function () {
+    mainSelector.removeClass('blur');
 });
 
-$('#logInModal').each(function () {
-    $('#logInModal').modal({
+logInModalSelector.each(function () {
+    logInModalSelector.modal({
         show: true,
         backdrop: 'static',
         keyboard: false
     });
-    $('#main').addClass('blur');
+    mainSelector.addClass('blur');
 });
 
