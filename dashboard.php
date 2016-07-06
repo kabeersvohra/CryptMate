@@ -8,7 +8,6 @@
 
     <link href="css/bootstrap.min.css" rel="stylesheet">
     <link href="css/landing-page.css" rel="stylesheet">
-    <link href="css/main.css" rel="stylesheet">
     <link href="css/navbar.css" rel="stylesheet">
     <link href="css/dashboard.css" rel="stylesheet">
     <link href="css/font-awesome.min.css" rel="stylesheet" type="text/css">
@@ -30,24 +29,8 @@
 
 <body>
 <div id="main">
-    <nav class="navbar navbar-fixed-top navbar-light bg-faded topnav" role="navigation" style="padding: 0;">
-        <div class="container topnav">
-            <a class="navbar-brand" style="padding: 10px;" href="/"><div id="img" style="height: 30px;"></div></a>
-            <ul class="nav navbar-nav navbar-right" style="padding: 10px; ">
-                <li><a class="nav-item nav-link" style="padding-right: 10px;">Login</a></li>
-                <li class="nav-item btn-group">
-                    <a class="dropdown-toggle nav-link" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        <span class="fa fa-gear"></span> <span class="caret"></span>
-                    </a>
-                    <div class="dropdown-menu" style="right: 0; left: auto;">
-                        <a class="dropdown-item" href="#">Manage Subscription</a>
-                        <a class="dropdown-item" href="#">Manage Account</a>
-                        <a class="dropdown-item" href="#">Delete Account</a>
-                    </div>
-                </li>
-            </ul>
-        </div>
-    </nav>
+
+    <?php include_once 'headers/navbar.php' ?>
 
     <div class="container" style="margin-top: 70px;">
 
@@ -117,6 +100,23 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-primary">Submit</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="deleteAccountModal" tabindex="-1" role="dialog" aria-labelledby="deleteAccountModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="deleteAccountModalLabel">Delete account</h4>
+            </div>
+            <div class="modal-body">
+                Are you sure you want to delete? For your security, the moment you press delete ALL of your data will be irrevocably deleted from our servers and the only way to start again would be to create a new account.
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary">Delete</button>
             </div>
         </div>
     </div>

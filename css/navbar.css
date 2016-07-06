@@ -6,6 +6,10 @@
     float: left !important;
 }
 
+.nav-link {
+    color: #5B5657 !important;
+}
+
 .navbar-nav.navbar-right:last-child {
     margin-right: -15px !important;
 }
