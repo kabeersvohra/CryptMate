@@ -10,13 +10,15 @@ if (!isset($_SESSION)) session_start();
 
 include_once 'database/connectdatabase.php';
 
+$_SESSION["token"] = "HCoUQ9yGbjSP4iyLLAClrXCVbh3Uc2ZHuds9cOFbVlROrdq2BScSDFDCKtkKl0iDbyBbc5cYgRCvUQmlwn2ZStpqMz2Xx0qyxSxxMxjQfKcXqo8NBYAhfQySdnFAkUWFAj3cFcRIKTv16qBvf1CkGY1JbuajeUOE3FExFl6f5o6YFvjIlLSPyJox4mH66lzXQ2klddq6rkTWD3uOCbr1IFnzQUuL7RyKIGWLJaFYkoLLh4pH3GxAaKZOvhnpYLXx";
+
 ?>
 
 <?php include("headers/header.php") ?>
 <link href="css/style.css" rel="stylesheet" type="text/css">
 <link href="css/font-awesome.min.css" rel="stylesheet" type="text/css">
 <link href="css/bootstrap.min.css" rel="stylesheet">
-    <link href="css/landing-page.css" rel="stylesheet">
+<link href="css/landing-page.css" rel="stylesheet">
 <link href="css/navbar.css" rel="stylesheet">
 
 <?php include_once 'headers/navbar.php' ?>
