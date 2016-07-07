@@ -23,6 +23,7 @@
     transition: margin-top 0.5s linear;
     position: relative;
     margin-right: 11px;
+    margin-top: 16px;
 }
 .name {
     color: #565656;

@@ -20,10 +20,19 @@ $_SESSION["token"] = "HCoUQ9yGbjSP4iyLLAClrXCVbh3Uc2ZHuds9cOFbVlROrdq2BScSDFDCKt
 <link href="css/bootstrap.min.css" rel="stylesheet">
 <link href="css/landing-page.css" rel="stylesheet">
 <link href="css/navbar.css" rel="stylesheet">
+<script type="text/javascript" src="https://js.stripe.com/v2/"></script>
+<script type="text/javascript">
+    Stripe.setPublishableKey('pk_test_iMSLKp40qU6IPtvS1mLtQEli');
+</script>
+<script type="text/javascript" src="js/subscription.js"></script>
+<script src="js/jquery.js"></script>
+<script src="js/tether.min.js"></script>
+<script src="js/bootstrap.min.js"></script>
+
 
 <?php include_once 'headers/navbar.php' ?>
 
-<div class="container" style="margin-top: 70px;">
+<div class="container" style="margin-top: 70px; text-align: center;">
 
     <div class="row">
         <?php
@@ -32,12 +41,12 @@ $_SESSION["token"] = "HCoUQ9yGbjSP4iyLLAClrXCVbh3Uc2ZHuds9cOFbVlROrdq2BScSDFDCKt
         else
             echo "<p>Subscription ends:</p>";
         ?>
-        <p><?= $db->getSubscriptionEnd($_SESSION["token"]) ?></p>
+        <p style='margin-bottom: 0;'><?= $db->getSubscriptionEnd($_SESSION["token"]) ?></p>
     </div>
     
     <div class="row options">
         <div class='wrapper'>
-            <div class='package col-sm-5 col-md-4 col-md-offset-2 col-sm-offset-1'>
+            <div class='package col-xs-8 col-xs-offset-2 col-sm-5 col-sm-offset-0 col-md-4 col-md-offset-2 col-sm-offset-1'>
                 <div class='name'>Monthly</div>
                 <div class='price month'>£3</div>
                 <div class='trial'>Free 30 day trial</div>
@@ -56,16 +65,11 @@ $_SESSION["token"] = "HCoUQ9yGbjSP4iyLLAClrXCVbh3Uc2ZHuds9cOFbVlROrdq2BScSDFDCKt
                     </li>
                 </ul>
                 <div style="text-align: center;">
-                   <form action="https://www.sandbox.paypal.com/cgi-bin/webscr" method="post" target="_top">
-                        <input type="hidden" name="cmd" value="_s-xclick">
-                        <input type="hidden" name="hosted_button_id" value="D5S4UG668P5P8">
-                        <input type="image" src="https://www.sandbox.paypal.com/en_US/GB/i/btn/btn_subscribeCC_LG.gif" border="0" name="submit" alt="PayPal – The safer, easier way to pay online.">
-                        <img alt="" border="0" src="https://www.sandbox.paypal.com/en_GB/i/scr/pixel.gif" width="1" height="1">
-                    </form>
+                    <button id="monthlySubscribe" type="button" data-toggle="modal" href="#paymentModal">sub</button>
                 </div>
             </div>
 
-            <div class='package col-sm-5 col-md-4'>
+            <div class='package col-xs-8 col-xs-offset-2 col-sm-5 col-sm-offset-0 col-md-4'>
                 <div class='name'>Yearly</div>
                 <div class='price year'>£30</div>
                 <div class='trial'>Free 30 day trial</div>
@@ -95,12 +99,43 @@ $_SESSION["token"] = "HCoUQ9yGbjSP4iyLLAClrXCVbh3Uc2ZHuds9cOFbVlROrdq2BScSDFDCKt
             </div>
         </div>
     </div>
+    
+    <div class="modal fade" id="paymentModal" tabindex="-1" role="dialog" aria-labelledby="paymentModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <form action="" method="POST" id="monthlySubscribe">
+                        <span class="payment-errors"></span>
 
-    <div class="row" style="padding-top: 10px;">
-        <p>You can unsubscribe at any time. If you choose to unsubscribe you will be able to use your account until the subscription ends. To unsubscribe to monthy or yearly plans please click the button below:</p>
-        <A HREF="https://www.paypal.com/cgi-bin/webscr?cmd=_subscr-find&alias=F8VHSXJ66RVHG">
-            <IMG SRC="https://www.paypalobjects.com/en_GB/i/btn/btn_unsubscribe_LG.gif" BORDER="0">
-        </A>
-        <p>Please note that if you did not subscribe with a paypal account and you subscribed directly with a credit/debit card that you would need to call paypal to have the subscription cancelled.</p>
+                        <div class="form-row">
+                            <label>
+                                <span>Card Number</span>
+                                <input type="text" size="20" data-stripe="number">
+                            </label>
+                        </div>
+
+                        <div class="form-row">
+                            <label>
+                                <span>Expiration (MM/YY)</span>
+                                <input type="text" size="2" data-stripe="exp_month">
+                            </label>
+                            <span> / </span>
+                            <input type="text" size="2" data-stripe="exp_year">
+                        </div>
+
+                        <div class="form-row">
+                            <label>
+                                <span>CVC</span>
+                                <input type="text" size="4" data-stripe="cvc">
+                            </label>
+                        </div>
+                        <input type="submit" class="submit" value="Submit Payment">
+                    </form>
+                </div>
+
+            </div>
+
+        </div>
     </div>
+
 </div>
