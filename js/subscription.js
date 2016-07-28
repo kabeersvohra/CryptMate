@@ -1,32 +1,63 @@
-function stripeResponseHandler (status, response) {
-    // Grab the form
-    var $form = $('#monthlySubscribe');
+var form;
 
-    if (response.error) {
-        $form.find('.payment-errors').text(response.error.message);
-        $form.find('.submit').prop('disabled', false); // Re-enable submission
-    } else {
-        // Get token id
-        var token = response.id;
+$(document).ready(function (e) {
+    $('#checkout').submit(function (e) {
 
-        // Insert token id into form so it gets submitted to server
-        $form.append($('<input type="hidden" name="stripeToken">').val(token));
+        form = $(this);
 
-        // Submit form
-        $form.get(0).submit();
-    }
-}
+        // form.find('button').prop('disabled', true);
 
-$(function () {
-    var $form = $('#monthlySubscribe');
-    $form.submit(function (event) {
-        // Disable submit to prevent repeated clicks
-        $form.find('.submit').prop('disabled', true);
+        var number = form.find('#ccnumber').val();
+        var securitycode = form.find('#securitycode').val();
+        var exp = form.find('#expdate').val().split("/");
 
-        // Request token from stripe
-        Stripe.card.createToken($form, stripeResponseHandler);
-
-        // Prevent the form being submitted
+        Stripe.card.createToken({
+            number: number,
+            cvc: securitycode,
+            exp_month: exp[0],
+            exp_year: exp[1]
+        }, formSubmit);
         return false;
     });
 });
+
+function formSubmit (status, response) {
+    alert(status);
+    if(response.error) {
+        $('.message-wrapper').addClass('alert alert-danger').text(response.error.message);
+        form.find('button').prop('disabled', false);
+    }
+    else {
+        var token = response.id;
+        $.ajax({
+            url: '/processing/stripe.php',
+            type: 'POST',
+            data: {stripeToken: token},
+            success: stripeSuccess
+        });
+    }
+}
+
+function stripeSuccess(status, response) {
+    alert(status, response);
+    if (response.error) {
+        $('.message-wrapper').addClass('alert alert-danger').text(response.error);
+    }
+    else {
+        $.ajax({
+            type: "POST",
+            url: "/processing/stripe.php",
+            data: {stripeToken: token},
+            success: stripeResponseSuccess,
+            error: stripeResponseFail
+        });
+    }
+}
+
+function stripeResponseSuccess(data, status){
+    alert("Data: " + data + "\nStatus: " + status);
+}
+
+function stripeResponseFail(data, status) {
+    alert("Data: " + data + "\nStatus: " + status);
+}

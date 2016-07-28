@@ -1067,6 +1067,25 @@ CryptMate';
             return $result;
     }
 
+    public function getSubscriptionEndUnix($token)
+    {
+        $sql1 =
+            "SELECT UNIX_TIMESTAMP($this->key_subscriptionend)
+             FROM $this->table_user
+             WHERE $this->key_token = ?;";
+        $stmt1 = $this->connection->prepare($sql1);
+        $stmt1->bind_param("i", $token);
+        $stmt1->execute();
+        $stmt1->bind_result($subscriptionend);
+        $result = $stmt1->fetch();
+        $stmt1->close();
+
+        if ($result)
+            return $subscriptionend;
+        else
+            return $result;
+    }
+
     public function getSubscriptionEnded($token)
     {
         $sql1 =
@@ -1178,5 +1197,6 @@ CryptMate';
         }
         return $rand; // Return the random string
     }
+
 
 }

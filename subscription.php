@@ -8,31 +8,25 @@
 
 if (!isset($_SESSION)) session_start();
 
-include_once 'database/connectdatabase.php';
+include_once $_SERVER['DOCUMENT_ROOT'] . '/database/connectdatabase.php';
 
 $_SESSION["token"] = "HCoUQ9yGbjSP4iyLLAClrXCVbh3Uc2ZHuds9cOFbVlROrdq2BScSDFDCKtkKl0iDbyBbc5cYgRCvUQmlwn2ZStpqMz2Xx0qyxSxxMxjQfKcXqo8NBYAhfQySdnFAkUWFAj3cFcRIKTv16qBvf1CkGY1JbuajeUOE3FExFl6f5o6YFvjIlLSPyJox4mH66lzXQ2klddq6rkTWD3uOCbr1IFnzQUuL7RyKIGWLJaFYkoLLh4pH3GxAaKZOvhnpYLXx";
 
 ?>
+<head>
+    <?php include("headers/header.php") ?>
+    <link href="css/subscription.css" rel="stylesheet" type="text/css">
+    <link href="css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="css/landing-page.css" rel="stylesheet">
+    <link href="css/navbar.css" rel="stylesheet">
+</head>
 
-<?php include("headers/header.php") ?>
-<link href="css/style.css" rel="stylesheet" type="text/css">
-<link href="css/font-awesome.min.css" rel="stylesheet" type="text/css">
-<link href="css/bootstrap.min.css" rel="stylesheet">
-<link href="css/landing-page.css" rel="stylesheet">
-<link href="css/navbar.css" rel="stylesheet">
-<script type="text/javascript" src="https://js.stripe.com/v2/"></script>
-<script type="text/javascript">
-    Stripe.setPublishableKey('pk_test_iMSLKp40qU6IPtvS1mLtQEli');
-</script>
-<script type="text/javascript" src="js/subscription.js"></script>
-<script src="js/jquery.js"></script>
-<script src="js/tether.min.js"></script>
-<script src="js/bootstrap.min.js"></script>
 
 
 <?php include_once 'headers/navbar.php' ?>
 
-<div class="container" style="margin-top: 70px; text-align: center;">
+<div class="container" style="padding-top: 70px; text-align: center;">
 
     <div class="row">
         <?php
@@ -99,43 +93,59 @@ $_SESSION["token"] = "HCoUQ9yGbjSP4iyLLAClrXCVbh3Uc2ZHuds9cOFbVlROrdq2BScSDFDCKt
             </div>
         </div>
     </div>
-    
-    <div class="modal fade" id="paymentModal" tabindex="-1" role="dialog" aria-labelledby="paymentModalLabel">
+
+    <div class="modal fade" id="paymentModal" tabindex="-1" role="dialog" data-backdrop="static">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
-                <div class="modal-body">
-                    <form action="" method="POST" id="monthlySubscribe">
-                        <span class="payment-errors"></span>
+                <form action="" method="post" id="checkout">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title" align="center">Checkout</h4>
+                        <p align="center">CryptMate Monthly</p>
+                    </div>
+                    <div class="modal-body">
+                        <div class="message-wrapper"></div>
+                        <h1 align="center">£3</h1>
 
-                        <div class="form-row">
-                            <label>
-                                <span>Card Number</span>
-                                <input type="text" size="20" data-stripe="number">
-                            </label>
+                        <div class="form-group">
+                            <label>Name On Card</label>
+                            <input type="text" class="form-control" name="card_holder_name">
                         </div>
 
-                        <div class="form-row">
-                            <label>
-                                <span>Expiration (MM/YY)</span>
-                                <input type="text" size="2" data-stripe="exp_month">
-                            </label>
-                            <span> / </span>
-                            <input type="text" size="2" data-stripe="exp_year">
+                        <div class="form-group">
+                            <label for="ccnumber">Card Number</label>
+                            <input type="text" class="form-control" id="ccnumber">
                         </div>
 
-                        <div class="form-row">
-                            <label>
-                                <span>CVC</span>
-                                <input type="text" size="4" data-stripe="cvc">
-                            </label>
+                        <div class="form-group row">
+                            <div class="col-xs-6">
+                                <label>CVC</label>
+                                <input type="text" class="form-control" id="securitycode">
+                            </div>
+                            <div class="col-xs-6">
+                                <label>EXP (MM/YY)</label>
+                                <input type="text" class="form-control" id="expdate">
+                            </div>
                         </div>
-                        <input type="submit" class="submit" value="Submit Payment">
-                    </form>
-                </div>
 
+                        <div class="modal-footer">
+                            <button type="submit" class="btn btn-primary">Checkout</button>
+                        </div>
+
+                    </div>
+                </form>
             </div>
-
         </div>
     </div>
 
 </div>
+
+
+<script type="text/javascript" src="https://js.stripe.com/v2/"></script>
+<script type="text/javascript">
+    Stripe.setPublishableKey('pk_test_iMSLKp40qU6IPtvS1mLtQEli');
+</script>
+<script src="js/jquery.js"></script>
+<script src="js/subscription.js"></script>
+<script src="js/tether.min.js"></script>
+<script src="js/bootstrap.min.js"></script>
