@@ -12,13 +12,13 @@ $event_json = json_decode($input);
 $event_id = $event_json->id;
 $event = \Stripe\Event::retrieve($event_id);
 
-if ($event->type == 'invoice.payment_succeeded') {
-    email_invoice_receipt($event->data->object);
+if (isset($event->type) && $event->type == 'invoice.payment_succeeded') {
+    process_invoice_receipt($event->data->object);
 }
 
 http_response_code(200);
 
-function email_invoice_receipt($invoice) {
+function process_invoice_receipt($invoice) {
     $customerID = $invoice->customer;
     $charge = \Stripe\Charge::retrieve($invoice->charge);
     $amount = $charge->amount;
@@ -26,9 +26,11 @@ function email_invoice_receipt($invoice) {
 }
 
 function update_subscription_db($customerID, $amount) {
-    if ($amount == 300) {
-
-    } elseif ($amount == 3000) {
-
+    $monthlyCharge = 300;
+    $yearlyCharge = 3000;
+    if ($amount == $monthlyCharge) {
+        $db->addOneMonth($customerID);
+    } elseif ($amount == $yearlyCharge) {
+        $db->addOneYear($customerID);
     }
 }

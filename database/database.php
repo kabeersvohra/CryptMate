@@ -17,6 +17,7 @@ class database {
     private $table_user = "`user`";
     private $table_emailconfirmations = "`emailconfirmations`";
     private $table_transactions = "`transactions`";
+    private $table_stripe = "`Stripe`";
 
     private $key_id = "`ID`";
     private $key_name = "`Name`";
@@ -50,6 +51,8 @@ class database {
     private $key_recieveremail = "`RecieverEmail`";
     private $key_subscriberid = "`SubscriberID`";
     private $key_verified = "`Verified`";
+    private $key_customerid = "`CustomerID`";
+    private $key_plan = "`Plan`";
 
     private $cryptMateHashingAlgo = PASSWORD_DEFAULT;
     private $generateHashingAlgo = PASSWORD_BCRYPT;
@@ -1130,8 +1133,9 @@ CryptMate';
         $stmt1->close();
     }
 
-    public function addOneMonth($payer_token)
+    public function addOneMonth($customer_id)
     {
+        $payer_token = $this->getTokenFromCustomer($customer_id);
         if ($this->getSubscriptionEnded($payer_token))
             $sql1 =
                 "UPDATE $this->table_user
@@ -1149,8 +1153,9 @@ CryptMate';
         $stmt1->close();
     }
 
-    public function addOneYear($payer_token)
+    public function addOneYear($customer_id)
     {
+        $payer_token = $this->getTokenFromCustomer($customer_id);
         if ($this->getSubscriptionEnded($payer_token))
             $sql1 =
                 "UPDATE $this->table_user
@@ -1167,7 +1172,24 @@ CryptMate';
         $stmt1->close();
     }
 
-    private function randomString($length, $type = '') {
+    private function getTokenFromCustomer($customer_id)
+    {
+        $sql1 =
+            "SELECT $this->key_userid
+             FROM $this->table_stripe
+             WHERE $this->key_customerid = ?;";
+        $stmt1 = $this->connection->prepare($sql1);
+        $stmt1->bind_param("s", $customer_id);
+        $stmt1->execute();
+        $stmt1->bind_result($user_id);
+        $stmt1->fetch();
+        $stmt1->close();
+
+        return $user_id;
+    }
+
+    private function randomString($length, $type = '')
+    {
         // Select which type of characters you want in your random string
         switch($type) {
             case 'num':
@@ -1197,6 +1219,5 @@ CryptMate';
         }
         return $rand; // Return the random string
     }
-
 
 }
