@@ -16,34 +16,17 @@ $(document).ready(function (e) {
             cvc: securitycode,
             exp_month: exp[0],
             exp_year: exp[1]
-        }, formSubmit);
+        }, stripeSuccess);
         return false;
     });
 });
 
-function formSubmit (status, response) {
-    alert(status);
-    if(response.error) {
+function stripeSuccess(status, response) {
+    if (response.error) {
         $('.message-wrapper').addClass('alert alert-danger').text(response.error.message);
-        form.find('button').prop('disabled', false);
     }
     else {
         var token = response.id;
-        $.ajax({
-            url: '/processing/stripe.php',
-            type: 'POST',
-            data: {stripeToken: token},
-            success: stripeSuccess
-        });
-    }
-}
-
-function stripeSuccess(status, response) {
-    alert(status, response);
-    if (response.error) {
-        $('.message-wrapper').addClass('alert alert-danger').text(response.error);
-    }
-    else {
         $.ajax({
             type: "POST",
             url: "/processing/stripe.php",
