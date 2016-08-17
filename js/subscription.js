@@ -41,8 +41,12 @@ function stripeSuccess(status, response) {
 
 function stripeResponseSuccess(data, status){
     alert("Data: " + data + "\nStatus: " + status);
+    console.log(data);
+    console.log(status);
 }
 
 function stripeResponseFail(data, status) {
     alert("Data: " + data + "\nStatus: " + status);
+    console.log(data);
+    console.log(status);
 }
