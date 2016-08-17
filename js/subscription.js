@@ -30,7 +30,9 @@ function stripeSuccess(status, response) {
         $.ajax({
             type: "POST",
             url: "/processing/stripe.php",
-            data: {stripeToken: token},
+            data: {stripeToken: token,
+                stripePlan: "monthly",
+                subscribe: true},
             success: stripeResponseSuccess,
             error: stripeResponseFail
         });

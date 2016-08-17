@@ -5,11 +5,14 @@ if (!isset($_SESSION)) session_start();
 include_once $_SERVER['DOCUMENT_ROOT'] . '/database/connectdatabase.php';
 require_once $_SERVER['DOCUMENT_ROOT'] . '/processing/config.php';
 
-$stripeToken = $_POST['stripeToken'];
-$cryptmateToken = $_SESSION["token"];
-$stripePlan = $_POST['stripePlan'];
-$stripeCustomer = $_POST['stripeCustomer'];
-$subscribe = $_POST['subscribe'];
+// Either stripeToken, cryptmateToken, stripePlan and subscribe are set or
+// cryptmateToken, stripePlan, stripeCustomer and subscribe are set
+
+$stripeToken = $_POST["stripeToken"]; // Sometimes set
+$cryptmateToken = $_SESSION["token"]; // Always set
+$stripePlan = $_POST["stripePlan"]; // Always set
+$stripeCustomer = $_POST["stripeCustomer"]; // Sometimes set
+$subscribe = $_POST["subscribe"]; // Always set
 
 if (!isset($cryptmateToken))
     badRequest(new Exception("User is not logged in"));
