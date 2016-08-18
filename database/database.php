@@ -1188,14 +1188,14 @@ CryptMate';
         return $token;
     }
 
-    private function getUserIDFromCustomer($customer_id)
+    private function getUserIDFromToken($token)
     {
         $sql1 =
-            "SELECT $this->key_userid
-             FROM $this->table_stripe
-             WHERE $this->key_customerid = ?;";
+            "SELECT $this->key_id
+             FROM $this->table_user
+             WHERE $this->key_token = ?;";
         $stmt1 = $this->connection->prepare($sql1);
-        $stmt1->bind_param("s", $customer_id);
+        $stmt1->bind_param("s", $token);
         $stmt1->execute();
         $stmt1->bind_result($user_id);
         $stmt1->fetch();
@@ -1236,23 +1236,23 @@ CryptMate';
         return $rand; // Return the random string
     }
 
-    public function addStripeCustomerDetails($cryptmateToken, $stripeCustomer, $stripePlan)
+    public function addStripeCustomerDetails($token, $customerID, $plan)
     {
-        $user_id = $this->getUserIDFromCustomer($cryptmateToken);
+        $user_id = $this->getUserIDFromToken($token);
         $sql1 =
             "INSERT INTO $this->table_stripe
                 ($this->key_userid, $this->key_customerid, $this->key_plan)
              VALUES
                 (?, ?, ?);";
         $stmt1 = $this->connection->prepare($sql1);
-        $stmt1->bind_param("iss", $user_id, $stripeCustomer, $stripePlan);
+        $stmt1->bind_param("iss", $user_id, $customerID, $plan);
         $stmt1->execute();
         $stmt1->close();
     }
 
-    public function getStripeCustomerDetails($cryptmateToken)
+    public function getStripeCustomerDetails($token)
     {
-        $user_id = $this->getUserIDFromCustomer($cryptmateToken);
+        $user_id = $this->getUserIDFromToken($token);
         $sql1 =
             "SELECT $this->key_customerid
              FROM $this->table_stripe
