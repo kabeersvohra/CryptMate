@@ -1175,15 +1175,26 @@ CryptMate';
     private function getTokenFromCustomer($customer_id)
     {
         $sql1 =
-            "SELECT $this->key_token
+            "SELECT $this->key_userid
              FROM $this->table_stripe
              WHERE $this->key_customerid = ?;";
         $stmt1 = $this->connection->prepare($sql1);
         $stmt1->bind_param("s", $customer_id);
         $stmt1->execute();
-        $stmt1->bind_result($token);
+        $stmt1->bind_result($user_id);
         $stmt1->fetch();
         $stmt1->close();
+
+        $sql2 =
+            "SELECT $this->key_token
+             FROM $this->table_user
+             WHERE $this->key_id = ?;";
+        $stmt2 = $this->connection->prepare($sql2);
+        $stmt2->bind_param("s", $user_id);
+        $stmt2->execute();
+        $stmt2->bind_result($token);
+        $stmt2->fetch();
+        $stmt2->close();
 
         return $token;
     }

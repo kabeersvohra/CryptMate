@@ -9,14 +9,16 @@ require_once $_SERVER['DOCUMENT_ROOT'] . '/processing/config.php';
 $input = @file_get_contents("php://input");
 $event_json = json_decode($input);
 
-$event_id = $event_json->id;
-$event = \Stripe\Event::retrieve($event_id);
+if (isset($event_json)) {
+    $event_id = $event_json->id;
+    $event = \Stripe\Event::retrieve($event_id);
 
-if (isset($event->type) && $event->type == 'invoice.payment_succeeded') {
-    process_invoice_receipt($event->data->object);
+    if (isset($event->type) && $event->type == 'invoice.payment_succeeded') {
+        process_invoice_receipt($event->data->object);
+    }
+
+    http_response_code(200);
 }
-
-http_response_code(200);
 
 function process_invoice_receipt($invoice) {
     $customerID = $invoice->customer;
@@ -26,6 +28,7 @@ function process_invoice_receipt($invoice) {
 }
 
 function update_subscription_db($customerID, $amount) {
+    global $db;
     $monthlyCharge = 300;
     $yearlyCharge = 3000;
     if ($amount == $monthlyCharge) {

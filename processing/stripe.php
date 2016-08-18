@@ -50,7 +50,7 @@ function createCustomer($stripeToken, $stripePlan, $subscriptionEnd, $email) {
         $customer = \Stripe\Customer::create(array(
             "source" => $stripeToken,
             "plan" => $stripePlan,
-//            "trial_end" => $subscriptionEnd,
+            "trial_end" => $subscriptionEnd,
             "email" => $email
         ));
     } catch (Exception $e) {

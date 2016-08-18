@@ -23,7 +23,6 @@ $_SESSION["token"] = "HCoUQ9yGbjSP4iyLLAClrXCVbh3Uc2ZHuds9cOFbVlROrdq2BScSDFDCKt
 </head>
 
 
-
 <?php include_once 'headers/navbar.php' ?>
 
 <div class="container" style="padding-top: 70px; text-align: center;">
