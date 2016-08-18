@@ -17,7 +17,7 @@ class database {
     private $table_user = "`user`";
     private $table_emailconfirmations = "`emailconfirmations`";
     private $table_transactions = "`transactions`";
-    private $table_stripe = "`Stripe`";
+    private $table_stripe = "`stripe`";
 
     private $key_id = "`ID`";
     private $key_name = "`Name`";
