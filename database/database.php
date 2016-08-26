@@ -15,8 +15,7 @@ class database {
 
     private $table_keys = "`keys`";
     private $table_user = "`user`";
-    private $table_emailconfirmations = "`emailconfirmations`";
-    private $table_transactions = "`transactions`";
+    private $table_emailConfirmations = "`emailconfirmations`";
     private $table_stripe = "`stripe`";
 
     private $key_id = "`ID`";
@@ -26,32 +25,20 @@ class database {
     private $key_salt = "`Salt`";
     private $key_cost = "`Cost`";
     private $key_token = "`Token`";
-    private $key_userid = "`UserID`";
+    private $key_userID = "`UserID`";
     private $key_domain = "`Domain`";
-    private $key_emailhash = "`EmailHash`";
-    private $key_emailverification = "`EmailVerified`";
+    private $key_emailHash = "`EmailHash`";
+    private $key_emailVerification = "`EmailVerified`";
     private $key_email = "`Email`";
     private $key_email1 = "`Email1`";
     private $key_email2 = "`Email2`";
-    private $key_subscriptionend = "`SubscriptionEnd`";
-    private $key_passwordhash = "`PasswordHash`";
+    private $key_subscriptionEnd = "`SubscriptionEnd`";
+    private $key_passwordHash = "`PasswordHash`";
     private $key_hash1 = "`Hash1`";
     private $key_hash2 = "`Hash2`";
     private $key_verification1 = "`Verification1`";
     private $key_verification2 = "`Verification2`";
-    private $key_transactionid = "`TransactionID`";
-    private $key_transactiontype = "`TransactionType`";
-    private $key_paymentstatus = "`PaymentStatus`";
-    private $key_paymentamount = "`PaymentAmount`";
-    private $key_paymentcurrency = "`PaymentCurrency`";
-    private $key_paymentfee = "`PaymentFee`";
-    private $key_payeremail = "`PayerEmail`";
-    private $key_payername = "`PayerName`";
-    private $key_payertoken = "`PayerToken`";
-    private $key_recieveremail = "`RecieverEmail`";
-    private $key_subscriberid = "`SubscriberID`";
-    private $key_verified = "`Verified`";
-    private $key_customerid = "`CustomerID`";
+    private $key_customerID = "`CustomerID`";
     private $key_plan = "`Plan`";
 
     private $cryptMateHashingAlgo = PASSWORD_DEFAULT;
@@ -72,9 +59,7 @@ class database {
         {
             $this->connection = new mysqli($this->db_host,$this->db_user,$this->db_pass,$this->db_name);
             if(!($this->connection->connect_errno > 0))
-            {
                 $this->connected = true;
-            }
         }
     }
 
@@ -84,90 +69,67 @@ class database {
         {
             $this->connection = new mysqli($this->db_host,$this->db_user,$this->db_pass,$this->db_name);
             if($this->connection->connect_errno > 0)
-            {
                 return false;
-            }
             else
-            {
                 $this->connected = true;
                 return true;
-            }
         }
         else
-        {
             return true;
-        }
     }
 
 
     public function createUser($name, $username, $password, $email)
     {
-        $sql1 =
+        $query1 =
             "SELECT 1
              FROM $this->table_user
              WHERE $this->key_username = ?";
 
-        $stmt1 = $this->connection->prepare($sql1);
-        $stmt1->bind_param("s", $username);
-        $stmt1->execute();
-        $result = $stmt1->fetch();
-        $stmt1->close();
+        $successful = $this->queryWithoutReturningResult($query1, "s", array($username));
 
-        if ($result)
+        if ($successful)
         {
            return "username";
         }
 
-        $sql2 =
+        $query2 =
             "SELECT 1
              FROM $this->table_user
              WHERE $this->key_email = ?";
+        $successful = $this->queryWithoutReturningResult($query2, "s", array($email));
 
-        $stmt2 = $this->connection->prepare($sql2);
-        $stmt2->bind_param("s", $email);
-        $stmt2->execute();
-        $result = $stmt2->fetch();
-        $stmt2->close();
-
-        if ($result)
-        {
+        if ($successful)
             return "email";
-        }
 
-        $sql3 =
+        $query3 =
             "SELECT *
              FROM $this->table_user
              WHERE $this->key_token = ?;";
-        $stmt3 = $this->connection->prepare($sql3);
+
+        $token = null;
 
         while (true)
         {
             $token = $this->randomString(256);
-            $stmt3->bind_param("s", $token);
-            $stmt3->execute();
-            $result = $stmt3->fetch();
-            if (!$result) break;
+            $used = $this->queryWithoutReturningResult($query3, "s", array($token));
+            if (!$used) break;
         }
 
-        $stmt3->close();
+        $emailHash = $this->randomString(32);
+        $emailVerification = intval(false);
 
-        $emailhash = $this->randomString(32);
-        $emailverification = intval(false);
-
-        $this->sendEmailVerification($emailhash, $email, $name);
+        $this->sendEmailVerification($emailHash, $email, $name);
 
         $hash = password_hash($password, $this->cryptMateHashingAlgo);
 
-        $sql4 =
+        $query4 =
             "INSERT INTO $this->table_user ($this->key_name, $this->key_username, $this->key_hash,
-                         $this->key_token, $this->key_emailhash, $this->key_emailverification, $this->key_email,
-                         $this->key_subscriptionend)
+                         $this->key_token, $this->key_emailHash, $this->key_emailVerification, $this->key_email,
+                         $this->key_subscriptionEnd)
              VALUES (?, ?, ?, ?, ?, ?, ?, (NOW() + INTERVAL 1 MONTH));";
-
-        $stmt4 = $this->connection->prepare($sql4);
-        $stmt4->bind_param("sssssis", $name, $username, $hash, $token, $emailhash, $emailverification, $email);
-        $stmt4->execute();
-        $stmt4->close();
+        $this->queryWithoutReturningResult($query4, "sssssis",
+            array($name, $username, $hash, $token, $emailHash, $emailVerification, $email));
 
         return $token;
     }
@@ -236,28 +198,19 @@ CryptMate';
     {
         $verified = intval(true);
 
-        $sql1 =
+        $query1 =
             "SELECT *
              FROM $this->table_user
-             WHERE $this->key_email = ? AND $this->key_emailhash = ?;";
-
-        $stmt1 = $this->connection->prepare($sql1);
-        $stmt1->bind_param("ss", $email, $hash);
-        $stmt1->execute();
-        $result = $stmt1->fetch();
-        $stmt1->close();
+             WHERE $this->key_email = ? AND $this->key_emailHash = ?;";
+        $result = $this->queryWithoutReturningResult($query1, "ss", array($email, $hash));
 
         if ($result)
         {
-            $sql2 =
+            $query2 =
                 "UPDATE $this->table_user
-                 SET $this->key_emailverification = $verified
-                 WHERE $this->key_email = ? AND $this->key_emailhash = ?;";
-
-            $stmt2 = $this->connection->prepare($sql2);
-            $stmt2->bind_param("ss", $email, $hash);
-            $stmt2->execute();
-            $stmt2->close();
+                 SET $this->key_emailVerification = $verified
+                 WHERE $this->key_email = ? AND $this->key_emailHash = ?;";
+            $this->queryWithoutReturningResult($query2, "ss", array($email, $hash));
             return true;
         }
         else
@@ -269,56 +222,32 @@ CryptMate';
 
     public function verifyUser($username, $password)
     {
-
-        $sql =
-            "SELECT $this->key_hash, $this->key_token, $this->key_emailverification
+        $query =
+            "SELECT $this->key_hash, $this->key_token, $this->key_emailVerification
              FROM $this->table_user
              WHERE $this->key_username = ?;";
+        $result = $this->queryReturningResult($query, "s", array($username));
 
-
-        $stmt = $this->connection->prepare($sql);
-        $stmt->bind_param("s", $username);
-        $stmt->execute();
-        $stmt->bind_result($hash, $token, $emailverified);
-        $result = $stmt->fetch();
-        $stmt->close();
-        $emailverified = $emailverified == 1;
-
-        if (!$result)
+        if ($result == false)
             return "username";
-        elseif(!$emailverified)
+        elseif($result[2] == 0)
             return "unverified";
-        elseif (password_verify($password, $hash))
-            return $token;
+        elseif (password_verify($password, $result[0]))
+            return $result[1];
         else
             return "password";
     }
 
-    public function getLoggedinUser($token)
+    public function getLoggedInUser($token)
     {
-        $sql1 =
+        $query =
             "SELECT $this->key_username
              FROM $this->table_user
              WHERE $this->key_token = ?;";
-
-        $stmt1 = $this->connection->prepare($sql1);
-        $stmt1->bind_param("s", $token);
-        $stmt1->execute();
-        $stmt1->bind_result($username);
-        $result = $stmt1->fetch();
-        $stmt1->close();
-
-        if($result)
-        {
-            return $username;
-        }
-        else
-        {
-            return false;
-        }
+        return $this->queryReturningSingleResult($query, "s", array($token));
     }
 
-    public function createDomain ($token, $password, $subdomain, $hostname, $tld, $linkdomain)
+    public function createDomain ($token, $password, $subdomain, $hostname, $tld, $linkDomain)
     {
         if ($subdomain == "")
             $domain = "$hostname.$tld";
@@ -330,60 +259,42 @@ CryptMate';
         if (!filter_var(gethostbyname($domain), FILTER_VALIDATE_IP))
             return "domaininvalid";
 
-        $sql1 =
+        $query1 =
             "SELECT $this->key_id, $this->key_username
              FROM $this->table_user
              WHERE $this->key_token = ?;";
+        $userID = $this->queryReturningSingleResult($query1, "s", array($token));
 
-        $stmt1 = $this->connection->prepare($sql1);
-        $stmt1->bind_param("s", $token);
-        $stmt1->execute();
-        $stmt1->bind_result($userid, $username);
-        $result = $stmt1->fetch();
-        $stmt1->close();
-
-        if(!$result)
+        if($userID == false)
             return "tokenerror";
 
-        if ($linkdomain == "")
+        if ($linkDomain == "")
             $salt = $this->randomString(256);
         else
         {
-            $sql2 =
+            $query2 =
                 "SELECT $this->key_salt
                  FROM $this->table_keys
-                 WHERE $this->key_userid = ? AND $this->key_domain = ?;";
-            $stmt2 = $this->connection->prepare($sql2);
-            $stmt2->bind_param("is", $userid, $linkdomain);
-            $stmt2->execute();
-            $stmt2->bind_result($salt);
-            $stmt2->fetch();
-            $stmt2->close();
+                 WHERE $this->key_userID = ? AND $this->key_domain = ?;";
+            $salt = $this->queryReturningSingleResult($query2, "is", array($userID, $linkDomain));
         }
 
-        $sql3 =
+        $query3 =
             "SELECT 1
              FROM $this->table_keys
-             WHERE $this->key_userid = ? AND $this->key_domain = ?;";
-        $stmt3 = $this->connection->prepare($sql3);
-        $stmt3->bind_param("is", $userid, $domain);
-        $stmt3->execute();
-        $result = $stmt3->fetch();
-        $stmt3->close();
+             WHERE $this->key_userID = ? AND $this->key_domain = ?;";
+        $result = $this->queryWithoutReturningResult($query3, "is", array($userID, $domain));
 
         if($result)
             return "domainused";
 
-        $sql4 =
-            "INSERT INTO $this->table_keys ($this->key_userid, $this->key_domain, $this->key_salt, $this->key_cost)
+        $query4 =
+            "INSERT INTO $this->table_keys ($this->key_userID, $this->key_domain, $this->key_salt, $this->key_cost)
              VALUES (?, ?, ?, ?);";
+        $this->queryWithoutReturningResult($query4, "issi", array($userID, $domain, $salt, $this->cost));
 
-        $stmt4 = $this->connection->prepare($sql4);
-        $stmt4->bind_param("issi", $userid, $domain, $salt, $this->cost);
-        $stmt4->execute();
-        $stmt4->close();
-
-        return str_replace(array("'", "\""), "!", password_hash($password, $this->generateHashingAlgo, [$salt, $this->cost]));
+        return str_replace(array("'", "\""), "!", password_hash($password, $this->generateHashingAlgo,
+            [$salt, $this->cost]));
     }
 
 
@@ -394,227 +305,145 @@ CryptMate';
         if (!filter_var(gethostbyname($domain), FILTER_VALIDATE_IP))
             return "domaininvalid";
 
-        $sql1 =
-            "SELECT $this->key_id, $this->key_username
+        $query1 =
+            "SELECT $this->key_id
              FROM $this->table_user
              WHERE $this->key_token = ?;";
+        $userID = $this->queryReturningSingleResult($query1, "s", array($token));
 
-        $stmt1 = $this->connection->prepare($sql1);
-        $stmt1->bind_param("s", $token);
-        $stmt1->execute();
-        $stmt1->bind_result($userid, $username);
-        $result = $stmt1->fetch();
-        $stmt1->close();
-
-        if(!$result)
+        if($userID == false)
             return "tokenerror";
 
         $salt = $this->randomString(256);
 
-        $sql2 =
+        $query2 =
             "SELECT 1
              FROM $this->table_keys
-             WHERE $this->key_userid = ? AND $this->key_domain = ?;";
-        $stmt2 = $this->connection->prepare($sql2);
-        $stmt2->bind_param("is", $userid, $domain);
-        $stmt2->execute();
-        $result = $stmt2->fetch();
-        $stmt2->close();
+             WHERE $this->key_userID = ? AND $this->key_domain = ?;";
+        $successful = $this->queryWithoutReturningResult($query2, "is", array($userID, $domain));
 
-        if($result)
+        if($successful)
             return "domainused";
 
-        $sql3 =
-            "INSERT INTO $this->table_keys ($this->key_userid, $this->key_domain, $this->key_salt, $this->key_cost)
+        $query3 =
+            "INSERT INTO $this->table_keys ($this->key_userID, $this->key_domain, $this->key_salt, $this->key_cost)
              VALUES (?, ?, ?, ?);";
+        $this->queryWithoutReturningResult($query3, "issi", array($userID, $domain, $salt, $this->cost));
 
-        $stmt3 = $this->connection->prepare($sql3);
-        $stmt3->bind_param("issi", $userid, $domain, $salt, $this->cost);
-        $stmt3->execute();
-        $stmt3->close();
-
-        return str_replace(array("'", "\""), "!", password_hash($password, $this->generateHashingAlgo, [$salt, $this->cost]));
+        return str_replace(array("'", "\""), "!", password_hash($password, $this->generateHashingAlgo,
+            [$salt, $this->cost]));
     }
 
 
     public function isKeyedDomain($token, $domain)
     {
-        $sql1 =
+        $query1 =
             "SELECT $this->key_id
              FROM $this->table_user
              WHERE $this->key_token = ?;";
+        $userID = $this->queryReturningSingleResult($query1, "s", array($token));
 
-        $stmt1 = $this->connection->prepare($sql1);
-        $stmt1->bind_param("s", $token);
-        $stmt1->execute();
-        $stmt1->bind_result($userid);
-        $result = $stmt1->fetch();
-        $stmt1->close();
-
-        if(!$result)
-        {
+        if($userID == false)
             return "tokenerror";
-        }
 
-        $sql2 =
+        $query2 =
             "SELECT *
              FROM $this->table_keys
-             WHERE $this->key_userid = ? AND $this->key_domain = ?;";
-
-        $stmt2 = $this->connection->prepare($sql2);
-        $stmt2->bind_param("ss", $userid, $domain);
-        $stmt2->execute();
-        $result = $stmt2->fetch();
-        $stmt2->close();
-
-        return ($result) ? "iskeyeddomain" : "isntkeyeddomain";
+             WHERE $this->key_userID = ? AND $this->key_domain = ?;";
+        $successful = $this->queryWithoutReturningResult($query2, "ss", array($userID, $domain));
+        return ($successful) ? "iskeyeddomain" : "isntkeyeddomain";
     }
 
     public function getKeyedDomains($token)
     {
-        $sql1 =
+        $query1 =
             "SELECT $this->key_id
              FROM $this->table_user
              WHERE $this->key_token = ?;";
+        $userID = $this->queryReturningSingleResult($query1, "s", array($token));
 
-        $stmt1 = $this->connection->prepare($sql1);
-        $stmt1->bind_param("s", $token);
-        $stmt1->execute();
-        $stmt1->bind_result($userid);
-        $result = $stmt1->fetch();
-        $stmt1->close();
-
-        if(!$result)
-        {
+        if($userID == false)
             return "tokenerror";
-        }
 
-        $sql2 =
+        $query2 =
             "SELECT $this->key_domain
              FROM $this->table_keys
-             WHERE $this->key_userid = ?;";
-
-        $stmt2 = $this->connection->prepare($sql2);
-        $stmt2->bind_param("s", $userid);
-        $stmt2->execute();
-        $stmt2->bind_result($result);
-        $array = [];
-
-        while ($stmt2->fetch())
-        {
-            array_push($array, $result);
-        }
-
-        $stmt2->close();
+             WHERE $this->key_userID = ?;";
+        $array = $this->queryReturningMultipleResults($query2, "s", array($userID));
 
         return $array;
     }
 
     public function generatePassword($domain, $password, $token)
     {
-        $sql1 =
+        $query1 =
             "SELECT $this->key_id
              FROM $this->table_user
              WHERE $this->key_token = ?;";
+        $userID = $this->queryReturningSingleResult($query1, "s", array($token));
 
-        $stmt1 = $this->connection->prepare($sql1);
-        $stmt1->bind_param("s", $token);
-        $stmt1->execute();
-        $stmt1->bind_result($userid);
-        $result = $stmt1->fetch();
-        $stmt1->close();
-
-        if(!$result)
+        if($userID == false)
         {
             return "tokenerror";
         }
 
-        $sql2 =
+        $query2 =
             "SELECT $this->key_salt, $this->key_cost
              FROM $this->table_keys
-             WHERE $this->key_userid = ? AND $this->key_domain = ?;";
-
-        $stmt2 = $this->connection->prepare($sql2);
-        $stmt2->bind_param("is", $userid, $domain);
-        $stmt2->execute();
-        $stmt2->bind_result($salt, $cost);
-        $stmt2->fetch();
-        $stmt2->close();
-        return str_replace(array("'", "\""), "!", password_hash($password, $this->generateHashingAlgo, [$salt, $cost]));
+             WHERE $this->key_userID = ? AND $this->key_domain = ?;";
+        $result = $this->queryReturningResult($query2, "is", array($userID, $domain));
+        return str_replace(array("'", "\""), "!", password_hash($password, $this->generateHashingAlgo,
+            [$result[0], $result[1]]));
     }
 
     public function resendVerification($email, $username)
     {
         $verified = intval(false);
-        $emailhash = $this->randomString(32);
+        $emailHash = $this->randomString(32);
 
-        $sql1 =
+        $query1 =
             "UPDATE $this->table_user
-             SET $this->key_emailhash = ?, $this->key_emailverification = ?
+             SET $this->key_emailHash = ?, $this->key_emailVerification = ?
              WHERE $this->key_email = ? OR $this->key_username = ?;";
+        $this->queryWithoutReturningResult($query1, "ssss", array($emailHash, $verified, $email, $username));
 
-        $stmt1 = $this->connection->prepare($sql1);
-        $stmt1->bind_param("ssss", $emailhash, $verified, $email, $username);
-        $stmt1->execute();
-        $stmt1->close();
-
-        $sql2 =
+        $query2 =
             "SELECT $this->key_email, $this->key_username
              FROM $this->table_user
              WHERE $this->key_email = ? OR $this->key_username = ?;";
+        $result = $this->queryReturningResult($query2, "ss", array($email, $username));
 
-        $stmt2 = $this->connection->prepare($sql2);
-        $stmt2->bind_param("ss", $email, $username);
-        $stmt2->execute();
-        $result = $stmt2->fetch();
-
-        if($result)
+        if($result != false)
         {
-            $stmt2->bind_result($sqlemail, $sqlusername);
-            $this->sendEmailVerification($emailhash, $sqlemail, $sqlusername);
-            $stmt2->close();
+            $this->sendEmailVerification($emailHash, $result[0], $result[1]);
             return true;
         }
         else
-        {
-            $stmt2->close();
             return false;
-        }
     }
 
     public function forgottenPassword($email, $username)
     {
-        $passwordhash = $this->randomString(32);
+        $passwordHash = $this->randomString(32);
 
-        $sql1 =
+        $query1 =
             "SELECT *
              FROM $this->table_user
              WHERE $this->key_email = ? AND $this->key_username = ?;";
+        $successful = $this->queryWithoutReturningResult($query1, "ss", array($email, $username));
 
-        $stmt1 = $this->connection->prepare($sql1);
-        $stmt1->bind_param("ss", $email, $username);
-        $stmt1->execute();
-        $result = $stmt1->fetch();
-        $stmt1->close();
-
-        if($result)
+        if($successful)
         {
-            $sql2 =
+            $query2 =
                 "UPDATE $this->table_user
-                 SET $this->key_passwordhash = ?
+                 SET $this->key_passwordHash = ?
                  WHERE $this->key_email = ? AND $this->key_username = ?;";
-
-            $stmt2 = $this->connection->prepare($sql2);
-            $stmt2->bind_param("sss", $passwordhash, $email, $username);
-            $stmt2->execute();
-            $stmt2->close();
-            $this->sendPasswordReset($passwordhash, $email, $username);
+            $this->queryWithoutReturningResult($query2, "sss", array($passwordHash, $email, $username));
+            $this->sendPasswordReset($passwordHash, $email, $username);
             return true;
         }
         else
-        {
             return false;
-        }
     }
 
     private function sendPasswordReset($passwordhash, $email, $username)
@@ -630,7 +459,7 @@ If this was you please click the link below to reset your password:
 https://www.cryptmate.com/resetpassword.php?email=' . $email . '&hash=' . $passwordhash . '
 
 If this was not you, please click the link below to cancel this request
-or you can simply leave it and continue using your account as normal.
+or you can simply ignore it and continue using your account as normal.
 
 To cancel the password reset request:
 
@@ -644,77 +473,49 @@ CryptMate';
         mail($to, $subject, $message, $headers);
     }
 
-    public function checkResetPassword($email, $passwordhash)
+    public function checkResetPassword($email, $passwordHash)
     {
-        $sql1 =
+        $query =
             "SELECT *
              FROM $this->table_user
-             WHERE $this->key_email = ? AND $this->key_passwordhash = ?;";
-
-        $stmt1 = $this->connection->prepare($sql1);
-        $stmt1->bind_param("ss", $email, $passwordhash);
-        $stmt1->execute();
-        $result = $stmt1->fetch();
-        $stmt1->close();
-        return $result;
+             WHERE $this->key_email = ? AND $this->key_passwordHash = ?;";
+        $success = $this->queryWithoutReturningResult($query, "ss", array($email, $passwordHash));
+        return $success;
     }
 
 
     public function cancelResetPassword($email)
     {
-        $sql1 =
+        $query =
             "UPDATE $this->table_user
-             SET $this->key_passwordhash = NULL
+             SET $this->key_passwordHash = NULL
              WHERE $this->key_email = ?;";
-
-        $stmt1 = $this->connection->prepare($sql1);
-        $stmt1->bind_param("s", $email);
-        $stmt1->execute();
-        $result = ($stmt1->affected_rows == 1);
-        $stmt1->close();
-        return $result;
+        return $this->queryReturningAffectedRows($query, "s", array($email)) == 1;
     }
 
     public function resetPassword($password, $hash, $email)
     {
-        $sql1 =
+        $query =
             "UPDATE $this->table_user
              SET $this->key_hash = ?
-             WHERE $this->key_email = ? AND $this->key_passwordhash = ?;";
-
-        $stmt1 = $this->connection->prepare($sql1);
-        $passhash = password_hash($password, $this->cryptMateHashingAlgo);
-        $stmt1->bind_param("sss", $passhash, $email, $hash);
-        $stmt1->execute();
-        $result = ($stmt1->affected_rows == 1);
-        $stmt1->close();
-        return $result;
+             WHERE $this->key_email = ? AND $this->key_passwordHash = ?;";
+        $passHash = password_hash($password, $this->cryptMateHashingAlgo);
+        return $this->queryReturningAffectedRows($query, "sss", array($passHash, $email, $hash)) == 1;
     }
 
 
     public function remindUsername($email)
     {
-        $sql1 =
+        $query =
             "SELECT $this->key_name, $this->key_username
              FROM $this->table_user
              WHERE $this->key_email = ?;";
+        $result = $this->queryReturningResult($query, "s", array($email));
 
-        $stmt1 = $this->connection->prepare($sql1);
-        $stmt1->bind_param("s", $email);
-        $stmt1->execute();
-        $stmt1->bind_result($name, $username);
-        $result = $stmt1->fetch();
-        $stmt1->close();
+        if ($result != false)
+            $this->sendUsername($email, $result[0], $result[1]);
 
-        if ($result)
-        {
-            $this->sendUsername($email, $name, $username);
-            return true;
-        }
-        else
-        {
-            return false;
-        }
+        return $result;
     }
 
     private function sendUsername($email, $name, $username)
@@ -739,159 +540,101 @@ CryptMate';
 
     public function getNumberDomains($token)
     {
-        $sql1 =
+        $query1 =
             "SELECT $this->key_id
              FROM $this->table_user
              WHERE $this->key_token = ?;";
+        $userID = $this->queryReturningSingleResult($query1, "s", array($token));
 
-        $stmt1 = $this->connection->prepare($sql1);
-        $stmt1->bind_param("s", $token);
-        $stmt1->execute();
-        $stmt1->bind_result($userid);
-        $result = $stmt1->fetch();
-        $stmt1->close();
-
-        if(!$result)
-        {
+        if($userID == false)
             return 0;
-        }
 
-        $sql2 =
+        $query2 =
             "SELECT COUNT(*)
              FROM $this->table_keys
-             WHERE $this->key_userid = ?";
-        $stmt2 = $this->connection->prepare($sql2);
-        $stmt2->bind_param("i", $userid);
-        $stmt2->execute();
-        $stmt2->bind_result($count);
-        $result = $stmt2->fetch();
-        $stmt2->close();
+             WHERE $this->key_userID = ?";
+        $count = $this->queryReturningSingleResult($query2, "i", array($userID));
 
-        if (!$result)
-        {
+        if ($count == false)
             return 0;
-        }
         else
-        {
             return $count;
-        }
     }
 
     public function deleteDomain($domain, $token)
     {
-        $sql1 =
+        $query1 =
             "SELECT $this->key_id
              FROM $this->table_user
              WHERE $this->key_token = ?;";
+        $userID = $this->queryReturningSingleResult($query1, "s", array($token));
 
-        $stmt1 = $this->connection->prepare($sql1);
-        $stmt1->bind_param("s", $token);
-        $stmt1->execute();
-        $stmt1->bind_result($userid);
-        $result = $stmt1->fetch();
-        $stmt1->close();
-
-        if(!$result)
-        {
+        if($userID == false)
             return false;
-        }
 
-        $sql2 =
+        $query2 =
             "DELETE FROM $this->table_keys
-             WHERE $this->key_userid = ? AND $this->key_domain = ?;";
+             WHERE $this->key_userID = ? AND $this->key_domain = ?;";
+        $rows = $this->queryReturningAffectedRows($query2, "is", array($userID, $domain));
 
-        $stmt2 = $this->connection->prepare($sql2);
-        $stmt2->bind_param("is", $userid, $domain);
-        $stmt2->execute();
-        $result = $stmt2->affected_rows;
-        $stmt2->close();
-
-        return ($result == 1);
+        return ($rows == 1);
     }
 
     public function deleteAccount($token)
     {
-        $sql1 =
+        $query =
             "DELETE FROM $this->table_user
              WHERE $this->key_token = ?;";
-
-        $stmt1 = $this->connection->prepare($sql1);
-        $stmt1->bind_param("s", $token);
-        $stmt1->execute();
-        $result = $stmt1->affected_rows;
-        $stmt1->close();
-        return ($result >= 1);
+        $rows = $this->queryReturningAffectedRows($query, "s", array($token));
+        return ($rows >= 1);
     }
 
     public function getAccountDetails($token)
     {
-        $sql1 =
+        $query =
             "SELECT $this->key_name, $this->key_username, $this->key_email
              FROM $this->table_user
              WHERE $this->key_token = ?;";
-        $stmt1 = $this->connection->prepare($sql1);
-        $stmt1->bind_param("s", $token);
-        $stmt1->execute();
-        $stmt1->bind_result($name, $username, $email);
-        $stmt1->fetch();
-        $stmt1->close();
+        $result = $this->queryReturningSingleResult($query, "s", array($token));
         return
             array(
-                "name" => $name,
-                "username" => $username,
-                "email" => $email
+                "name" => $result[0],
+                "username" => $result[1],
+                "email" => $result[2]
             );
     }
 
     public function verifyNewEmail($email, $hash)
     {
         $verified = intval(true);
-        $sql1 =
+        $query1 =
             "SELECT $this->key_token
-             FROM $this->table_emailconfirmations
+             FROM $this->table_emailConfirmations
              WHERE $this->key_email1 = ? AND $this->key_hash1 = ? ;";
-        $stmt1 = $this->connection->prepare($sql1);
-        $stmt1->bind_param("ss", $email, $hash);
-        $stmt1->execute();
-        $stmt1->bind_result($token);
-        $result = $stmt1->fetch();
-        $stmt1->close();
-        if ($result)
+        $token = $this->queryReturningSingleResult($query1, "ss", array($email, $hash));
+        if ($token != false)
         {
-            $sql2 =
-                "UPDATE $this->table_emailconfirmations
+            $query2 =
+                "UPDATE $this->table_emailConfirmations
                  SET $this->key_verification1 = ?
                  WHERE $this->key_email1 = ? AND $this->key_hash1 = ?;";
-            $stmt2 = $this->connection->prepare($sql2);
-            $stmt2->bind_param("sss", $verified, $email, $hash);
-            $stmt2->execute();
-            $stmt2->close();
-
+            $this->queryWithoutReturningResult($query2, "sss", array($verified, $email, $hash));
             $updated = 1;
         }
         else
         {
-            $sql2 =
+            $query2 =
                 "SELECT $this->key_token
-                 FROM $this->table_emailconfirmations
+                 FROM $this->table_emailConfirmations
                  WHERE $this->key_email2 = ? AND $this->key_hash2 = ?;";
-            $stmt2 = $this->connection->prepare($sql2);
-            $stmt2->bind_param("ss", $email, $hash);
-            $stmt2->execute();
-            $stmt2->bind_result($token);
-            $result = $stmt2->fetch();
-            $stmt2->close();
-            if ($result)
+            $token = $this->queryReturningSingleResult($query2, "ss", array($email, $hash));
+            if ($token != false)
             {
-                $sql3 =
-                    "UPDATE $this->table_emailconfirmations
+                $query3 =
+                    "UPDATE $this->table_emailConfirmations
                      SET $this->key_verification2 = ?
                      WHERE $this->key_email2 = ? AND $this->key_hash2 = ?";
-                $stmt3 = $this->connection->prepare($sql3);
-                $stmt3->bind_param("sss", $verified, $email, $hash);
-                $stmt3->execute();
-                $stmt3->close();
-
+                $this->queryWithoutReturningResult($query3, "sss", array($verified, $email, $hash));
                 $updated = 2;
             }
             else
@@ -902,27 +645,22 @@ CryptMate';
 
         if (isset($token))
         {
-            $sql4 =
+            $query4 =
                 "SELECT $this->key_verification1, $this->key_verification2, $this->key_email2
-                 FROM $this->table_emailconfirmations
+                 FROM $this->table_emailConfirmations
                  WHERE $this->key_token = ?;";
-            $stmt4 = $this->connection->prepare($sql4);
-            $stmt4->bind_param("s", $token);
-            $stmt4->execute();
-            $stmt4->bind_result($verified1, $verified2, $email2);
-            $stmt4->fetch();
-            $stmt4->close();
+            $result = $this->queryReturningResult($query4, "s", array($token));
+            $verified1 = $result[0];
+            $verified2 = $result[1];
+            $email2 = $result[2];
 
-            if ($verified1 == 1 && $verified2 == 1)
+            if ($verified1 == intval(true) && $verified2 == intval(true))
             {
-                $sql5 =
+                $query5 =
                     "UPDATE $this->table_user
                      SET $this->key_email = ?
                      WHERE $this->key_token = ?;";
-                $stmt5 = $this->connection->prepare($sql5);
-                $stmt5->bind_param("ss", $email2, $token);
-                $stmt5->execute();
-                $stmt5->close();
+                $this->queryWithoutReturningResult($query5, "ss", array($email2, $token));
                 return 3;
             }
             else
@@ -934,111 +672,80 @@ CryptMate';
         return null;
     }
 
-    public function isCurrentEmail($token, $currentemail)
+    public function isCurrentEmail($token, $currentEmail)
     {
-        $sql1 =
+        $query =
             "SELECT 1
              FROM $this->table_user
              WHERE $this->key_email = ? AND $this->key_token = ?;";
-        $stmt1 = $this->connection->prepare($sql1);
-        $stmt1->bind_param("ss", $currentemail, $token);
-        $stmt1->execute();
-        $result = $stmt1->fetch();
-        $stmt1->close();
-
-        return $result;
+        $successful = $this->queryWithoutReturningResult($query, "ss", array($currentEmail, $token));
+        return $successful;
     }
 
-    public function isNewEmail($newemail)
+    public function isNewEmail($email)
     {
-        $sql1 =
+        $query =
             "SELECT 1
              FROM $this->table_user
              WHERE $this->key_email = ?";
-        $stmt1 = $this->connection->prepare($sql1);
-        $stmt1->bind_param("s", $newemail);
-        $stmt1->execute();
-        $result = $stmt1->fetch();
-        $stmt1->close();
-
-        return !$result;
+        $hasResult = $this->queryWithoutReturningResult($query, "s", array($email));
+        return !$hasResult;
     }
 
 
-    public function changeEmail($token, $currentemail, $newemail)
+    public function changeEmail($token, $currentEmail, $newEmail)
     {
-        mysqli_report(MYSQLI_REPORT_ERROR);
         $verified = intval(false);
         $hash1 = $this->randomString(32);
         $hash2 = $this->randomString(32);
 
-        $sql1 =
-            "INSERT INTO $this->table_emailconfirmations
+        $query1 =
+            "INSERT INTO $this->table_emailConfirmations
                   ($this->key_token, $this->key_email1, $this->key_hash1, $this->key_verification1,
                    $this->key_email2, $this->key_hash2, $this->key_verification2)
              VALUES (?, ?, ?, ?, ?, ?, ?);";
+        $rows = $this->queryReturningAffectedRows($query1, "sssissi",
+            array($token, $currentEmail, $hash1, $verified, $newEmail, $hash2, $verified));
 
-        $stmt1 = $this->connection->prepare($sql1);
-        $stmt1->bind_param("sssissi", $token, $currentemail, $hash1, $verified, $newemail, $hash2, $verified);
-        $stmt1->execute();
-        $result = $stmt1->affected_rows;
-        $stmt1->close();
-
-        if ($result != 1)
+        if ($rows != 1)
             return false;
 
-        $sql2 =
+        $query2 =
             "SELECT $this->key_name
              FROM $this->table_user
              WHERE $this->key_token = ?;";
+        $name = $this->queryReturningSingleResult($query2, "s", array($token));
 
-        $stmt2 = $this->connection->prepare($sql2);
-        $stmt2->bind_param("s", $token);
-        $stmt2->execute();
-        $stmt2->bind_result($name);
-        $result = $stmt2->fetch();
-        $stmt2->close();
-
-        if (!$result)
+        if ($name == false)
             return false;
 
-        $this->sendCurrentEmailVerification($hash1, $currentemail, $name);
-        $this->sendNewEmailVerification($hash2, $newemail, $name);
-
+        $this->sendCurrentEmailVerification($hash1, $currentEmail, $name);
+        $this->sendNewEmailVerification($hash2, $newEmail, $name);
         return true;
     }
 
-    public function changePassword($oldpassword, $newpassword, $token)
+
+    //TODO: create enum for magic numbers
+    public function changePassword($oldPassword, $newPassword, $token)
     {
-        $sql1 =
+        $query1 =
             "SELECT $this->key_hash
              FROM $this->table_user
              WHERE $this->key_token = ?;";
+        $hash = $this->queryReturningSingleResult($query1, "s", array($token));
 
-        $stmt1 = $this->connection->prepare($sql1);
-        $stmt1->bind_param("s", $token);
-        $stmt1->execute();
-        $stmt1->bind_result($hash);
-        $result = $stmt1->fetch();
-        $stmt1->close();
-
-        if ($result)
+        if ($hash != false)
         {
-            if (password_verify($oldpassword, $hash))
+            if (password_verify($oldPassword, $hash))
             {
-                $newhash = password_hash($newpassword, $this->cryptMateHashingAlgo);
+                $newHash = password_hash($newPassword, $this->cryptMateHashingAlgo);
 
-                $sql3 =
+                $query2 =
                     "UPDATE $this->table_user
                      SET $this->key_hash = ?
                      WHERE $this->key_token = ?";
-
-                $stmt3 = $this->connection->prepare($sql3);
-                $stmt3->bind_param("ss", $newhash, $token);
-                $stmt3->execute();
-                $result = $stmt3->affected_rows;
-                $stmt3->close();
-                if ($result == 1)
+                $rows = $this->queryReturningAffectedRows($query2, "ss", array($newHash, $token));
+                if ($rows == 1)
                     return 1;
                 else
                     return 3;
@@ -1056,159 +763,153 @@ CryptMate';
 
     public function getSubscriptionEnd($token)
     {
-        $sql1 =
-            "SELECT DATE_FORMAT($this->key_subscriptionend,'%D %M %Y')
+        $query =
+            "SELECT DATE_FORMAT($this->key_subscriptionEnd,'%D %M %Y')
              FROM $this->table_user
              WHERE $this->key_token = ?;";
-        $stmt1 = $this->connection->prepare($sql1);
-        $stmt1->bind_param("s", $token);
-        $stmt1->execute();
-        $stmt1->bind_result($subscriptionend);
-        $result = $stmt1->fetch();
-        $stmt1->close();
-
-        if ($result)
-            return $subscriptionend;
-        else
-            return $result;
+        return $this->queryReturningSingleResult($query, "s", array($token));
     }
 
     public function getSubscriptionEndUnix($token)
     {
-        $sql1 =
-            "SELECT UNIX_TIMESTAMP($this->key_subscriptionend)
+        $query =
+            "SELECT UNIX_TIMESTAMP($this->key_subscriptionEnd)
              FROM $this->table_user
              WHERE $this->key_token = ?;";
-        $stmt1 = $this->connection->prepare($sql1);
-        $stmt1->bind_param("i", $token);
-        $stmt1->execute();
-        $stmt1->bind_result($subscriptionend);
-        $result = $stmt1->fetch();
-        $stmt1->close();
-
-        if ($result)
-            return $subscriptionend;
-        else
-            return $result;
+        return $this->queryReturningSingleResult($query, "s", array($token));
     }
 
     public function getSubscriptionEnded($token)
     {
         $query =
-            "SELECT $this->key_subscriptionend < CURRENT_DATE()
+            "SELECT $this->key_subscriptionEnd < CURRENT_DATE()
              FROM $this->table_user
              WHERE $this->key_token = ?;";
-        return $this->queryWithResult($query, "s", $token);
+        return $this->queryReturningSingleResult($query, "s", $token);
     }
 
-    public function isNewTransaction($txn_id)
+    public function addOneMonth($customerID)
     {
-        $sql1 =
-            "SELECT *
-             FROM $this->table_transactions
-             WHERE $this->key_transactionid = ?;";
-        $stmt1 = $this->connection->prepare($sql1);
-        $stmt1->bind_param("i", $txn_id);
-        $stmt1->execute();
-        $result = $stmt1->fetch();
-        $stmt1->close();
-
-        return !$result;
+        $this->addInterval("INTERVAL 1 MONTH", $customerID);
     }
 
-    public function createNewTransaction($txn_id, $txn_type, $payment_status, $payment_amount, $payment_currency, $payment_fee, $payer_email, $payer_name, $payer_token, $receiver_email, $subscriber_id, $verified)
+    public function addOneYear($customerID)
     {
-        $sql1 =
-            "INSERT INTO $this->table_transactions
-                ($this->key_transactionid, $this->key_transactiontype, $this->key_paymentstatus, $this->key_paymentamount, $this->key_paymentcurrency, $this->key_paymentfee, $this->key_payeremail, $this->key_payername, $this->key_payertoken, $this->key_recieveremail, $this->key_subscriberid, $this->key_verified)
-             VALUES
-                (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
-        $stmt1 = $this->connection->prepare($sql1);
-        $stmt1->bind_param("issisissssis", $txn_id, $txn_type, $payment_status, $payment_amount, $payment_currency, $payment_fee, $payer_email, $payer_name, $payer_token, $receiver_email, $subscriber_id, $verified);
-        $stmt1->execute();
-        $stmt1->close();
+        $this->addInterval("INTERVAL 1 YEAR", $customerID);
     }
 
-    public function addOneMonth($customer_id)
+    private function addInterval($interval, $customerID)
     {
-        $payer_token = $this->getTokenFromCustomer($customer_id);
-        if ($this->getSubscriptionEnded($payer_token))
-            $sql1 =
+        $payerToken = $this->getTokenFromCustomer($customerID);
+        if ($this->getSubscriptionEnded($payerToken))
+            $query =
                 "UPDATE $this->table_user
-                 SET $this->key_subscriptionend = DATE_ADD(now(), INTERVAL 1 MONTH)
+                 SET $this->key_subscriptionEnd = DATE_ADD(now(), $interval)
                  WHERE $this->key_token = ?;";
         else
-            $sql1 =
+            $query =
                 "UPDATE $this->table_user
-                 SET $this->key_subscriptionend = DATE_ADD($this->key_subscriptionend, INTERVAL 1 MONTH)
+                 SET $this->key_subscriptionEnd = DATE_ADD($this->key_subscriptionEnd, $interval)
                  WHERE $this->key_token = ?;";
-
-        $stmt1 = $this->connection->prepare($sql1);
-        $stmt1->bind_param("s", $payer_token);
-        $stmt1->execute();
-        $stmt1->close();
+        $this->queryWithoutReturningResult($query, "s", array($payerToken));
     }
 
-    public function addOneYear($customer_id)
+    private function getTokenFromCustomer($customerID)
     {
-        $payer_token = $this->getTokenFromCustomer($customer_id);
-        if ($this->getSubscriptionEnded($payer_token))
-            $sql1 =
-                "UPDATE $this->table_user
-                 SET $this->key_subscriptionend = DATE_ADD(now(), INTERVAL 1 YEAR)
-                 WHERE $this->key_token = ?;";
-        else
-            $sql1 =
-                "UPDATE $this->table_user
-                 SET $this->key_subscriptionend = DATE_ADD($this->key_subscriptionend, INTERVAL 1 YEAR)
-                 WHERE $this->key_token = ?;";
-        $stmt1 = $this->connection->prepare($sql1);
-        $stmt1->bind_param("s", $payer_token);
-        $stmt1->execute();
-        $stmt1->close();
-    }
-
-    private function getTokenFromCustomer($customer_id)
-    {
-        $sql1 =
-            "SELECT $this->key_userid
+        $query1 =
+            "SELECT $this->key_userID
              FROM $this->table_stripe
-             WHERE $this->key_customerid = ?;";
-        $stmt1 = $this->connection->prepare($sql1);
-        $stmt1->bind_param("s", $customer_id);
-        $stmt1->execute();
-        $stmt1->bind_result($user_id);
-        $stmt1->fetch();
-        $stmt1->close();
+             WHERE $this->key_customerID = ?;";
+        $user_id = $this->queryReturningSingleResult($query1, "s", $customerID);
 
-        $sql2 =
+        $query2 =
             "SELECT $this->key_token
              FROM $this->table_user
              WHERE $this->key_id = ?;";
-        $stmt2 = $this->connection->prepare($sql2);
-        $stmt2->bind_param("s", $user_id);
-        $stmt2->execute();
-        $stmt2->bind_result($token);
-        $stmt2->fetch();
-        $stmt2->close();
 
-        return $token;
+        return $this->queryReturningSingleResult($query2, "s", $user_id)["token"];
     }
 
     private function getUserIDFromToken($token)
     {
-        $sql1 =
+        $query =
             "SELECT $this->key_id
              FROM $this->table_user
              WHERE $this->key_token = ?;";
-        $stmt1 = $this->connection->prepare($sql1);
-        $stmt1->bind_param("s", $token);
-        $stmt1->execute();
-        $stmt1->bind_result($user_id);
-        $stmt1->fetch();
-        $stmt1->close();
+        return $this->queryReturningSingleResult($query, "s", array($token));
+    }
 
-        return $user_id;
+
+    public function addStripeCustomerDetails($token, $customerID, $plan)
+    {
+        $user_id = $this->getUserIDFromToken($token);
+        $query =
+            "INSERT INTO $this->table_stripe
+                ($this->key_userID, $this->key_customerID, $this->key_plan)
+             VALUES
+                (?, ?, ?);";
+        $this->queryWithoutReturningResult($query, "iss", array($user_id, $customerID, $plan));
+    }
+
+    public function getStripeCustomerDetails($token)
+    {
+        $user_id = $this->getUserIDFromToken($token);
+        $query =
+            "SELECT $this->key_customerID
+             FROM $this->table_stripe
+             WHERE $this->key_userID = ?;";
+        return $this->queryReturningSingleResult($query, "i", array($user_id));
+    }
+
+    private function queryReturningSingleResult($query, $types, $params) {
+        $result = $this->queryReturningResult($query, $types, $params);
+        if ($result != false)
+            return $result[0];
+        else
+            return false;
+    }
+
+    private function queryReturningResult($query, $types, $params) {
+        $stmt = $this->connection->prepare($query);
+        call_user_func_array(array($stmt, "bind_param"), array_merge(array($types), $params));
+        $stmt->execute();
+        $result = $stmt->get_result()->fetch_array();
+        $successful = $stmt->fetch();
+        $stmt->close();
+        if ($successful)
+            return $result;
+        else
+            return false;
+    }
+
+    private function queryWithoutReturningResult($query, $types, $params) {
+        $stmt = $this->connection->prepare($query);
+        call_user_func_array(array($stmt, "bind_param"), array_merge(array($types), $params));
+        $stmt->execute();
+        $successful = $stmt->fetch();
+        $stmt->close();
+        return $successful;
+    }
+
+    private function queryReturningAffectedRows($query, $types, $params) {
+        $stmt = $this->connection->prepare($query);
+        call_user_func_array(array($stmt, "bind_param"), array_merge(array($types), $params));
+        $stmt->execute();
+        $rows = $stmt->affected_rows;
+        $stmt->close();
+        return $rows;
+    }
+
+    private function queryReturningMultipleResults($query, $types, $params) {
+        $stmt = $this->connection->prepare($query);
+        call_user_func_array(array($stmt, "bind_param"), array_merge(array($types), $params));
+        $stmt->execute();
+        $stmt->bind_result($result);
+        $array = [];
+        while ($stmt->fetch())
+            array_push($array, $result);
+        $stmt->close();
+        return $array;
     }
 
     private function randomString($length, $type = '')
@@ -1242,39 +943,4 @@ CryptMate';
         }
         return $rand; // Return the random string
     }
-
-    public function addStripeCustomerDetails($token, $customerID, $plan)
-    {
-        $user_id = $this->getUserIDFromToken($token);
-        $sql1 =
-            "INSERT INTO $this->table_stripe
-                ($this->key_userid, $this->key_customerid, $this->key_plan)
-             VALUES
-                (?, ?, ?);";
-        $stmt1 = $this->connection->prepare($sql1);
-        $stmt1->bind_param("iss", $user_id, $customerID, $plan);
-        $stmt1->execute();
-        $stmt1->close();
-    }
-
-    public function getStripeCustomerDetails($token)
-    {
-        $user_id = $this->getUserIDFromToken($token);
-        $query =
-            "SELECT $this->key_customerid
-             FROM $this->table_stripe
-             WHERE $this->key_userid = ?;";
-        return $this->queryWithResult($query, "i", array($user_id));
-    }
-
-    private function queryWithResult($query, $types, $params) {
-        $stmt = $this->connection->prepare($query);
-        call_user_func_array(array($stmt, "bind_param"), array_merge(array($types), $params));
-        $stmt->execute();
-        $stmt->bind_result($result);
-        $stmt->fetch();
-        $stmt->close();
-        return $result;
-    }
-
 }

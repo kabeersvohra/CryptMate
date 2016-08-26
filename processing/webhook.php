@@ -2,7 +2,7 @@
 
 if (!isset($_SESSION)) session_start();
 
-include_once $_SERVER['DOCUMENT_ROOT'] . '/database/connectdatabase.php';
+include_once $_SERVER['DOCUMENT_ROOT'] . '/database/connect.php';
 require_once $_SERVER['DOCUMENT_ROOT'] . '/processing/config.php';
 
 // Retrieve the request's body and parse it as JSON

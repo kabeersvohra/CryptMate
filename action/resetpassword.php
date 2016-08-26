@@ -6,7 +6,7 @@
  * Time: 3:34 PM
  */
 
-include_once $_SERVER['DOCUMENT_ROOT'] . '/database/connectdatabase.php';
+include_once $_SERVER['DOCUMENT_ROOT'] . '/database/connect.php';
 
 if (!isset($_SESSION)) session_start();
 

@@ -2,7 +2,7 @@
 
 if (!isset($_SESSION)) session_start();
 
-include_once $_SERVER['DOCUMENT_ROOT'] . '/database/connectdatabase.php';
+include_once $_SERVER['DOCUMENT_ROOT'] . '/database/connect.php';
 require_once $_SERVER['DOCUMENT_ROOT'] . '/processing/config.php';
 
 // Either stripeToken, cryptmateToken, stripePlan and subscribe are set or

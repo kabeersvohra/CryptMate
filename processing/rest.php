@@ -6,7 +6,7 @@
  * Time: 12:27
  */
 
-include_once $_SERVER['DOCUMENT_ROOT'] . '/database/connectdatabase.php';
+include_once $_SERVER['DOCUMENT_ROOT'] . '/database/connect.php';
 
 $result = json_encode(array());
 

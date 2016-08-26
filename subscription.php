@@ -8,7 +8,7 @@
 
 if (!isset($_SESSION)) session_start();
 
-include_once $_SERVER['DOCUMENT_ROOT'] . '/database/connectdatabase.php';
+include_once $_SERVER['DOCUMENT_ROOT'] . '/database/connect.php';
 
 $_SESSION["token"] = "HCoUQ9yGbjSP4iyLLAClrXCVbh3Uc2ZHuds9cOFbVlROrdq2BScSDFDCKtkKl0iDbyBbc5cYgRCvUQmlwn2ZStpqMz2Xx0qyxSxxMxjQfKcXqo8NBYAhfQySdnFAkUWFAj3cFcRIKTv16qBvf1CkGY1JbuajeUOE3FExFl6f5o6YFvjIlLSPyJox4mH66lzXQ2klddq6rkTWD3uOCbr1IFnzQUuL7RyKIGWLJaFYkoLLh4pH3GxAaKZOvhnpYLXx";
 
