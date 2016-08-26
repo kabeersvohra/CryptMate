@@ -33,6 +33,8 @@ $_SESSION["token"] = "HCoUQ9yGbjSP4iyLLAClrXCVbh3Uc2ZHuds9cOFbVlROrdq2BScSDFDCKt
             echo "<p>Subscription ended:</p>";
         else
             echo "<p>Subscription ends:</p>";
+
+        echo $db->getStripeCustomerDetails($_SESSION["token"])
         ?>
         <p style='margin-bottom: 0;'><?= $db->getSubscriptionEnd($_SESSION["token"]) ?></p>
     </div>

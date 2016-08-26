@@ -929,6 +929,9 @@ CryptMate';
                 return $updated;
 
         }
+
+        //should never be reached
+        return null;
     }
 
     public function isCurrentEmail($token, $currentemail)
@@ -1264,18 +1267,21 @@ CryptMate';
     public function getStripeCustomerDetails($token)
     {
         $user_id = $this->getUserIDFromToken($token);
-        $sql1 =
+        $query =
             "SELECT $this->key_customerid
              FROM $this->table_stripe
              WHERE $this->key_userid = ?;";
-        $stmt1 = $this->connection->prepare($sql1);
-        $stmt1->bind_param("i", $user_id);
-        $stmt1->execute();
-        $stmt1->bind_result($customer_id);
-        $stmt1->fetch();
-        $stmt1->close();
+        return $this->queryWithResult($query, "i", array($user_id));
+    }
 
-        return $customer_id;
+    private function queryWithResult($query, $types, $params) {
+        $stmt = $this->connection->prepare($query);
+        call_user_func_array(array($stmt, "bind_param"), array_merge(array($types), $params));
+        $stmt->execute();
+        $stmt->bind_result($result);
+        $stmt->fetch();
+        $stmt->close();
+        return $result;
     }
 
 }
