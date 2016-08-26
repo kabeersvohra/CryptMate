@@ -1094,18 +1094,11 @@ CryptMate';
 
     public function getSubscriptionEnded($token)
     {
-        $sql1 =
+        $query =
             "SELECT $this->key_subscriptionend < CURRENT_DATE()
              FROM $this->table_user
              WHERE $this->key_token = ?;";
-        $stmt1 = $this->connection->prepare($sql1);
-        $stmt1->bind_param("s", $token);
-        $stmt1->execute();
-        $stmt1->bind_result($subscriptionended);
-        $stmt1->fetch();
-        $stmt1->close();
-
-        return $subscriptionended;
+        return $this->queryWithResult($query, "s", $token);
     }
 
     public function isNewTransaction($txn_id)
