@@ -229,13 +229,13 @@ CryptMate';
         $result = $this->queryReturningResult($query, "s", array($username));
 
         if ($result == false)
-            return "username";
+            throw new Exception("username");
         elseif($result[2] == 0)
-            return "unverified";
+            throw new Exception("unverified");
         elseif (password_verify($password, $result[0]))
             return $result[1];
         else
-            return "password";
+            throw new Exception("password");
     }
 
     public function getLoggedInUser($token)
@@ -381,10 +381,9 @@ CryptMate';
              FROM $this->table_user
              WHERE $this->key_token = ?;";
         $userID = $this->queryReturningSingleResult($query1, "s", array($token));
-
         if($userID == false)
         {
-            return "tokenerror";
+            throw new Exception("tokenError");
         }
 
         $query2 =
@@ -392,6 +391,8 @@ CryptMate';
              FROM $this->table_keys
              WHERE $this->key_userID = ? AND $this->key_domain = ?;";
         $result = $this->queryReturningResult($query2, "is", array($userID, $domain));
+        echo str_replace(array("'", "\""), "!", password_hash($password, $this->generateHashingAlgo,
+            [$result[0], $result[1]]));
         return str_replace(array("'", "\""), "!", password_hash($password, $this->generateHashingAlgo,
             [$result[0], $result[1]]));
     }
@@ -871,12 +872,15 @@ CryptMate';
 
     private function queryReturningResult($query, $types, $params) {
         $stmt = $this->connection->prepare($query);
-        call_user_func_array(array($stmt, "bind_param"), array_merge(array($types), $params));
+        $merged = array_merge(array($types), $params);
+        $paramTypes = array();
+        foreach($merged as $key => $value)
+            $paramTypes[$key]=&$merged[$key];
+        call_user_func_array(array($stmt, "bind_param"), $paramTypes);
         $stmt->execute();
         $result = $stmt->get_result()->fetch_array();
-        $successful = $stmt->fetch();
         $stmt->close();
-        if ($successful)
+        if (!empty($result))
             return $result;
         else
             return false;
@@ -884,7 +888,11 @@ CryptMate';
 
     private function queryWithoutReturningResult($query, $types, $params) {
         $stmt = $this->connection->prepare($query);
-        call_user_func_array(array($stmt, "bind_param"), array_merge(array($types), $params));
+        $merged = array_merge(array($types), $params);
+        $paramTypes = array();
+        foreach($merged as $key => $value)
+            $paramTypes[$key]=&$merged[$key];
+        call_user_func_array(array($stmt, "bind_param"), $paramTypes);
         $stmt->execute();
         $successful = $stmt->fetch();
         $stmt->close();
@@ -893,7 +901,11 @@ CryptMate';
 
     private function queryReturningAffectedRows($query, $types, $params) {
         $stmt = $this->connection->prepare($query);
-        call_user_func_array(array($stmt, "bind_param"), array_merge(array($types), $params));
+        $merged = array_merge(array($types), $params);
+        $paramTypes = array();
+        foreach($merged as $key => $value)
+            $paramTypes[$key]=&$merged[$key];
+        call_user_func_array(array($stmt, "bind_param"), $paramTypes);
         $stmt->execute();
         $rows = $stmt->affected_rows;
         $stmt->close();
@@ -902,7 +914,11 @@ CryptMate';
 
     private function queryReturningMultipleResults($query, $types, $params) {
         $stmt = $this->connection->prepare($query);
-        call_user_func_array(array($stmt, "bind_param"), array_merge(array($types), $params));
+        $merged = array_merge(array($types), $params);
+        $paramtypes = array();
+        foreach($merged as $key => $value)
+            $paramtypes[$key]=&$merged[$key];
+        call_user_func_array(array($stmt, "bind_param"), $paramtypes);
         $stmt->execute();
         $stmt->bind_result($result);
         $array = [];

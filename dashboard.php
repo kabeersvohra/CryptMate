@@ -16,15 +16,19 @@
 
 <?php
     session_start();
-    $loggedin = true;
-    $username = "Login";
-    $domains = array("facebook.com", "google.com", "how-to-geek.com", "facebook.com", "google.com", "how-to-geek.com", "facebook.com", "google.com", "how-to-geek.com");
 
-    if (isset($_SESSION['token']))
-    {
-        $username = "KVohra95";
-        //$domains = getDomains;
-    }
+    include_once $_SERVER['DOCUMENT_ROOT'] . '/database/connect.php';
+    $_SESSION['token'] = "HCoUQ9yGbjSP4iyLLAClrXCVbh3Uc2ZHuds9cOFbVlROrdq2BScSDFDCKtkKl0iDbyBbc5cYgRCvUQmlwn2ZStpqMz2Xx0qyxSxxMxjQfKcXqo8NBYAhfQySdnFAkUWFAj3cFcRIKTv16qBvf1CkGY1JbuajeUOE3FExFl6f5o6YFvjIlLSPyJox4mH66lzXQ2klddq6rkTWD3uOCbr1IFnzQUuL7RyKIGWLJaFYkoLLh4pH3GxAaKZOvhnpYLXx";
+
+    $loggedIn = true;
+    $username = "Login";
+    $domains = array("www.facebook.com", "google.com", "how-to-geek.com");
+
+//    if (isset($_SESSION['token']))
+//    {
+//        $username = $db->getLoggedInUser($_SESSION['token']);
+//        $domains = $db->getKeyedDomains($_SESSION['token']);
+//    }
 ?>
 
 <body>
@@ -48,9 +52,13 @@
         <div class="col-xs-12">
 
                 <?php
-                foreach($domains as $domain){ ?>
+                for($i=0; $i < count($domains); $i++) {
+                    $domain = $domains[$i];
+                    $passwordId = "password" . $i;
+                    ?>
+
                     <table style="width: 100%; text-align: center;">
-                        <td style="padding: 10px;"><img src="https://www.google.com/s2/favicons?domain=<?php echo $domain; ?>"/> </td>
+                        <td style="padding: 10px;"><img src="https://www.google.com/s2/favicons?domain=<?php echo $domain; ?>"/></td>
                         <td style="padding: 10px; text-align: left; width: 100%"><?php echo $domain; ?></td>
                         <td style="padding-right: 10px">
                             <span title="Regenerate salt" class="fa fa-cogs" style="color: black; "></span>
@@ -63,9 +71,11 @@
                         </td>
                     </table>
                     <table style="width: 100%; text-align: center;">
-                        <td style="width: 100%; padding-left: 10px;"><input type="password" style="width: 100%; padding-left: 10px;" placeholder="Enter password"/></td>
-                        <td style="padding: 10px">
-                            <span class="fa fa-arrow-right" style="color: black;"></span>
+                        <td style="width: 100%; padding-left: 10px;"><input type="password" id="<?= $passwordId ?>" style="width: 100%;
+                                  padding-left: 10px;" placeholder="Enter password"/></td>
+                        <td style="padding: 10px" id="hel">
+                            <span class="fa fa-arrow-right" style="color: black;"
+                                  onclick="generatePassword($('#<?= $passwordId ?>'), '<?= $domain ?>', '<?php if (isset($_SESSION['token'])) echo $_SESSION['token'] ?>');"></span>
                         </td>
                     </table>
                 <?php } ?>
@@ -123,7 +133,7 @@
     </div>
 </div>
 
-<?php if (!$loggedin) { ?>
+<?php if (!$loggedIn) { ?>
 
     <div class="modal" id="logInModal" tabindex="-1" role="dialog" aria-labelledby="logInModalLabel">
         <div class="modal-dialog" role="document">

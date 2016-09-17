@@ -19,3 +19,20 @@ logInModalSelector.each(function () {
     mainSelector.addClass('blur');
 });
 
+function generatePassword(passwordField, domain, token) {
+    var password = passwordField.val();
+    $.ajax({
+        type: "GET",
+        url: "/rest/generate.php",
+        data: {domain: domain,
+            password: password,
+            token: token},
+        success: function (data, status) {
+            passwordField.attr('type', 'text');
+            passwordField.val(data);
+        },
+        error: function (data, status) {
+            console.log(data);
+        }
+    });
+}

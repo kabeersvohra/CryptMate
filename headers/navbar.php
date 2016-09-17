@@ -2,7 +2,9 @@
     <div class="container topnav">
         <a class="navbar-brand" style="padding: 10px;" href="/"><div id="img" style="height: 30px;"></div></a>
         <ul class="nav navbar-nav navbar-right" style="padding: 10px; ">
-            <li><a class="nav-item nav-link" style="padding-right: 10px;">Login</a></li>
+            <li><a class="nav-item nav-link" style="padding-right: 10px;">
+                    <?php if(isset($username)) echo $username; else echo "Login"; ?>
+                </a></li>
             <li class="nav-item btn-group">
                 <a class="dropdown-toggle nav-link" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     <span class="fa fa-gear"></span> <span class="caret"></span>
