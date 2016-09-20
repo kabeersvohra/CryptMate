@@ -5,7 +5,7 @@
  * Date: 9/3/2015
  * Time: 2:40 PM
  */
-include_once $_SERVER['DOCUMENT_ROOT'] . '/headers/header.php';
+include_once $_SERVER['DOCUMENT_ROOT'] . '/includes/header.php';
 ?>
 
 <title>Reset Password</title>

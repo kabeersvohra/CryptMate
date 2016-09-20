@@ -6,7 +6,7 @@
  * Time: 22:35
  */
 
-include_once $_SERVER['DOCUMENT_ROOT'] . '/headers/header.php';
+include_once $_SERVER['DOCUMENT_ROOT'] . '/includes/header.php';
 ?>
 
 <title>Verify Email</title>

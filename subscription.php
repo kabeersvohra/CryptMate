@@ -10,33 +10,28 @@ if (!isset($_SESSION)) session_start();
 
 include_once $_SERVER['DOCUMENT_ROOT'] . '/database/connect.php';
 
-$_SESSION["token"] = "HCoUQ9yGbjSP4iyLLAClrXCVbh3Uc2ZHuds9cOFbVlROrdq2BScSDFDCKtkKl0iDbyBbc5cYgRCvUQmlwn2ZStpqMz2Xx0qyxSxxMxjQfKcXqo8NBYAhfQySdnFAkUWFAj3cFcRIKTv16qBvf1CkGY1JbuajeUOE3FExFl6f5o6YFvjIlLSPyJox4mH66lzXQ2klddq6rkTWD3uOCbr1IFnzQUuL7RyKIGWLJaFYkoLLh4pH3GxAaKZOvhnpYLXx";
-
 ?>
 <head>
-    <?php include("headers/header.php") ?>
+    <?php include("includes/header.php") ?>
     <link href="css/subscription.css" rel="stylesheet" type="text/css">
-    <link href="css/font-awesome.min.css" rel="stylesheet" type="text/css">
-    <link href="css/bootstrap.min.css" rel="stylesheet">
-    <link href="css/landing-page.css" rel="stylesheet">
-    <link href="css/navbar.css" rel="stylesheet">
 </head>
 
 
-<?php include_once 'headers/navbar.php' ?>
+<?php include_once 'includes/navbar.php' ?>
 
 <div class="container" style="padding-top: 70px; text-align: center;">
 
     <div class="row">
         <?php
-        if ($db->getSubscriptionEnded($_SESSION["token"]))
-            echo "<p>Subscription ended:</p>";
-        else
-            echo "<p>Subscription ends:</p>";
+        if (isset($_COOKIE['token'])) {
+            if ($db->getSubscriptionEnded($_COOKIE["token"]))
+                echo "<p>Subscription ended:</p>";
+            else
+                echo "<p>Subscription ends:</p>";
 
-        echo $db->getStripeCustomerDetails($_SESSION["token"])
+            echo "<p style='margin-bottom: 0;'>" . $db->getSubscriptionEnd($_COOKIE["token"]) . "</p>";
+        }
         ?>
-        <p style='margin-bottom: 0;'><?= $db->getSubscriptionEnd($_SESSION["token"]) ?></p>
     </div>
     
     <div class="row options">
@@ -60,7 +55,8 @@ $_SESSION["token"] = "HCoUQ9yGbjSP4iyLLAClrXCVbh3Uc2ZHuds9cOFbVlROrdq2BScSDFDCKt
                     </li>
                 </ul>
                 <div style="text-align: center;">
-                    <button id="monthlySubscribe" type="button" data-toggle="modal" href="#paymentModal">sub</button>
+                    <button id="monthlySubscribe" type="button" data-toggle="modal" href="#paymentModal"
+                            onclick="setPaymentMethodToMonthly();">Subscribe</button>
                 </div>
             </div>
 
@@ -83,12 +79,8 @@ $_SESSION["token"] = "HCoUQ9yGbjSP4iyLLAClrXCVbh3Uc2ZHuds9cOFbVlROrdq2BScSDFDCKt
                     </li>
                 </ul>
                 <div style="text-align: center;">
-                   <form action="https://www.sandbox.paypal.com/cgi-bin/webscr" method="post" target="_top">
-                        <input type="hidden" name="cmd" value="_s-xclick">
-                        <input type="hidden" name="hosted_button_id" value="D5S4UG668P5P8">
-                        <input type="image" src="https://www.sandbox.paypal.com/en_US/GB/i/btn/btn_subscribeCC_LG.gif" border="0" name="submit" alt="PayPal – The safer, easier way to pay online.">
-                        <img alt="" border="0" src="https://www.sandbox.paypal.com/en_GB/i/scr/pixel.gif" width="1" height="1">
-                    </form>
+                    <button id="monthlySubscribe" type="button" data-toggle="modal" href="#paymentModal"
+                            onclick="setPaymentMethodToYearly();">Subscribe</button>
                 </div>
             </div>
         </div>
@@ -101,11 +93,11 @@ $_SESSION["token"] = "HCoUQ9yGbjSP4iyLLAClrXCVbh3Uc2ZHuds9cOFbVlROrdq2BScSDFDCKt
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                         <h4 class="modal-title" align="center">Checkout</h4>
-                        <p align="center">CryptMate Monthly</p>
+                        <p align="center" id="paymentModalTitle"></p>
                     </div>
                     <div class="modal-body">
                         <div class="message-wrapper"></div>
-                        <h1 align="center">£3</h1>
+                        <h1 align="center" id="paymentModalPrice">£3</h1>
 
                         <div class="form-group">
                             <label>Name On Card</label>
@@ -137,6 +129,8 @@ $_SESSION["token"] = "HCoUQ9yGbjSP4iyLLAClrXCVbh3Uc2ZHuds9cOFbVlROrdq2BScSDFDCKt
             </div>
         </div>
     </div>
+
+    <?php include("includes/modals.php") ?>
 
 </div>
 

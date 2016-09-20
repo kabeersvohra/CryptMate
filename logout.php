@@ -1,35 +1,42 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: Kabeer
- * Date: 30/05/2015
- * Time: 16:19
- */
+$loggedin = isset($_COOKIE["token"]);
 
-if (!isset($_SESSION)) session_start();
-$loggedin = isset($_SESSION["token"]);
+if ($loggedin) {
+    unset($_COOKIE["token"]);
+    setcookie('token', '', time() - 3600, '/');
+}
+
 if ($loggedin)
-    unset($_SESSION["token"]);
-
-include_once $_SERVER['DOCUMENT_ROOT'] . '/headers/header.php';
+    $title = "Logged Out";
+else
+    $title = "Log Out";
 ?>
+
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/html">
 <head>
-    <?php
-        if ($loggedin)
-            echo "<title>Logged Out</title>";
-        else
-            echo "<title>Log Out</title>";
-    ?>
+
+    <?php include("includes/header.php") ?>
+    <title><?= $title ?></title>
+
 </head>
 <body>
-<div class="container mainbody" style="text-align: center; font-weight: normal;">
+
+<?php include_once 'includes/navbar.php' ?>
+
+<div class="container" style="margin-top: 70px; text-align: center; font-weight: normal;">
     <?php
-        if ($loggedin)
-            echo "You have logged out successfully";
-        else
-            echo "You are not logged in, please log in";
+    if ($loggedin)
+        echo "You have logged out successfully";
+    else
+        echo "You are not logged in, please log in";
     ?>
 </div>
+
+
+<script src="js/jquery.js"></script>
+<script src="js/tether.min.js"></script>
+<script src="js/bootstrap.min.js"></script>
 </body>
 
 

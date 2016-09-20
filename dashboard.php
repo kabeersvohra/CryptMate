@@ -2,39 +2,29 @@
 <html xmlns="http://www.w3.org/1999/html">
 <head>
 
-    <?php include("headers/header.php") ?>
+    <?php include("includes/header.php") ?>
+    <link href="css/dashboard.css" rel="stylesheet">
 
     <title>Dashboard</title>
-
-    <link href="css/bootstrap.min.css" rel="stylesheet">
-    <link href="css/landing-page.css" rel="stylesheet">
-    <link href="css/navbar.css" rel="stylesheet">
-    <link href="css/dashboard.css" rel="stylesheet">
-    <link href="css/font-awesome.min.css" rel="stylesheet" type="text/css">
 
 </head>
 
 <?php
-    session_start();
-
     include_once $_SERVER['DOCUMENT_ROOT'] . '/database/connect.php';
-    $_SESSION['token'] = "HCoUQ9yGbjSP4iyLLAClrXCVbh3Uc2ZHuds9cOFbVlROrdq2BScSDFDCKtkKl0iDbyBbc5cYgRCvUQmlwn2ZStpqMz2Xx0qyxSxxMxjQfKcXqo8NBYAhfQySdnFAkUWFAj3cFcRIKTv16qBvf1CkGY1JbuajeUOE3FExFl6f5o6YFvjIlLSPyJox4mH66lzXQ2klddq6rkTWD3uOCbr1IFnzQUuL7RyKIGWLJaFYkoLLh4pH3GxAaKZOvhnpYLXx";
-
-    $loggedIn = true;
-    $username = "Login";
+    $loggedIn = false;
     $domains = array("www.facebook.com", "google.com", "how-to-geek.com");
 
-//    if (isset($_SESSION['token']))
-//    {
-//        $username = $db->getLoggedInUser($_SESSION['token']);
-//        $domains = $db->getKeyedDomains($_SESSION['token']);
-//    }
+    if (isset($_COOKIE['token']))
+    {
+        $loggedIn = true;
+        $domains = $db->getKeyedDomains($_COOKIE['token']);
+    }
 ?>
 
 <body>
 <div id="main">
 
-    <?php include_once 'headers/navbar.php' ?>
+    <?php include_once 'includes/navbar.php' ?>
 
     <div class="container" style="margin-top: 70px;">
 
@@ -58,7 +48,9 @@
                     ?>
 
                     <table style="width: 100%; text-align: center;">
-                        <td style="padding: 10px;"><img src="https://www.google.com/s2/favicons?domain=<?php echo $domain; ?>"/></td>
+                        <td style="padding: 10px;">
+                            <img src="https://www.google.com/s2/favicons?domain=<?php echo $domain; ?>"/>
+                        </td>
                         <td style="padding: 10px; text-align: left; width: 100%"><?php echo $domain; ?></td>
                         <td style="padding-right: 10px">
                             <span title="Regenerate salt" class="fa fa-cogs" style="color: black; "></span>
@@ -67,15 +59,18 @@
                             <span title="Edit domain" class="fa fa-pencil" style="color: black; "></span>
                         </td>
                         <td style="padding-right: 10px;">
-                            <span title="Delete domain" class="fa fa-trash" style="color: black;"></span>
+                            <span title="Delete domain" class="fa fa-trash" style="color: black;"
+                                  onclick="deleteDomain('<?= $domain ?>');"></span>
                         </td>
                     </table>
                     <table style="width: 100%; text-align: center;">
                         <td style="width: 100%; padding-left: 10px;"><input type="password" id="<?= $passwordId ?>" style="width: 100%;
-                                  padding-left: 10px;" placeholder="Enter password"/></td>
+                                  padding-left: 10px;"
+                                                                            placeholder="Enter password"/></td>
                         <td style="padding: 10px" id="hel">
                             <span class="fa fa-arrow-right" style="color: black;"
-                                  onclick="generatePassword($('#<?= $passwordId ?>'), '<?= $domain ?>', '<?php if (isset($_SESSION['token'])) echo $_SESSION['token'] ?>');"></span>
+                                  onclick="generatePassword($('#<?= $passwordId ?>'), '<?= $domain ?>',
+                                      <?php if (isset($_COOKIE['token'])) echo $_COOKIE['token'] ?>');"></span>
                         </td>
                     </table>
                 <?php } ?>
@@ -89,49 +84,55 @@
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
                 <h4 class="modal-title" id="exampleModalLabel">Add domain</h4>
             </div>
+            <form onsubmit="addDomain(<?php if (isset($_COOKIE['token'])) echo $_COOKIE['token'] ?>)">
+                <div class="modal-body">
+                        <div class="form-group">
+                            <label for="domain" class="control-label">Domain</label>
+                            <input type="url" class="form-control" id="domain">
+                        </div>
+                        <div class="form-group">
+                            <label for="password" class="control-label">Password</label>
+                            <input type="password" class="form-control" id="password">
+                        </div>
+                        <div class="form-group">
+                            <label for="confirmpassword" class="control-label">Confirm Password</label>
+                            <input type="password" class="form-control" id="confirmpassword">
+                        </div>
+                </div>
+                <div class="modal-footer">
+                    <input type="submit" class="btn btn-primary">
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="deleteDomainModal" tabindex="-1" role="dialog" aria-labelledby="deleteDomainModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title" id="deleteDomainModalLabel">Delete domain</h4>
+            </div>
             <div class="modal-body">
-                <form>
-                    <div class="form-group">
-                        <label for="domain" class="control-label">Domain</label>
-                        <input type="url" class="form-control" id="domain">
-                    </div>
-                    <div class="form-group">
-                        <label for="password" class="control-label">Password</label>
-                        <input type="password" class="form-control" id="password">
-                    </div>
-                    <div class="form-group">
-                        <label for="confirmpassword" class="control-label">Confirm Password</label>
-                        <input type="password" class="form-control" id="confirmpassword">
-                    </div>
-                </form>
+                Are you sure you wish to delete the domain <span id="deleteDomainText"></span>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-primary">Submit</button>
+                <button type="button" class="btn btn-primary" onclick=
+                "confirmDeleteDomain('<?php if (isset($_COOKIE['token'])) echo $_COOKIE['token'] ?>');">Delete</button>
             </div>
         </div>
     </div>
 </div>
 
-<div class="modal fade" id="deleteAccountModal" tabindex="-1" role="dialog" aria-labelledby="deleteAccountModalLabel">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title" id="deleteAccountModalLabel">Delete account</h4>
-            </div>
-            <div class="modal-body">
-                Are you sure you want to delete? For your security, the moment you press delete ALL of your data will be irrevocably deleted from our servers and the only way to start again would be to create a new account.
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-primary">Delete</button>
-            </div>
-        </div>
-    </div>
-</div>
+<?php include("includes/modals.php") ?>
 
 <?php if (!$loggedIn) { ?>
 
@@ -142,19 +143,18 @@
                     <h4 class="modal-title" id="logInModalLabel">Login</h4>
                 </div>
                 <div class="modal-body">
-                    <?php include_once "loginform.php" ?>
+                    <?php include_once "forms/login.php" ?>
                 </div>
             </div>
         </div>
     </div>
-
-
-
 <?php } ?>
 
 <script src="js/jquery.js"></script>
 <script src="js/tether.min.js"></script>
 <script src="js/bootstrap.min.js"></script>
+<script src="js/login.js"></script>
+<script src="js/global.js"></script>
 <script src="js/dashboard.js"></script>
 
 </body>

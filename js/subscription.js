@@ -1,11 +1,14 @@
 var form;
+var plan;
+var $paymentModalPrice = $("#paymentModalPrice");
+var $paymentModalTitle = $("#paymentModalTitle");
 
 $(document).ready(function (e) {
     $('#checkout').submit(function (e) {
 
         form = $(this);
 
-        // form.find('button').prop('disabled', true);
+        form.find('button').prop('disabled', true);
 
         var number = form.find('#ccnumber').val();
         var securitycode = form.find('#securitycode').val();
@@ -31,7 +34,7 @@ function stripeSuccess(status, response) {
             type: "POST",
             url: "/processing/stripe.php",
             data: {stripeToken: token,
-                stripePlan: "monthly",
+                stripePlan: plan,
                 subscribe: true},
             success: stripeResponseSuccess,
             error: stripeResponseFail
@@ -49,4 +52,16 @@ function stripeResponseFail(data, status) {
     alert("Data: " + data + "\nStatus: " + status);
     console.log(data);
     console.log(status);
+}
+
+function setPaymentMethodToMonthly() {
+    plan = "Monthly";
+    $paymentModalTitle.text("CryptMate Monthly");
+    $paymentModalPrice.text("£3");
+}
+
+function setPaymentMethodToYearly() {
+    plan = "Yearly";
+    $paymentModalTitle.text("CryptMate Yearly");
+    $paymentModalPrice.text("£30");
 }

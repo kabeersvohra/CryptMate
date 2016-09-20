@@ -23,3 +23,8 @@
 <meta name="msapplication-TileImage" content="img/favicon/mstile-144x144.png">
 <meta name="msapplication-config" content="img/favicon/browserconfig.xml">
 <meta name="theme-color" content="#ffffff">
+
+<link href="css/bootstrap.min.css" rel="stylesheet">
+<link href="css/landing-page.css" rel="stylesheet">
+<link href="css/navbar.css" rel="stylesheet">
+<link href="css/font-awesome.min.css" rel="stylesheet" type="text/css">

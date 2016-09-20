@@ -6,7 +6,7 @@
  * Time: 15:56
  */
 
-include_once $_SERVER['DOCUMENT_ROOT'] . '/headers/header.php';
+include_once $_SERVER['DOCUMENT_ROOT'] . '/includes/header.php';
 
 ?>
 <title>Forgotten Username</title>

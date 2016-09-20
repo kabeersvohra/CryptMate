@@ -247,17 +247,12 @@ CryptMate';
         return $this->queryReturningSingleResult($query, "s", array($token));
     }
 
-    public function createDomain ($token, $password, $subdomain, $hostname, $tld, $linkDomain)
+    public function createDomain ($token, $password, $domain, $linkDomain)
     {
-        if ($subdomain == "")
-            $domain = "$hostname.$tld";
-        else
-            $domain = "$subdomain.$hostname.$tld";
-
         $domain = strtolower($domain);
 
         if (!filter_var(gethostbyname($domain), FILTER_VALIDATE_IP))
-            return "domaininvalid";
+            throw new Exception("domainInvalid");
 
         $query1 =
             "SELECT $this->key_id, $this->key_username
@@ -266,7 +261,7 @@ CryptMate';
         $userID = $this->queryReturningSingleResult($query1, "s", array($token));
 
         if($userID == false)
-            return "tokenerror";
+            throw new Exception("tokenError");
 
         if ($linkDomain == "")
             $salt = $this->randomString(256);
@@ -286,7 +281,7 @@ CryptMate';
         $result = $this->queryWithoutReturningResult($query3, "is", array($userID, $domain));
 
         if($result)
-            return "domainused";
+            throw new Exception("domainUsed");
 
         $query4 =
             "INSERT INTO $this->table_keys ($this->key_userID, $this->key_domain, $this->key_salt, $this->key_cost)
@@ -571,7 +566,7 @@ CryptMate';
         $userID = $this->queryReturningSingleResult($query1, "s", array($token));
 
         if($userID == false)
-            return false;
+            throw new Exception("tokenError");
 
         $query2 =
             "DELETE FROM $this->table_keys
@@ -587,7 +582,10 @@ CryptMate';
             "DELETE FROM $this->table_user
              WHERE $this->key_token = ?;";
         $rows = $this->queryReturningAffectedRows($query, "s", array($token));
-        return ($rows >= 1);
+        if ($rows >= 1)
+            return;
+        else
+            throw new Exception("tokenError");
     }
 
     public function getAccountDetails($token)
@@ -786,7 +784,7 @@ CryptMate';
             "SELECT $this->key_subscriptionEnd < CURRENT_DATE()
              FROM $this->table_user
              WHERE $this->key_token = ?;";
-        return $this->queryReturningSingleResult($query, "s", $token);
+        return $this->queryReturningSingleResult($query, "s", array($token));
     }
 
     public function addOneMonth($customerID)
