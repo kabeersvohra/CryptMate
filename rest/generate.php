@@ -7,18 +7,21 @@
  */
 include_once $_SERVER['DOCUMENT_ROOT'] . '/database/connect.php';
 
-if (isset($_GET['domain']) && isset($_GET['password']) && isset($_GET['token']))
+if (isset($_POST['domain']) && isset($_POST['password']) && isset($_POST['token']))
 {
     try {
-        $hash = $db->generatePassword($_GET['domain'], $_GET['password'], $_GET['token']);
+        $hash = $db->generatePassword($_POST['domain'], $_POST['password'], $_POST['token']);
         echo $hash;
+        exit;
     } catch (Exception $e) {
         header("HTTP/1.1 401 Unauthorized");
         echo $e->getMessage();
+        exit;
     }
 }
 else
 {
     header("HTTP/1.1 400 Bad Request");
     echo 'invalidParameters';
+    exit;
 }

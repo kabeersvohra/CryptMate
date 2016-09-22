@@ -1,13 +1,6 @@
+<head>
 <?php
-/**
- * Created by PhpStorm.
- * User: Kabeer
- * Date: 29/05/2015
- * Time: 15:24
- */
-
 include_once $_SERVER['DOCUMENT_ROOT'] . '/includes/header.php';
-
 ?>
     <title>Login</title>
 </head>
@@ -26,5 +19,11 @@ include_once $_SERVER['DOCUMENT_ROOT'] . '/includes/header.php';
     </div>
 
 </div>
+
+<script src="js/jquery.js"></script>
+<script src="js/tether.min.js"></script>
+<script src="js/bootstrap.min.js"></script>
+<script src="js/login.js"></script>
+<script src="js/global.js"></script>
 
 </body>

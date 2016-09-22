@@ -8,17 +8,20 @@
 
 include_once $_SERVER['DOCUMENT_ROOT'] . '/database/connect.php';
 
-if (isset($_GET['token']))
+if (isset($_POST['token']))
 {
     try {
-        $db->deleteAccount($_GET['token']);
+        $db->deleteAccount($_POST['token']);
+        exit;
     } catch (Exception $e) {
         header("HTTP/1.1 401 Unauthorized");
         echo $e->getMessage();
+        exit;
     }
 }
 else
 {
     header("HTTP/1.1 400 Bad Request");
     echo 'invalidParameters';
+    exit;
 }

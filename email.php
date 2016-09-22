@@ -9,7 +9,7 @@
 include_once $_SERVER['DOCUMENT_ROOT'] . '/includes/header.php';
 
 ?>
-<title>Change Password</title>
+<title>Change Email</title>
 </head>
 <body>
 
@@ -17,13 +17,13 @@ include_once $_SERVER['DOCUMENT_ROOT'] . '/includes/header.php';
 
 <div class="container" style="margin-top: 70px;">
 
-    <?php include "forms/password.php"; ?>
+    <?php include "forms/email.php"; ?>
 </div>
 
 <script src="js/jquery.js"></script>
 <script src="js/tether.min.js"></script>
 <script src="js/bootstrap.min.js"></script>
 <script src="js/global.js"></script>
-<script src="js/password.js"></script>
+<script src="js/email.js"></script>
 
 </body>

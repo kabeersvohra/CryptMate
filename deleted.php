@@ -1,9 +1,15 @@
 <?php
 $deleted = isset($_POST["deleted"]);
 
-if ($deleted)
+if ($deleted) {
     $title = "Account Deleted";
-else
+    $loggedin = isset($_COOKIE["token"]);
+
+    if ($loggedin) {
+        unset($_COOKIE["token"]);
+        setcookie('token', '', time() - 3600, '/');
+    }
+} else
     $title = "Delete Account";
 ?>
 

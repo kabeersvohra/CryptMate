@@ -1,3 +1,5 @@
+<?php if (isset($_COOKIE["token"])) header("Location: /dashboard.php"); ?>
+
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/html">
     <head>
@@ -14,11 +16,6 @@
         <link href="css/font-awesome.min.css" rel="stylesheet" type="text/css">
 
         <link href="css/index.css" rel="stylesheet" type="text/css">
-
-        <script src="js/jquery.js"></script>
-        <script src="js/tether.min.js"></script>
-        <script src="js/bootstrap.min.js"></script>
-        <script src="js/index.js"></script>
 
         <link rel="apple-touch-icon" sizes="57x57" href="/img/favicon/apple-touch-icon-57x57.png">
         <link rel="apple-touch-icon" sizes="60x60" href="/img/favicon/apple-touch-icon-60x60.png">
@@ -55,47 +52,18 @@
 
             <div class="col-md-4 col-xs-12" style="text-align: center;">
                 <div class="col-sm-10 col-sm-offset-1 col-md-12">
-
-<!--                    <form class="form-horizontal" role="form" id="form" method="post" action="action/login.php" style="padding-top: 10%">-->
-<!--                        <div class="form-group">-->
-<!--                            <div class="col-sm-12">-->
-<!--                                <input type="text" class="form-control" id="username" name="username" style="text-align: center; border-radius: 0px;"-->
-<!--                                       value="--><?php
-//                                       if (isset($_SESSION["loginerrorusername"]))
-//                                       {
-//                                           echo $_SESSION["loginerrorusername"];
-//                                           unset($_SESSION["loginerrorusername"]);
-//                                       }
-//                                       ?><!--">-->
-<!--                            </div>-->
-<!--                        </div>-->
-<!--                        <div class="form-group">-->
-<!--                            <div class="col-sm-12">-->
-<!--                                <input type="password" name="password" class="form-control" id="password" style="text-align: center; border-radius: 0px;">-->
-<!--                            </div>-->
-<!--                        </div>-->
-<!--                        <div class="form-group">-->
-<!--                            <div class="col-sm-12" style="text-align: center;">-->
-<!--                                <button type="submit" class="btn btn-default" style="border-radius: 0px">Login</button>-->
-<!--                                <button type="submit" class="btn btn-default" style="border-radius: 0px">Register</button>-->
-<!--                            </div>-->
-<!--                        </div>-->
-<!--                    </form>-->
-<!---->
-<!--                    <div class="col-sm-12" style="text-align: center;padding-top: 20px;line-height: 30px;">-->
-<!--                        <p>Haven't got an account yet? Create one <a href="signup.php">here</a></p>-->
-<!--                        <p>Forgotten your password? Reset it <a href="forgottenpassword.php">here</a></p>-->
-<!--                        <p>Forgotten your username? Request a reminder <a href="forgottenusername.php">here</a></p>-->
-<!--                    </div>-->
-
                     <?php include_once "forms/login.php" ?>
-
                 </div>
 
             </div>
 
         </div>
 
+    <script src="js/jquery.js"></script>
+    <script src="js/tether.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/login.js"></script>
+    <script src="js/global.js"></script>
     </body>
 
 </html>

@@ -89,9 +89,7 @@ class database {
         $successful = $this->queryWithoutReturningResult($query1, "s", array($username));
 
         if ($successful)
-        {
-           return "username";
-        }
+           throw new Exception("username");
 
         $query2 =
             "SELECT 1
@@ -100,7 +98,7 @@ class database {
         $successful = $this->queryWithoutReturningResult($query2, "s", array($email));
 
         if ($successful)
-            return "email";
+            throw new Exception("email");
 
         $query3 =
             "SELECT *
@@ -581,6 +579,7 @@ CryptMate';
         $query =
             "DELETE FROM $this->table_user
              WHERE $this->key_token = ?;";
+
         $rows = $this->queryReturningAffectedRows($query, "s", array($token));
         if ($rows >= 1)
             return;
@@ -678,7 +677,10 @@ CryptMate';
              FROM $this->table_user
              WHERE $this->key_email = ? AND $this->key_token = ?;";
         $successful = $this->queryWithoutReturningResult($query, "ss", array($currentEmail, $token));
-        return $successful;
+        if ($successful)
+            return true;
+        else
+            throw new Exception("currentEmailWrong");
     }
 
     public function isNewEmail($email)
@@ -707,7 +709,7 @@ CryptMate';
             array($token, $currentEmail, $hash1, $verified, $newEmail, $hash2, $verified));
 
         if ($rows != 1)
-            return false;
+            throw new Exception("insertFailed");
 
         $query2 =
             "SELECT $this->key_name
@@ -716,16 +718,14 @@ CryptMate';
         $name = $this->queryReturningSingleResult($query2, "s", array($token));
 
         if ($name == false)
-            return false;
+            throw new Exception("tokenError");
 
         $this->sendCurrentEmailVerification($hash1, $currentEmail, $name);
         $this->sendNewEmailVerification($hash2, $newEmail, $name);
         return true;
     }
 
-
-    //TODO: create enum for magic numbers
-    public function changePassword($oldPassword, $newPassword, $token)
+    public function changePassword($currentPassword, $newPassword, $token)
     {
         $query1 =
             "SELECT $this->key_hash
@@ -735,8 +735,11 @@ CryptMate';
 
         if ($hash != false)
         {
-            if (password_verify($oldPassword, $hash))
+            if (password_verify($currentPassword, $hash))
             {
+                if (preg_match('/^.*(?=.{7,})(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).*$/', $newPassword) != 1)
+                    throw new Exception("newPasswordWeak");
+
                 $newHash = password_hash($newPassword, $this->cryptMateHashingAlgo);
 
                 $query2 =
@@ -745,19 +748,15 @@ CryptMate';
                      WHERE $this->key_token = ?";
                 $rows = $this->queryReturningAffectedRows($query2, "ss", array($newHash, $token));
                 if ($rows == 1)
-                    return 1;
+                    return true;
                 else
-                    return 3;
+                    throw new Exception("tokenError");
             }
             else
-            {
-                return 2;
-            }
+                throw new Exception("passwordIncorrect");
         }
         else
-        {
-            return 3;
-        }
+            throw new Exception("tokenError");
     }
 
     public function getSubscriptionEnd($token)

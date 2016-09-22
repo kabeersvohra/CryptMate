@@ -103,6 +103,17 @@
                             <label for="confirmpassword" class="control-label">Confirm Password</label>
                             <input type="password" class="form-control" id="confirmpassword">
                         </div>
+                        <div class="form-group">
+                            <label class="control-label col-sm-12" for="linkdomain"
+                                   class="control-label">Link Domain:</label>
+
+                            <select name="linkdomain" class="form-control" id="domain" name="domain"
+                                    style="text-align: center;">
+                                <?php array_unshift($domains, ""); foreach ($domains as $domain):?>
+                                    <option value="<?= $domain; ?>"><?= $domain; ?></option>
+                                <?php endforeach; ?>
+                            </select>
+                        </div>
                 </div>
                 <div class="modal-footer">
                     <input type="submit" class="btn btn-primary">

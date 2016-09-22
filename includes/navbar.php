@@ -22,6 +22,8 @@ include_once $_SERVER['DOCUMENT_ROOT'] . '/database/connect.php';
                            title="Manage subscription">Manage Subscription</a>
                         <a class="dropdown-item" href="password.php"
                            title="Manage account">Change Password</a>
+                        <a class="dropdown-item" href="email.php"
+                           title="Manage account">Change Email</a>
                         <a class="dropdown-item" href="#deleteAccountModal"
                            data-toggle="modal" title="Delete domain">Delete Account</a>
                         <a class="dropdown-item" href="logout.php"

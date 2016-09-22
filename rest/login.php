@@ -1,31 +1,29 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: Kabeer
- * Date: 17/09/2016
- * Time: 16:21
- */
 include_once $_SERVER['DOCUMENT_ROOT'] . '/database/connect.php';
 
-if (isset($_GET['username']) && isset($_GET['password']))
+if (isset($_POST['username']) && isset($_POST['password']))
 {
     try {
-        $token = $db->verifyUser($_GET['username'], $_GET['password']);
+        $token = $db->verifyUser($_POST['username'], $_POST['password']);
 
         if ($db->getSubscriptionEnded($token)) {
             header("HTTP/1.1 401 Unauthorized");
             echo 'subscriptionEnded';
+            exit;
         }
 
         echo $token;
+        exit;
 
     } catch (Exception $e) {
         header("HTTP/1.1 401 Unauthorized");
         echo $e->getMessage();
+        exit;
     }
 }
 else
 {
     header("HTTP/1.1 400 Bad Request");
     echo 'invalidParameters';
+    exit;
 }

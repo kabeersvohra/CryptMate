@@ -1,8 +1,10 @@
-var form = $('#login');
+var form = $('#register');
 
 form.submit(function(e) {
     var username = form.find("#username").val();
+    var email = form.find("#email").val();
     var password = form.find("#password").val();
+    var confirmPassword = form.find("#confirmpassword").val();
 
     $.ajax({
         type: "POST",

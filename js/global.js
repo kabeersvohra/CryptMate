@@ -1,6 +1,6 @@
 function deleteAccount(token) {
     $.ajax({
-        type: "GET",
+        type: "POST",
         url: "/rest/deleteaccount.php",
         data: {token: token},
         success: function (data, status) {
@@ -12,7 +12,13 @@ function deleteAccount(token) {
             form.submit();
         },
         error: function(data, status) {
-
+            console.log(data.responseText);
         }
     });
+}
+
+function getCookie(name) {
+    var value = "; " + document.cookie;
+    var parts = value.split("; " + name + "=");
+    if (parts.length == 2) return parts.pop().split(";").shift();
 }

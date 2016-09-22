@@ -32,7 +32,7 @@ logInModalSelector.each(function () {
 function generatePassword(passwordField, domain, token) {
     var password = passwordField.val();
     $.ajax({
-        type: "GET",
+        type: "POST",
         url: "/rest/generate.php",
         data: {domain: domain,
             password: password,
@@ -42,7 +42,7 @@ function generatePassword(passwordField, domain, token) {
             passwordField.val(data);
         },
         error: function (data, status) {
-            console.log(data);
+            console.log(data.responseText);
         }
     });
 }
@@ -55,7 +55,7 @@ function deleteDomain(domain) {
 
 function confirmDeleteDomain(token) {
     $.ajax({
-        type: "GET",
+        type: "POST",
         url: "/rest/deletedomain.php",
         data: {domain: domainToDelete,
             token: token},
@@ -64,7 +64,7 @@ function confirmDeleteDomain(token) {
             location.reload();
         },
         error: function (data, status) {
-            console.log(data);
+            console.log(data.responseText);
         }
     });
 }
@@ -73,22 +73,22 @@ function addDomain(token) {
     var form = $(this);
     var domain = form.find("#domain").val();
     var password = form.find("#password").val();
-    var confirmpassword = form.find("#confirmpassword").val();
-    var linkdomain = form.find("#linkdomain").val();
+    var confirmPassword = form.find("#confirmpassword").val();
+    var linkDomain = form.find("#linkdomain").val();
 
-    if (password == confirmpassword) {
+    if (password == confirmPassword) {
         $.ajax({
-            type: "GET",
+            type: "POST",
             url: "/rest/createdomain.php",
             data: {domain: domain,
                 password: password,
                 token: token,
-                linkdomain: linkdomain},
+                linkdomain: linkDomain},
             success: function (data, status) {
                 location.reload();
             },
             error: function (data, status) {
-                console.log(data);
+                console.log(data.responseText);
             }
         });
     }
