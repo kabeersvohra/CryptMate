@@ -16,9 +16,30 @@ include_once $_SERVER['DOCUMENT_ROOT'] . '/headers/header.php';
 
 <?php
 
-if (isset($_POST["email"]) && isset($_POST["hash"]))
+if (isset($_SESSION["resetpasswordsuccess"]))
 {
-    if($db->checkResetPassword($_POST["email"], $_POST["hash"]))
+    echo
+        "<div class='alert alert-success' role='alert'>
+                <span class='glyphicon glyphicon-ok-sign' aria-hidden='true'></span>
+                <span class='sr-only'>Success:</span>
+                " . $_SESSION["resetpasswordsuccess"] . "
+             </div>";
+    unset($_SESSION["resetpasswordsuccess"]);
+}
+elseif (isset($_SESSION["resetpassworderror"]))
+{
+    echo
+        "<div class='alert alert-danger' role='alert'>
+                <span class='glyphicon glyphicon-exclamation-sign' aria-hidden='true'></span>
+                <span class='sr-only'>Error:</span>
+                " . $_SESSION["resetpassworderror"] . "
+             </div>";
+    unset($_SESSION["resetpassworderror"]);
+}
+
+if (isset($_GET["email"]) && isset($_GET["hash"]))
+{
+    if($db->checkResetPassword($_GET["email"], $_GET["hash"]))
     {
         ?>
         <div class="col-sm-6 col-sm-offset-3">
@@ -35,8 +56,8 @@ if (isset($_POST["email"]) && isset($_POST["hash"]))
                         <input type="password" name="confirmpassword" class="form-control" id="confirmpassword" autocomplete="off" style="text-align: center;">
                     </div>
                 </div>
-                <input type="hidden" name="hash" value="<?= $_POST["hash"] ?>" />
-                <input type="hidden" name="email" value="<?= $_POST["email"] ?>" />
+                <input type="hidden" name="hash" value="<?= $_GET["hash"] ?>" />
+                <input type="hidden" name="email" value="<?= $_GET["email"] ?>" />
                 <div class="form-group">
                     <div class="col-sm-12" style="text-align: center; padding-top: 20px;">
                         <button type="submit" class="btn btn-default">Submit</button>
@@ -51,11 +72,11 @@ if (isset($_POST["email"]) && isset($_POST["hash"]))
         echo "Invalid email reset link, please try and request another <a href='forgottenpassword.php'>here</a>";
     }
 }
-elseif (isset($_POST["email"]) && isset($_POST["cancelreset"]))
+elseif (isset($_GET["email"]) && isset($_GET["cancelreset"]))
 {
-    if ($_POST["cancelreset"])
+    if ($_GET["cancelreset"])
     {
-        if ($db->cancelResetPassword($_POST["email"]))
+        if ($db->cancelResetPassword($_GET["email"]))
         {
             echo "Reset password link successfully cancelled";
         }

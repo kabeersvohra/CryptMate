@@ -22,6 +22,8 @@ class database {
     private $key_name = "`Name`";
     private $key_username = "`Username`";
     private $key_hash = "`Hash`";
+    private $key_salt = "`Salt`";
+    private $key_cost = "`Cost`";
     private $key_token = "`Token`";
     private $key_userid = "`UserID`";
     private $key_domain = "`Domain`";
@@ -49,7 +51,9 @@ class database {
     private $key_subscriberid = "`SubscriberID`";
     private $key_verified = "`Verified`";
 
-    private $hashingAlgo = PASSWORD_DEFAULT;
+    private $cryptMateHashingAlgo = PASSWORD_DEFAULT;
+    private $generateHashingAlgo = PASSWORD_BCRYPT;
+    private $cost = 10;
 
     private $connected = false;
     private $connection;
@@ -149,7 +153,7 @@ class database {
 
         $this->sendEmailVerification($emailhash, $email, $name);
 
-        $hash = password_hash($password, $this->hashingAlgo);
+        $hash = password_hash($password, $this->cryptMateHashingAlgo);
 
         $sql4 =
             "INSERT INTO $this->table_user ($this->key_name, $this->key_username, $this->key_hash,
@@ -339,7 +343,6 @@ CryptMate';
             return "tokenerror";
 
         $salt = $this->randomString(256);
-        $iterationCount = ITERATIONCOUNT;
 
         $sql2 =
             "SELECT 1
@@ -355,15 +358,15 @@ CryptMate';
             return "domainused";
 
         $sql3 =
-            "INSERT INTO $this->table_keys ($this->key_userid, $this->key_domain, $this->key_salt, $this->key_iterationcount)
+            "INSERT INTO $this->table_keys ($this->key_userid, $this->key_domain, $this->key_salt, $this->key_cost)
              VALUES (?, ?, ?, ?);";
 
         $stmt3 = $this->connection->prepare($sql3);
-        $stmt3->bind_param("issi", $userid, $domain, $salt, $iterationCount);
+        $stmt3->bind_param("issi", $userid, $domain, $salt, $this->cost);
         $stmt3->execute();
         $stmt3->close();
 
-        return hash_pbkdf2($this->hashingAlgo, $password, $salt, $iterationCount);
+        return str_replace(array("'", "\""), "!", password_hash($password, $this->generateHashingAlgo, [$salt, $this->cost]));
     }
 
 
@@ -390,7 +393,6 @@ CryptMate';
             return "tokenerror";
 
         $salt = $this->randomString(256);
-        $iterationCount = ITERATIONCOUNT;
 
         $sql2 =
             "SELECT 1
@@ -406,15 +408,15 @@ CryptMate';
             return "domainused";
 
         $sql3 =
-            "INSERT INTO $this->table_keys ($this->key_userid, $this->key_domain, $this->key_salt, $this->key_iterationcount)
+            "INSERT INTO $this->table_keys ($this->key_userid, $this->key_domain, $this->key_salt, $this->key_cost)
              VALUES (?, ?, ?, ?);";
 
         $stmt3 = $this->connection->prepare($sql3);
-        $stmt3->bind_param("issi", $userid, $domain, $salt, $iterationCount);
+        $stmt3->bind_param("issi", $userid, $domain, $salt, $this->cost);
         $stmt3->execute();
         $stmt3->close();
 
-        return hash_pbkdf2($this->hashingAlgo, $password, $salt, $iterationCount);
+        return str_replace(array("'", "\""), "!", password_hash($password, $this->generateHashingAlgo, [$salt, $this->cost]));
     }
 
 
@@ -480,10 +482,12 @@ CryptMate';
         $stmt2->execute();
         $stmt2->bind_result($result);
         $array = [];
+
         while ($stmt2->fetch())
         {
-            array_push($array, $result['Domain']);
+            array_push($array, $result);
         }
+
         $stmt2->close();
 
         return $array;
@@ -509,17 +513,17 @@ CryptMate';
         }
 
         $sql2 =
-            "SELECT $this->key_salt, $this->key_iterationcount
+            "SELECT $this->key_salt, $this->key_cost
              FROM $this->table_keys
              WHERE $this->key_userid = ? AND $this->key_domain = ?;";
 
         $stmt2 = $this->connection->prepare($sql2);
         $stmt2->bind_param("is", $userid, $domain);
         $stmt2->execute();
-        $stmt2->bind_result($salt, $iterationCount);
+        $stmt2->bind_result($salt, $cost);
         $stmt2->fetch();
         $stmt2->close();
-        return hash_pbkdf2($this->hashingAlgo, $password, $salt, $iterationCount);
+        return str_replace(array("'", "\""), "!", password_hash($password, $this->generateHashingAlgo, [$salt, $cost]));
     }
 
     public function resendVerification($email, $username)
@@ -649,22 +653,25 @@ CryptMate';
         $stmt1 = $this->connection->prepare($sql1);
         $stmt1->bind_param("s", $email);
         $stmt1->execute();
+        $result = ($stmt1->affected_rows == 1);
         $stmt1->close();
-        return $stmt1->affected_rows == 1;
+        return $result;
     }
 
     public function resetPassword($password, $hash, $email)
     {
         $sql1 =
             "UPDATE $this->table_user
-             SET $this->key_password = ?
+             SET $this->key_hash = ?
              WHERE $this->key_email = ? AND $this->key_passwordhash = ?;";
 
         $stmt1 = $this->connection->prepare($sql1);
-        $stmt1->bind_param("sss", password_hash($password, $this->hashingAlgo), $email, $hash);
+        $passhash = password_hash($password, $this->cryptMateHashingAlgo);
+        $stmt1->bind_param("sss", $passhash, $email, $hash);
         $stmt1->execute();
+        $result = ($stmt1->affected_rows == 1);
         $stmt1->close();
-        return $stmt1->affected_rows == 1;
+        return $result;
     }
 
 
@@ -999,7 +1006,7 @@ CryptMate';
         {
             if (password_verify($oldpassword, $hash))
             {
-                $newhash = password_hash($newpassword, $this->hashingAlgo);
+                $newhash = password_hash($newpassword, $this->cryptMateHashingAlgo);
 
                 $sql3 =
                     "UPDATE $this->table_user
