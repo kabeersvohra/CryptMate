@@ -57,7 +57,7 @@ if (isset($_POST['username']) && isset($_POST['password']))
 }
 elseif (isset($_POST['token']) && isset($_POST['password']) && isset($_POST['domain']) && isset($_POST['newpassword']))
 {
-    if ($_POST['newpassword'])
+    if ($_POST['newpassword'] && isset($_POST['linkeddomain']))
     {
         $hash = $db->createDomainFromRest($_POST['token'], $_POST['password'], $_POST['domain']);
         switch($hash)
@@ -117,30 +117,33 @@ elseif (isset($_POST['token']) && isset($_POST['domain']))
 {
     $iskeyeddomain = $db->isKeyedDomain($_POST['token'], $_POST['domain']);
 
-    if ($iskeyeddomain == "tokenerror")
+    switch ($iskeyeddomain)
     {
-        $result = json_encode(array
-        (
-            'returntype' => 'error',
-            'error' => 'Token mismatch'
-        ));
+        case "tokenerror":
+            $result = json_encode(array
+            (
+                'returntype' => 'error',
+                'error' => 'Token mismatch'
+            ));
+            break;
+        case "iskeyeddomain":
+            $result = json_encode(array
+            (
+                'returntype' => 'newpassword',
+                'newpassword' => false
+            ));
+            break;
+        case "isntkeyeddomain":
+            $keyeddomains = $db->getKeyedDomains($_POST["token"]);
+            $result = json_encode(array
+            (
+                'returntype' => 'newpassword',
+                'newpassword' => true,
+                'keyeddomains' => $keyeddomains
+            ));
+            break;
     }
-    elseif ($iskeyeddomain == "iskeyeddomain")
-    {
-        $result = json_encode(array
-        (
-            'returntype' => 'newpassword',
-            'newpassword' => false
-        ));
-    }
-    elseif ($iskeyeddomain == "isntkeyeddomain")
-    {
-        $result = json_encode(array
-        (
-            'returntype' => 'newpassword',
-            'newpassword' => true
-        ));
-    }
+
 }
 elseif (isset($_POST['token']) && (isset($_POST['keyeddomains'])))
 {
