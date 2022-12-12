@@ -1,0 +1,10 @@
+RewriteEngine on
+AuthType Basic
+AuthName "cryptmate.com"
+AuthUserFile "/home/kvohra95/.htpasswds/cryptmate.com/passwd"
+require valid-user
+RewriteCond %{HTTP_HOST} ^cryptmate\.com$ [NC]
+RewriteRule ^(.*)$ https://www.cryptmate.com/$1 [L,R=301]
+RewriteCond %{HTTPS} !=on
+RewriteRule ^(.*)$ https://www.cryptmate.com/$1 [L,R=301]
+RewriteRule ^(.*)favicon\.ico /img/favicon.ico [L]

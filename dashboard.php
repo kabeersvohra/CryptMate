@@ -6,7 +6,7 @@
  * Time: 17:54
  */
 
-include_once $_SERVER['DOCUMENT_ROOT'] . 'headers/header.php';
+include_once $_SERVER['DOCUMENT_ROOT'] . '/headers/header.php';
 
 ?>
 <title>Dashboard</title>
