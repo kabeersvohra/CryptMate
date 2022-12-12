@@ -374,6 +374,40 @@ CryptMate';
         return hash_pbkdf2($this->hashingAlgo, $password, $salt, $iterationCount);
     }
 
+
+    public function isKeyedDomain($token, $domain)
+    {
+        $sql1 =
+            "SELECT $this->key_id
+             FROM $this->table_user
+             WHERE $this->key_token = ?;";
+
+        $stmt1 = $this->connection->prepare($sql1);
+        $stmt1->bind_param("s", $token);
+        $stmt1->execute();
+        $stmt1->bind_result($userid);
+        $result = $stmt1->fetch();
+        $stmt1->close();
+
+        if(!$result)
+        {
+            return "tokenerror";
+        }
+
+        $sql2 =
+            "SELECT *
+             FROM $this->table_keys
+             WHERE $this->key_userid = ? AND $this->key_domain = ?;";
+
+        $stmt2 = $this->connection->prepare($sql2);
+        $stmt2->bind_param("ss", $userid, $domain);
+        $stmt2->execute();
+        $result = $stmt2->fetch();
+        $stmt2->close();
+
+        return ($result) ? "iskeyeddomain" : "isntkeyeddomain";
+    }
+
     public function getKeyedDomains($token)
     {
         $sql1 =

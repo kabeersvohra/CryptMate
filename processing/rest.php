@@ -8,6 +8,8 @@
 
 include_once $_SERVER['DOCUMENT_ROOT'] . '/database/connectdatabase.php';
 
+$result = json_encode(array());
+
 if (isset($_POST['username']) && isset($_POST['password']))
 {
     $token = $db->verifyUser($_POST['username'], $_POST['password']);
@@ -41,6 +43,39 @@ if (isset($_POST['username']) && isset($_POST['password']))
                 'token' => $token
             ));
             break;
+    }
+}
+elseif (isset($_POST['token']) && isset($_POST['password']) && isset($_POST['domain']) && isset($_POST['newpassword']))
+{
+
+}
+elseif (isset($_POST['token']) && isset($_POST['domain']))
+{
+    $iskeyeddomain = $db->isKeyedDomain($_POST['token'], $_POST['domain']);
+
+    if ($iskeyeddomain == "tokenerror")
+    {
+        $result = json_encode(array
+        (
+            'returntype' => 'error',
+            'error' => 'Token mismatch'
+        ));
+    }
+    elseif ($iskeyeddomain == "iskeyeddomain")
+    {
+        $result = json_encode(array
+        (
+            'returntype' => 'newpassword',
+            'newpassword' => false
+        ));
+    }
+    elseif ($iskeyeddomain == "isntkeyeddomain")
+    {
+        $result = json_encode(array
+        (
+            'returntype' => 'newpassword',
+            'newpassword' => true
+        ));
     }
 }
 
