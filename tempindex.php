@@ -45,7 +45,7 @@
         <div class="container" style="padding-top: 20px;">
 
             <div class="col-md-6 col-xs-12 col-md-offset-1" style="text-align: center;">
-                <div class="col-xs-8 col-xs-offset-2 col-sm-6 col-sm-offset-3 col-md-8 col-md-offset-2">
+                <div class="col-xs-10 col-xs-offset-1 col-sm-6 col-sm-offset-3 col-md-8 col-md-offset-2">
                     <img src="img/logo.png" style="width: 100%">
                     <p>Regain control of your security</p>
                     <p>youtube</p>
