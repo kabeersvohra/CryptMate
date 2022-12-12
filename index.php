@@ -20,10 +20,16 @@ include_once 'header.php';
             <div class="container">
 
                 <div class="row">
-                    <div class="col-lg-12">
+                    <div class="col-lg-6">
                         <div class="intro-message">
                             <h1>SafeCrypt</h1>
+                            <p>
+                                Here at SafeCrypt your security is our priority
+                            </p>
                         </div>
+                    </div>
+                    <div class="col-lg-6">
+                        youtube video
                     </div>
                 </div>
 
