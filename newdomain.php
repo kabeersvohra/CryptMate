@@ -5,7 +5,7 @@
  * Date: 29/05/2015
  * Time: 21:51
  */
-include 'header.php';
+include_once 'header.php';
 
 ?>
 

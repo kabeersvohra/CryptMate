@@ -6,7 +6,7 @@
  * Time: 21:54
  */
 
-include 'header.php';
+include_once 'header.php';
 ?>
 
     <title>Encrypted</title>

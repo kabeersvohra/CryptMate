@@ -6,7 +6,7 @@
  * Time: 19:53
  */
 
-include 'header.php';
+include_once 'header.php';
 ?>
 
 

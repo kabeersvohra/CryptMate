@@ -29,6 +29,7 @@ class database {
     private $key_emailhash = "`EmailHash`";
     private $key_emailverification = "`EmailVerified`";
     private $key_email = "`Email`";
+    private $key_passwordhash = "`PasswordHash`";
 
     private $hashingAlgo = "sha256";
 
@@ -71,7 +72,7 @@ class database {
     {
         $salt = mcrypt_create_iv(256, MCRYPT_DEV_URANDOM);
         $token = mcrypt_create_iv(256, MCRYPT_DEV_URANDOM);
-        $emailhash = mcrypt_create_iv(32, MCRYPT_DEV_URANDOM);
+        $emailhash = md5(mcrypt_create_iv(32, MCRYPT_DEV_URANDOM));
         $emailverification = intval(false);
         $iterationCount = ITERATIONCOUNT;
 
@@ -101,25 +102,30 @@ class database {
         $message = '
         Dear ' . $username . '
 
-        Thanks for signing up!
+        Thanks for using our service!
 
-        Your account has been created, you can login with the following credentials after you have activated your
-        account by pressing the url below.
+        You can use your account after you have activated
+        it by clicking on the url below.
 
         Please click this link to activate your account:
         http://www.safecrypt.me/verifyemail.php?email=' . $email . '&hash=' . $hash . '
 
+        Enjoy!
+
+        SafeCrypt
         ';
 
-        $headers = 'From:admin@safecrypt.me' . "\r\n";
+        $headers = 'From: admin@safecrypt.me' . "\r\n";
         mail($to, $subject, $message, $headers);
     }
 
     public function verifyEmail($email, $hash)
     {
+        $verified = intval(true);
+
         $sql1 =
             "UPDATE $this->table_user
-             SET $this->key_emailverification = intval(true)
+             SET $this->key_emailverification = $verified
              WHERE $this->key_email = ? AND $this->key_emailhash = ?;";
 
         $stmt1 = $this->connection->prepare($sql1);
@@ -135,7 +141,6 @@ class database {
         {
             return false;
         }
-
 
     }
 
@@ -270,5 +275,92 @@ class database {
         $stmt2->fetch();
         $stmt2->close();
         return hash_pbkdf2($this->hashingAlgo, $password, $salt, $iterationCount);
+    }
+
+    public function resendVerification($email, $username)
+    {
+        $verified = intval(false);
+        $emailhash = md5(mcrypt_create_iv(32, MCRYPT_DEV_URANDOM));
+
+        $sql1 =
+            "UPDATE $this->table_user
+             SET $this->key_emailhash = ?, $this->key_emailverification = ?
+             WHERE $this->key_email = ? OR $this->key_username = ?;";
+
+        $stmt1 = $this->connection->prepare($sql1);
+        $stmt1->bind_param("ssss",$emailhash, $verified, $email, $username);
+        $stmt1->execute();
+
+        $sql2 =
+            "SELECT $this->key_email, $this->key_username
+             FROM $this->table_user
+             WHERE $this->key_email = ? OR $this->key_username = ?;";
+
+        $stmt2 = $this->connection->prepare($sql2);
+        $stmt2->bind_param("ss", $email, $username);
+        $stmt2->execute();
+        $result = $stmt2->fetch();
+
+        if($result)
+        {
+            $stmt2->bind_result($sqlemail, $sqlusername);
+            $this->sendEmailVerification($emailhash, $sqlemail, $sqlusername);
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+
+    public function forgottenPassword($email, $username)
+    {
+        $passwordhash = md5(mcrypt_create_iv(32, MCRYPT_DEV_URANDOM));
+
+        $sql1 =
+            "UPDATE $this->table_user
+             SET $this->key_passwordhash = ?
+             WHERE $this->key_email = ? AND $this->key_username = ?;";
+
+        $stmt1 = $this->connection->prepare($sql1);
+        $stmt1->bind_param("ssss",$passwordhash, $email, $username);
+        $result = $stmt1->execute();
+
+        if($result)
+        {
+            $this->sendPasswordReset($passwordhash, $email, $username);
+        }
+
+    }
+
+    private function sendPasswordReset($passwordhash, $email, $username)
+    {
+        $cancel = intval(true);
+
+        $to      = $email;
+        $subject = 'SafeCrypt Password Reset';
+        $message = '
+        Dear ' . $username . '
+
+        Somebody has requested a password reset for your account
+
+        If this was you please click the link below to reset your password:
+
+        http://www.safecrypt.me/resetpassword.php?email=' . $email . '&hash=' . $passwordhash . '
+
+        If this was not you, please click the link below to cancel this request
+        or you can simply leave it and continue using your account as normal.
+
+        To cancel the password reset request:
+
+        http://www.safecrypt.me/resetpassword.php?email=' . $email . '&cancelreset' . $cancel . '
+
+        Thanks!
+
+        SafeCrypt
+        ';
+
+        $headers = 'From: admin@safecrypt.me' . "\r\n";
+        mail($to, $subject, $message, $headers);
     }
 }
