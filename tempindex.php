@@ -44,16 +44,16 @@
     <body>
         <div class="container" style="padding-top: 20px;">
 
-            <div class="col-md-6 col-sm-12 col-md-offset-1" style="text-align: center;">
-                <div class="col-sm-6 col-sm-offset-3 col-md-8 col-md-offset-2">
+            <div class="col-md-6 col-xs-12 col-md-offset-1" style="text-align: center;">
+                <div class="col-xs-6 col-xs-offset-3 col-md-8 col-md-offset-2">
                     <img src="img/logo.png" style="width: 100%">
                     <p>Regain control of your security</p>
                     <p>youtube</p>
                 </div>
             </div>
 
-            <div class="col-md-4 col-sm-12" style="text-align: center;">
-                <div class="col-sm-10 col-sm-offset-1 col-md-12">
+            <div class="col-md-4 col-xs-12" style="text-align: center;">
+                <div class="col-xs-10 col-xs-offset-1 col-md-12">
 
 <!--                    <form class="form-horizontal" role="form" id="form" method="post" action="action/login.php" style="padding-top: 10%">-->
 <!--                        <div class="form-group">-->
