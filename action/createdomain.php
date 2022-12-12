@@ -10,7 +10,7 @@ include_once $_SERVER['DOCUMENT_ROOT'] . '/database/connectdatabase.php';
 
 if (!isset($_SESSION)) session_start();
 
-if (isset($_POST["password"]) && isset($_POST["confirmpassword"]) && isset($_POST["subdomain"]) && isset($_POST["hostname"]) && isset($_POST["tld"]))
+if (isset($_POST["password"]) && isset($_POST["confirmpassword"]) && isset($_POST["subdomain"]) && isset($_POST["hostname"]) && isset($_POST["tld"]) && isset($_POST["linkdomain"]))
 {
 
 if ($_POST["password"] != $_POST["confirmpassword"])
@@ -23,9 +23,7 @@ if ($_POST["password"] != $_POST["confirmpassword"])
     exit;
 }
 
-    //best course of action if website is already in db
-
-    $hash = $db->createDomain($_SESSION["token"], $_POST["password"], $_POST["subdomain"], $_POST["hostname"], $_POST["tld"]);
+    $hash = $db->createDomain($_SESSION["token"], $_POST["password"], $_POST["subdomain"], $_POST["hostname"], $_POST["tld"], $_POST["linkdomain"]);
 
     switch($hash)
     {

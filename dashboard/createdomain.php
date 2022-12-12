@@ -1,6 +1,8 @@
 <?php
     if (!isset($_SESSION)) session_start();
 
+    include_once $_SERVER['DOCUMENT_ROOT'] . '/database/connectdatabase.php';
+
     if (isset($_SESSION["domainsuccess"]))
     {
         $_SESSION["generatedpassword"] = $_SESSION["domainsuccess"];
@@ -20,6 +22,9 @@
 
             unset($_SESSION["domainerror"]);
         }
+
+        $domains = $db->getKeyedDomains($_SESSION["token"]);
+        array_unshift($domains, "")
 
 ?>
 
@@ -63,6 +68,19 @@
 
                 ?>
                 placeholder="com" class="form-control" id="tld" style="text-align: center;">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label col-sm-12" for="linkdomain"
+                   style="text-align: center; padding-bottom: 10px;">Link Domain:</label>
+
+            <div class="col-sm-12">
+                <select name="linkdomain" class="form-control" id="domain" name="domain"
+                        style="text-align: center;">
+                    <?php foreach ($domains as $domain): ?>
+                        <option value="<?= $domain; ?>"><?= $domain; ?></option>
+                    <?php endforeach; ?>
+                </select>
             </div>
         </div>
         <div class="form-group">
