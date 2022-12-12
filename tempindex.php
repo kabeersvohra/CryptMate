@@ -16,6 +16,7 @@
         <link href="css/tempindex.css" rel="stylesheet" type="text/css">
 
         <script src="js/jquery.js"></script>
+        <script src="js/tether.min.js"></script>
         <script src="js/bootstrap.min.js"></script>
         <script src="js/tempindex.js"></script>
 
