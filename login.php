@@ -23,7 +23,4 @@ include_once 'header.php';
     <input type="submit" name="submit">
 </form>
 
-<?php
-
-?>
 </body>
