@@ -94,7 +94,7 @@ elseif (isset($_POST['token']) && isset($_POST['password']) && isset($_POST['dom
     }
     else
     {
-        $hash = $db->generatePassword($_POST['domain'], $_POST['token'], $_POST['password']);
+        $hash = $db->generatePassword($_POST['domain'], $_POST['password'], $_POST['token']);
         switch($hash) {
             case "tokenerror":
                 $result = json_encode(array
@@ -140,6 +140,21 @@ elseif (isset($_POST['token']) && isset($_POST['domain']))
             'returntype' => 'newpassword',
             'newpassword' => true
         ));
+    }
+}
+elseif (isset($_POST['token']) && (isset($_POST['keyeddomains'])))
+{
+    if ($_POST['keyeddomains'])
+    {
+        $keyedDomains = $db->getKeyedDomains($_POST['token']);
+        if ($keyedDomains == "tokenerror")
+        {
+            $result = json_encode(array());
+        }
+        else
+        {
+            $result = json_encode($keyedDomains);
+        }
     }
 }
 
