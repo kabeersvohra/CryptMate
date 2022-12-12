@@ -22,14 +22,14 @@ include_once 'header.php';
         if ($_SESSION["resendsuccess"])
             echo
             "<div class='alert alert-success' role='alert'>
-                <span class='glyphicon glyphicon-exclamation-sign' aria-hidden='true'></span>
+                <span class='glyphicon glyphicon-ok' aria-hidden='true'></span>
                 <span class='sr-only'>Success:</span>
                 Email verification has been resent, please check your inbox
              </div>";
         else
             echo
             "<div class='alert alert-danger' role='alert'>
-                <span class='glyphicon glyphicon-ok' aria-hidden='true'></span>
+                <span class='glyphicon glyphicon-exclamation-sign' aria-hidden='true'></span>
                 <span class='sr-only'>Error:</span>
                 Account not found in database, please check your credentials or make an account if you have not already done so
              </div>";
@@ -40,7 +40,7 @@ include_once 'header.php';
 
     <p style="text-align: center">Please enter your email address or your username:</p>
     <div class="col-sm-6 col-sm-offset-3">
-        <form class="form-horizontal" role="form" id="form" method="post" action="action_resend.png">
+        <form class="form-horizontal" role="form" id="form" method="post" action="action_resend.php">
             <div class="form-group">
                 <label class="control-label col-sm-12" for="username" style="text-align: center; padding-bottom: 10px;">Username</label>
                 <div class="col-sm-12">
