@@ -6,6 +6,6 @@
  * Time: 23:04
  */
 
-include_once "header.php";
+include_once 'header.php';
 
 $db->remindUsername($_POST["email"]);

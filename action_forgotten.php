@@ -6,7 +6,7 @@
  * Time: 12:26
  */
 
-include_once "header.php";
+include_once 'header.php';
 
 if (isset($_POST["email"]) && isset($_POST["username"]))
 {

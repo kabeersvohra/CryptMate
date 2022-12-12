@@ -13,7 +13,7 @@ include_once 'header.php';
 </head>
 <body>
 
-<form action="action_domain.php" method="POST" autocomplete="off">
+<form action="action_domain" method="POST" autocomplete="off">
     Website:
     <br>
 
