@@ -14,8 +14,10 @@ class database {
     private $db_user = "user";
     private $db_pass = "password";
     private $db_name = "database";
+
     private $table_keys = "`keys`";
     private $table_user = "`user`";
+
     private $key_id = "`ID`";
     private $key_username = "`Username`";
     private $key_hash = "`Hash`";
@@ -24,8 +26,11 @@ class database {
     private $key_token = "`Token`";
     private $key_userid = "`UserID`";
     private $key_domain = "`Domain`";
-    private $hashingAlgo = "sha256";
+    private $key_emailhash = "`EmailHash`";
+    private $key_emailverification = "`EmailVerified`";
+    private $key_email = "`Email`";
 
+    private $hashingAlgo = "sha256";
 
     private $connected = false;
     private $connection;
@@ -62,23 +67,76 @@ class database {
     }
 
 
-    public function createUser($username, $password)
+    public function createUser($username, $password, $email)
     {
         $salt = mcrypt_create_iv(256, MCRYPT_DEV_URANDOM);
         $token = mcrypt_create_iv(256, MCRYPT_DEV_URANDOM);
+        $emailhash = mcrypt_create_iv(32, MCRYPT_DEV_URANDOM);
+        $emailverification = intval(false);
         $iterationCount = ITERATIONCOUNT;
+
+        $this->sendEmailVerification($emailhash, $email, $username);
+
         $hash = hash_pbkdf2($this->hashingAlgo, $password, $salt, $iterationCount);
 
         $sql =
-            "INSERT INTO $this->table_user ($this->key_username, $this->key_hash, $this->key_salt, $this->key_iterationcount, $this->key_token)
-             VALUES (?, ?, ?, ?);";
+            "INSERT INTO $this->table_user ($this->key_username, $this->key_hash, $this->key_salt,
+                         $this->key_iterationcount, $this->key_token, $this->key_emailhash,
+                         $this->key_emailverification, $this->key_email)
+             VALUES (?, ?, ?, ?, ?, ?, ?, ?);";
 
         $stmt = $this->connection->prepare($sql);
-        $stmt->bind_param("sssis", $username, $hash, $salt, $iterationCount, $token);
+        $stmt->bind_param("sssissis", $username, $hash, $salt, $iterationCount,
+            $token, $emailhash, $emailverification, $email);
         $stmt->execute();
         $stmt->close();
 
         return $token;
+    }
+
+    private function sendEmailVerification($hash, $email, $username)
+    {
+        $to      = $email;
+        $subject = 'SafeCrypt Email Verification';
+        $message = '
+        Dear ' . $username . '
+
+        Thanks for signing up!
+
+        Your account has been created, you can login with the following credentials after you have activated your
+        account by pressing the url below.
+
+        Please click this link to activate your account:
+        http://www.safecrypt.me/verifyemail.php?email=' . $email . '&hash=' . $hash . '
+
+        ';
+
+        $headers = 'From:admin@safecrypt.me' . "\r\n";
+        mail($to, $subject, $message, $headers);
+    }
+
+    public function verifyEmail($email, $hash)
+    {
+        $sql1 =
+            "UPDATE $this->table_user
+             SET $this->key_emailverification = intval(true)
+             WHERE $this->key_email = ? AND $this->key_emailhash = ?;";
+
+        $stmt1 = $this->connection->prepare($sql1);
+        $stmt1->bind_param("ss", $email, $hash);
+        $result = $stmt1->execute();
+        $stmt1->close();
+
+        if ($result)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+
+
     }
 
     public function verifyUser($username, $password)
