@@ -19,6 +19,6 @@ if ($db->deleteAccount($_SESSION['token']))
 else
 {
     $_SESSION["deleteaccounterror"] = "There was an unexpected error while deleting your account. Please try again or contact customer support and we will be happy to assist you.";
-    header("Location: ../database.php#deleteaccount");
+    header("Location: ../dashboard.php#deleteaccount");
     exit;
 }
