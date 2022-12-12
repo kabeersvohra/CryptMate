@@ -1,4 +1,4 @@
-<?php
+9<?php
 /**
  * Created by PhpStorm.
  * User: Kabeer
@@ -15,7 +15,12 @@ include_once '../connectdatabase.php';
 <div class="col-sm-6 col-sm-offset-3" style="text-align: center;">
 
     <div class="row">
-        <p>Subscription ends:</p>
+        <?php
+        if ($_SESSION["subscriptionexpired"])
+            echo "<p>Subscription ended:</p>";
+        else
+            echo "<p>Subscription ends:</p>";
+        ?>
         <p><?= $db->getSubscriptionEnd($_SESSION["token"]) ?></p>
     </div>
 

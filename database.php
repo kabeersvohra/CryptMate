@@ -919,6 +919,22 @@ SafeCrypt';
             return $result;
     }
 
+    public function getSubscriptionEnded($token)
+    {
+        $sql1 =
+            "SELECT $this->key_subscriptionend < now()
+             FROM $this->table_user
+             WHERE $this->key_token = ?;";
+        $stmt1 = $this->connection->prepare($sql1);
+        $stmt1->bind_param("s", $token);
+        $stmt1->execute();
+        $stmt1->bind_result($subscriptionended);
+        $stmt1->fetch();
+        $stmt1->close();
+
+        return $subscriptionended;
+    }
+
     public function isNewTransaction($txn_id)
     {
         $sql1 =
@@ -943,6 +959,43 @@ SafeCrypt';
                 (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
         $stmt1 = $this->connection->prepare($sql1);
         $stmt1->bind_param("issisissssis", $txn_id, $txn_type, $payment_status, $payment_amount, $payment_currency, $payment_fee, $payer_email, $payer_name, $payer_token, $receiver_email, $subscriber_id, $verified);
+        $stmt1->execute();
+        $stmt1->close();
+    }
+
+    public function addOneMonth($payer_token)
+    {
+        if ($this->getSubscriptionEnded($payer_token))
+            $sql1 =
+                "UPDATE $this->table_user
+                 SET $this->key_subscriptionend = DATE_ADD(now(), INTERVAL 1 MONTH)
+                 WHERE $this->key_token = ?;";
+        else
+            $sql1 =
+                "UPDATE $this->table_user
+                 SET $this->key_subscriptionend = DATE_ADD($this->key_subscriptionend, INTERVAL 1 MONTH)
+                 WHERE $this->key_token = ?;";
+
+        $stmt1 = $this->connection->prepare($sql1);
+        $stmt1->bind_param("s", $payer_token);
+        $stmt1->execute();
+        $stmt1->close();
+    }
+
+    public function addOneYear($payer_token)
+    {
+        if ($this->getSubscriptionEnded($payer_token))
+            $sql1 =
+                "UPDATE $this->table_user
+                 SET $this->key_subscriptionend = DATE_ADD(now(), INTERVAL 1 YEAR)
+                 WHERE $this->key_token = ?;";
+        else
+            $sql1 =
+                "UPDATE $this->table_user
+                 SET $this->key_subscriptionend = DATE_ADD($this->key_subscriptionend, INTERVAL 1 YEAR)
+                 WHERE $this->key_token = ?;";
+        $stmt1 = $this->connection->prepare($sql1);
+        $stmt1->bind_param("s", $payer_token);
         $stmt1->execute();
         $stmt1->close();
     }
