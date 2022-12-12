@@ -28,5 +28,6 @@ switch($token)
         break;
     default:
         echo "Login successful";
+        $_SESSION["Token"] = $token;
         break;
 }

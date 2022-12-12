@@ -14,8 +14,17 @@ class database {
     private $db_user = "user";
     private $db_pass = "password";
     private $db_name = "database";
-    private $table_keys = "keys";
-    private $table_user = "user";
+    private $table_keys = "`keys`";
+    private $table_user = "`user`";
+    private $key_id = "`ID`";
+    private $key_username = "`Username`";
+    private $key_hash = "`Hash`";
+    private $key_salt = "`Salt`";
+    private $key_iterationcount = "`IterationCount`";
+    private $key_token = "`Token`";
+    private $key_userid = "`UserID`";
+    private $key_domain = "`Domain`";
+
 
     private $connected = false;
     private $connection;
@@ -60,74 +69,80 @@ class database {
         $hash = hash_pbkdf2("sha256", $password, $salt, $iterationCount);
 
         $sql =
-            "INSERT INTO ? (Username, Hash, Salt, IterationCount, Token)
+            "INSERT INTO $this->table_user ($this->key_username, $this->key_hash, $this->key_salt, $this->key_iterationcount, $this->key_token)
              VALUES (?, ?, ?, ?);";
 
         $stmt = $this->connection->prepare($sql);
-        $stmt->bind_param("ssssis", $this->table_user, $username, $hash, $salt, $iterationCount, $token);
+        $stmt->bind_param("sssis", $username, $hash, $salt, $iterationCount, $token);
         $stmt->execute();
+        $stmt->close();
+
+        return $token;
     }
 
     public function verifyUser($username, $password)
     {
 
         $sql =
-            "SELECT *
-             FROM ?
-             WHERE Username = ?;";
+            "SELECT $this->key_salt, $this->key_iterationcount, $this->key_hash, $this->key_token
+             FROM $this->table_user
+             WHERE $this->key_username = ?;";
+
 
         $stmt = $this->connection->prepare($sql);
-        $stmt->bind_param("ss", $this->table_user, $username);
+        $stmt->bind_param("s", $username);
         $stmt->execute();
+        $stmt->bind_result($salt, $iterationcount, $hash, $token);
+        $result = $stmt->fetch();
+        $stmt->close();
 
-        if(mysqli_stmt_num_rows($stmt) == 0)
+        if(!$result)
         {
             return "username";
-
         }
-
-        $result = $stmt->fetch();
-
-        if (hash_pbkdf2("sha256", $password, $result["Salt"], $result["IterationCount"]) == $result["Hash"])
+        elseif (hash_pbkdf2("sha256", $password, $salt, $iterationcount) == $hash)
         {
-            return $result["Token"];
+            return $token;
+        }
+        else
+        {
+            return "password";
         }
 
-        return "password";
     }
 
     public function newEncryption ($token, $password, $subdomain, $hostname, $tld)
     {
         $domain = "$subdomain.$hostname.$tld";
 
-        $sql =
-            "SELECT *
-             FROM ?
-             WHERE Token = ?;";
+        $sql1 =
+            "SELECT $this->key_id, $this->key_username
+             FROM $this->table_user
+             WHERE $this->key_token = ?;";
 
-        $stmt = $this->connection->prepare($sql);
-        $stmt->bind_param("ss", $this->table_user, $token);
-        $stmt->execute();
+        $stmt1 = $this->connection->prepare($sql1);
+        $stmt1->bind_param("s", $token);
+        $stmt1->execute();
+        $stmt1->bind_result($userid, $username);
+        $result = $stmt1->fetch();
+        $stmt1->close();
 
-        if(mysqli_stmt_num_rows($stmt) == 0)
+        if(!$result)
         {
             return "tokenerror";
         }
 
-        $result = $stmt->fetch();
-
-        $username = $result["Username"];
-        $userid = $result["ID"];
         $salt = mcrypt_create_iv(256, MCRYPT_DEV_URANDOM);
         $iterationCount = ITERATIONCOUNT;
 
-        $sql =
-            "INSERT INTO ? (UserID, Domain, Username, Salt, IterationCount)
+        $sql2 =
+            "INSERT INTO $this->table_keys ($this->key_userid, $this->key_domain, $this->key_username, $this->key_salt, $this->key_iterationcount)
              VALUES (?, ?, ?, ?, ?);";
 
-        $stmt = $this->connection->prepare($sql);
-        $stmt->bind_param("sisssi", $this->table_keys, $userid, $domain, $username, $salt, $iterationCount);
-        $stmt->execute();
+        $stmt2 = $this->connection->prepare($sql2);
+        $stmt2->bind_param("isssi", $userid, $domain, $username, $salt, $iterationCount);
+        $stmt2->execute();
+        $stmt2->close();
 
         return hash_pbkdf2("sha256", $password, $salt, $iterationCount);
     }
