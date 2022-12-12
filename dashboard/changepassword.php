@@ -6,7 +6,7 @@
  * Time: 16:47
  */
 
-include_once '../connectdatabase.php';
+include_once '../database/connectdatabase.php';
 
 if (!isset($_SESSION)) session_start();
 
@@ -33,7 +33,7 @@ elseif (isset($_SESSION["changepassworderror"]))
 
 ?>
 <div class="col-sm-6 col-sm-offset-3">
-    <form class="form-horizontal" role="form" id="form" method="post" action="action/changepassword.php">
+    <form class="form-horizontal" role="form" id="form" method="post" action="../action/changepassword.php">
         <div class="form-group">
             <label class="control-label col-sm-12" for="password" style="text-align: center; padding-top: 30px; padding-bottom: 10px;">Old Password</label>
             <div class="col-sm-12">

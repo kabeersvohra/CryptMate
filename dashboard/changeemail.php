@@ -6,7 +6,7 @@
  * Time: 16:47
  */
 
-include_once '../connectdatabase.php';
+include_once '../database/connectdatabase.php';
 
 if (!isset($_SESSION)) session_start();
 
@@ -34,7 +34,7 @@ elseif (isset($_SESSION["changeemailerror"]))
 
 ?>
 <div class="col-sm-6 col-sm-offset-3">
-    <form class="form-horizontal" role="form" id="form" method="post" action="action/changeemail.php">
+    <form class="form-horizontal" role="form" id="form" method="post" action="../action/changeemail.php">
 
         <div class="form-group">
             <label class="control-label col-sm-12" for="email" style="text-align: center; padding-bottom: 10px;">Current Email</label>

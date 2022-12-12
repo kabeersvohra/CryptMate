@@ -169,7 +169,7 @@ class database {
     private function sendEmailVerification($hash, $email, $name)
     {
         $to      = $email;
-        $subject = 'SafeCrypt Email Verification';
+        $subject = 'CryptMate Email Verification';
         $message = 'Dear ' . $name . '
 
 Thanks for using our service!
@@ -178,51 +178,51 @@ You can use your account after you have activated
 it by clicking on the url below.
 
 Please click this link to activate your account:
-https://www.safecrypt.me/verifyemail.php?email=' . $email . '&hash=' . $hash . '&newemail=0
+https://www.cryptmate.com/verifyemail.php?email=' . $email . '&hash=' . $hash . '&newemail=0
 
 Enjoy!
 
-SafeCrypt';
+CryptMate';
 
-        $headers = 'From: admin@safecrypt.me' . "\r\n";
+        $headers = 'From: admin@cryptmate.com' . "\r\n";
         mail($to, $subject, $message, $headers);
     }
 
     private function sendCurrentEmailVerification($hash, $email, $name)
     {
         $to      = $email;
-        $subject = 'SafeCrypt Email Verification';
+        $subject = 'CryptMate Email Verification';
         $message = 'Dear ' . $name . '
 
 To ensure the legitimacy of an email change on your account you must verify this email address as well as your new email address
 
 Please click this link to verify this email address:
-https://www.safecrypt.me/verifyemail.php?email=' . $email . '&hash=' . $hash . '&newemail=1
+https://www.cryptmate.com/verifyemail.php?email=' . $email . '&hash=' . $hash . '&newemail=1
 
 Thanks!
 
-SafeCrypt';
+CryptMate';
 
-        $headers = 'From: admin@safecrypt.me' . "\r\n";
+        $headers = 'From: admin@cryptmate.com' . "\r\n";
         mail($to, $subject, $message, $headers);
     }
 
     private function sendNewEmailVerification($hash, $email, $name)
     {
         $to      = $email;
-        $subject = 'SafeCrypt Email Verification';
+        $subject = 'CryptMate Email Verification';
         $message = 'Dear ' . $name . '
 
 To ensure the legitimacy of an email change on your account you must verify this email address as well as your previous email address
 
 Please click this link to verify this email address:
-https://www.safecrypt.me/verifyemail.php?email=' . $email . '&hash=' . $hash . '&newemail=1
+https://www.cryptmate.com/verifyemail.php?email=' . $email . '&hash=' . $hash . '&newemail=1
 
 Thanks!
 
-SafeCrypt';
+CryptMate';
 
-        $headers = 'From: admin@safecrypt.me' . "\r\n";
+        $headers = 'From: admin@cryptmate.com' . "\r\n";
         mail($to, $subject, $message, $headers);
     }
 
@@ -516,27 +516,27 @@ SafeCrypt';
     private function sendPasswordReset($passwordhash, $email, $username)
     {
         $to      = $email;
-        $subject = 'SafeCrypt Password Reset';
+        $subject = 'CryptMate Password Reset';
         $message = 'Dear ' . $username . '
 
 Somebody has requested a password reset for your account
 
 If this was you please click the link below to reset your password:
 
-https://www.safecrypt.me/resetpassword.php?email=' . $email . '&hash=' . $passwordhash . '
+https://www.cryptmate.com/resetpassword.php?email=' . $email . '&hash=' . $passwordhash . '
 
 If this was not you, please click the link below to cancel this request
 or you can simply leave it and continue using your account as normal.
 
 To cancel the password reset request:
 
-https://www.safecrypt.me/resetpassword.php?email=' . $email . '&cancelreset=true
+https://www.cryptmate.com/resetpassword.php?email=' . $email . '&cancelreset=true
 
 Thanks!
 
-SafeCrypt';
+CryptMate';
 
-        $headers = 'From: admin@safecrypt.me' . "\r\n";
+        $headers = 'From: admin@cryptmate.com' . "\r\n";
         mail($to, $subject, $message, $headers);
     }
 
@@ -568,7 +568,7 @@ SafeCrypt';
     private function sendUsername($email, $name)
     {
         $to      = $email;
-        $subject = 'SafeCrypt Username Reminder';
+        $subject = 'CryptMate Username Reminder';
         $message = 'Dear ' . $name . '
 
 Somebody has requested a username reminder for your account
@@ -579,9 +579,9 @@ If this was not you, please ignore this email.
 
 Thanks!
 
-SafeCrypt';
+CryptMate';
 
-        $headers = 'From: admin@safecrypt.me' . "\r\n";
+        $headers = 'From: admin@cryptmate.com' . "\r\n";
         mail($to, $subject, $message, $headers);
     }
 
@@ -922,7 +922,7 @@ SafeCrypt';
     public function getSubscriptionEnded($token)
     {
         $sql1 =
-            "SELECT $this->key_subscriptionend < now()
+            "SELECT $this->key_subscriptionend < CURRENT_DATE()
              FROM $this->table_user
              WHERE $this->key_token = ?;";
         $stmt1 = $this->connection->prepare($sql1);
