@@ -366,6 +366,7 @@ SafeCrypt';
         $stmt1 = $this->connection->prepare($sql1);
         $stmt1->bind_param("ssss",$emailhash, $verified, $email, $username);
         $stmt1->execute();
+        $stmt1->close();
 
         $sql2 =
             "SELECT $this->key_email, $this->key_username
@@ -381,10 +382,12 @@ SafeCrypt';
         {
             $stmt2->bind_result($sqlemail, $sqlusername);
             $this->sendEmailVerification($emailhash, $sqlemail, $sqlusername);
+            $stmt2->close();
             return true;
         }
         else
         {
+            $stmt2->close();
             return false;
         }
     }
@@ -402,6 +405,7 @@ SafeCrypt';
         $stmt1->bind_param("ss", $email, $username);
         $stmt1->execute();
         $result = $stmt1->fetch();
+        $stmt1->close();
 
         if($result)
         {
@@ -413,6 +417,7 @@ SafeCrypt';
             $stmt2 = $this->connection->prepare($sql2);
             $stmt2->bind_param("sss", $passwordhash, $email, $username);
             $stmt2->execute();
+            $stmt2->close();
             $this->sendPasswordReset($passwordhash, $email, $username);
             return true;
         }

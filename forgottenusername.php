@@ -5,15 +5,43 @@
  * Date: 31/05/2015
  * Time: 15:56
  */
+
 include_once 'header.php';
 
 ?>
-<title>Forgotten Password</title>
+<title>Forgotten Username</title>
 <link href="css/login.css" rel="stylesheet">
 </head>
 <body>
 
 <div class="container mainbody">
+
+    <?php
+
+    if (isset($_SESSION['forgottenusernamesuccessmsg']))
+    {
+        echo
+            "<div class='alert alert-success' role='alert'>
+                <span class='glyphicon glyphicon-ok-sign' aria-hidden='true'></span>
+                <span class='sr-only'>Success:</span>
+                " . $_SESSION["forgottenusernamesuccessmsg"] . "
+             </div>";
+    }
+    elseif (isset($_SESSION['forgottenusernamesuccessmsg']))
+    {
+        echo
+            "<div class='alert alert-danger' role='alert'>
+                <span class='glyphicon glyphicon-exclamation-sign' aria-hidden='true'></span>
+                <span class='sr-only'>Error:</span>
+                " . $_SESSION["forgottenusernamefailuremsg"] . "
+             </div>";
+    }
+
+    unset($_SESSION['forgottenusernamesuccessmsg']);
+    unset($_SESSION['forgottenusernamefailuremsg']);
+
+    ?>
+
     <p style="text-align: center">Please enter your email address:</p>
     <div class="col-sm-6 col-sm-offset-3">
         <form class="form-horizontal" role="form" id="form" method="post" action="action_forgotusername.php">

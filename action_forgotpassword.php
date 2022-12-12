@@ -6,27 +6,19 @@
  * Time: 12:26
  */
 
-include_once 'header.php';
+include_once 'connectDb.php';
 
-?>
-<title>Forgotten Password</title>
-<link href="css/login.css" rel="stylesheet">
-</head>
-<body>
-
-<div class="container mainbody" style="text-align: center;">
-
-<?php
+if (!isset($_SESSION)) session_start();
 
 if (isset($_POST["email"]) && isset($_POST["username"]))
 {
     if($db->forgottenPassword($_POST["email"], $_POST["username"]))
     {
-        $_SESSION['successmsg'] = "Success!  Please check your email for further instructions";
+        $_SESSION['forgottenpasswordsuccessmsg'] = "Success!  Please check your email for further instructions";
     }
     else
     {
-        $_SESSION['failuremsg'] = "The credentials provided were not found.  Please try again";
+        $_SESSION['forgottenpasswordfailuremsg'] = "The credentials provided were not found.  Please try again";
     }
     header('Location: forgottenpassword.php');
 }
