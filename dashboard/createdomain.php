@@ -5,7 +5,7 @@
     {
         $_SESSION["generatedpassword"] = $_SESSION["domainsuccess"];
         unset($_SESSION["domainsuccess"]);
-        include_once 'generatedpassword.php';
+        include_once $_SERVER['DOCUMENT_ROOT'] . '/dashboard/generatedpassword.php';
     }
     else
     {

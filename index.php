@@ -6,7 +6,7 @@
  * Time: 11:28
  */
 
-include_once 'header.php';
+include_once $_SERVER['DOCUMENT_ROOT'] . '/headers/header.php';
 
 ?>
         <title>CryptMate</title>

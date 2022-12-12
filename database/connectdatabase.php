@@ -6,7 +6,7 @@
  * Time: 16:24
  */
 
-include_once '/database/database.php';
+include_once $_SERVER['DOCUMENT_ROOT'] . '/database/database.php';
 
 $status = true;
 $db = new Database("localhost",

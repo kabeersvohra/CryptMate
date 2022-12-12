@@ -6,7 +6,7 @@
  * Time: 17:54
  */
 
-include_once 'header.php';
+include_once $_SERVER['DOCUMENT_ROOT'] . 'headers/header.php';
 
 ?>
 <title>Dashboard</title>
@@ -23,7 +23,7 @@ include_once 'header.php';
             if($db->getSubscriptionEnded($_SESSION["token"]))
             {
                 echo "<div class='row' style='padding-top: 20px;'>";
-                include_once 'dashboard/managesubscription.php';
+                include_once $_SERVER['DOCUMENT_ROOT'] . '/dashboard/managesubscription.php';
             }
             else
             {

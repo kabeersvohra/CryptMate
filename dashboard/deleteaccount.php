@@ -8,7 +8,7 @@
 
 if (!isset($_SESSION)) session_start();
 
-include_once '../database/connectdatabase.php';
+include_once $_SERVER['DOCUMENT_ROOT'] . '/database/connectdatabase.php';
 
 $domains = $db->getKeyedDomains($_SESSION["token"]);
 
