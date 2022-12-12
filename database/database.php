@@ -65,7 +65,14 @@ class database {
         $this->db_user = $user;
         $this->db_pass = $password;
         $this->db_name = $database;
-        $this->connection = new mysqli("", "", "", "");
+        if(!$this->connected)
+        {
+            $this->connection = new mysqli($this->db_host,$this->db_user,$this->db_pass,$this->db_name);
+            if(!($this->connection->connect_errno > 0))
+            {
+                $this->connected = true;
+            }
+        }
     }
 
     public function connect()
@@ -124,7 +131,7 @@ class database {
             return "email";
         }
 
-        $salt = mcrypt_create_iv(256, MCRYPT_DEV_URANDOM);
+        $salt = $this->randomString(256);
 
         $sql3 =
             "SELECT *
@@ -134,7 +141,7 @@ class database {
 
         while (true)
         {
-            $token = mcrypt_create_iv(256, MCRYPT_DEV_URANDOM);
+            $token = $this->randomString(256);
             $stmt3->bind_param("s", $token);
             $stmt3->execute();
             $result = $stmt3->fetch();
@@ -143,7 +150,7 @@ class database {
 
         $stmt3->close();
 
-        $emailhash = md5(mcrypt_create_iv(32, MCRYPT_DEV_URANDOM));
+        $emailhash = $this->randomString(32);
         $emailverification = intval(false);
         $iterationcount = ITERATIONCOUNT;
 
@@ -339,7 +346,7 @@ CryptMate';
         if(!$result)
             return "tokenerror";
 
-        $salt = mcrypt_create_iv(256, MCRYPT_DEV_URANDOM);
+        $salt = $this->randomString(256);
         $iterationCount = ITERATIONCOUNT;
 
         $sql2 =
@@ -394,11 +401,11 @@ CryptMate';
         $stmt2 = $this->connection->prepare($sql2);
         $stmt2->bind_param("s", $userid);
         $stmt2->execute();
-        $result = $stmt2->get_result();
+        $stmt2->bind_result($result);
         $array = [];
-        for ($i = 0; $i < $result->num_rows; $i++)
+        while ($stmt2->fetch())
         {
-            array_push($array, $result->fetch_array()['Domain']);
+            array_push($array, $result['Domain']);
         }
         $stmt2->close();
 
@@ -441,7 +448,7 @@ CryptMate';
     public function resendVerification($email, $username)
     {
         $verified = intval(false);
-        $emailhash = md5(mcrypt_create_iv(32, MCRYPT_DEV_URANDOM));
+        $emailhash = $this->randomString(32);
 
         $sql1 =
             "UPDATE $this->table_user
@@ -479,7 +486,7 @@ CryptMate';
 
     public function forgottenPassword($email, $username)
     {
-        $passwordhash = md5(mcrypt_create_iv(32, MCRYPT_DEV_URANDOM));
+        $passwordhash = $this->randomString(32);
 
         $sql1 =
             "SELECT *
@@ -814,8 +821,8 @@ CryptMate';
     {
         mysqli_report(MYSQLI_REPORT_ERROR);
         $verified = intval(false);
-        $hash1 = md5(mcrypt_create_iv(32, MCRYPT_DEV_URANDOM));
-        $hash2 = md5(mcrypt_create_iv(32, MCRYPT_DEV_URANDOM));
+        $hash1 = $this->randomString(32);
+        $hash2 = $this->randomString(32);
 
         $sql1 =
             "INSERT INTO $this->table_emailconfirmations
@@ -870,7 +877,7 @@ CryptMate';
         {
             if ($hash == hash_pbkdf2($this->hashingAlgo, $oldpassword, $salt, $iterationcount))
             {
-                $newsalt = mcrypt_create_iv(256, MCRYPT_DEV_URANDOM);
+                $newsalt = $this->randomString(256);
                 $newiterationcount = ITERATIONCOUNT;
                 $newhash = hash_pbkdf2($this->hashingAlgo, $newpassword, $newsalt, $newiterationcount);
 
@@ -998,6 +1005,37 @@ CryptMate';
         $stmt1->bind_param("s", $payer_token);
         $stmt1->execute();
         $stmt1->close();
+    }
+
+    private function randomString($length, $type = '') {
+        // Select which type of characters you want in your random string
+        switch($type) {
+            case 'num':
+                // Use only numbers
+                $salt = '1234567890';
+                break;
+            case 'lower':
+                // Use only lowercase letters
+                $salt = 'abcdefghijklmnopqrstuvwxyz';
+                break;
+            case 'upper':
+                // Use only uppercase letters
+                $salt = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+                break;
+            default:
+                // Use uppercase, lowercase, numbers, and symbols
+                $salt = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890';
+                break;
+        }
+        $rand = '';
+        $i = 0;
+        while ($i < $length) { // Loop until you have met the length
+            $num = rand() % strlen($salt);
+            $tmp = substr($salt, $num, 1);
+            $rand = $rand . $tmp;
+            $i++;
+        }
+        return $rand; // Return the random string
     }
 
 }
