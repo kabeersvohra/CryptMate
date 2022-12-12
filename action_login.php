@@ -6,19 +6,20 @@
  * Time: 19:05
  */
 
-include_once 'connectDb.php';
+include_once 'header.php';
+?>
 
-if (!isset($_SESSION)) session_start();
+    <title>Logged In</title>
+</head>
+<body>
 
+<?php
 if (isset($_POST["username"]) && isset($_POST["password"]))
 {
     $token = $db -> verifyUser($_POST["username"], $_POST["password"]);
 
     switch($token)
     {
-        case "unverified":
-            echo "Sorry the account has not been verified, please check your email or request another verification";
-            break;
         case "username":
             echo "Sorry username was incorrect";
             break;
@@ -31,11 +32,3 @@ if (isset($_POST["username"]) && isset($_POST["password"]))
             break;
     }
 }
-
-include_once 'header.php';
-?>
-
-    <title>Logged In</title>
-</head>
-<body>
-
