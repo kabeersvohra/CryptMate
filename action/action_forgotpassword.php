@@ -6,7 +6,7 @@
  * Time: 12:26
  */
 
-include_once 'connectdatabase.php';
+include_once '../connectdatabase.php';
 
 if (!isset($_SESSION)) session_start();
 
@@ -20,7 +20,8 @@ if (isset($_POST["email"]) && isset($_POST["username"]))
     {
         $_SESSION['forgottenpasswordfailuremsg'] = "The credentials provided were not found.  Please try again";
     }
-    header('Location: forgottenpassword.php');
+    header('Location: ../forgottenpassword.php');
+    exit;
 }
 
 ?>

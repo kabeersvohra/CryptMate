@@ -6,7 +6,7 @@
  * Time: 19:53
  */
 
-include_once 'connectdatabase.php';
+include_once '../connectdatabase.php';
 
 if (!isset($_SESSION)) session_start();
 
@@ -19,10 +19,15 @@ if (isset($_POST["domain"]) && isset($_POST["password"]) && isset($_SESSION["tok
     switch($hash)
     {
         case "tokenerror":
-            echo "Token is invalid, please sign in again or if you are having further issues please contact us";
-            break;
+            $_SESSION["generateerror"] = "Token is invalid, please sign in again or if you are having further issues please contact us";
+            $_SESSION["generateerrorsubdomain"] = $_POST["subdomain"];
+            $_SESSION["generateerrorhostname"] = $_POST["hostname"];
+            $_SESSION["generateerrortld"] = $_POST["tld"];
+            header("Location: ../dashboard.php#generatepassword");
+            exit;
         default:
-            echo "Generated hash is $hash";
-            break;
+            $_SESSION["generatesuccess"] = $hash;
+            header("Location: ../dashboard.php#generatepassword");
+            exit;
     }
 }

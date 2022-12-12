@@ -9,7 +9,6 @@ include_once 'header.php';
 
 ?>
 <title>404</title>
-<link href="css/login.css" rel="stylesheet">
 </head>
 <body>
 
