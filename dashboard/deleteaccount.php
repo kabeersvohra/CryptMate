@@ -26,7 +26,7 @@ if (isset($_SESSION["deleteaccounterror"]))
 ?>
 
 <div class="col-sm-6 col-sm-offset-3">
-    <form class="form-horizontal" role="form" id="form" method="post" action="action/action_deleteaccount.php">
+    <form class="form-horizontal" role="form" id="form" method="post" action="action/deleteaccount.php">
         <div class="form-group">
             <label class="control-label col-sm-12" for="domain"
                    style="text-align: center; padding-bottom: 10px;">Are you sure you want to delete? For your security, the moment you press delete ALL of your data will be irrevocably deleted from our servers and the only way to start again would be to create a new account.</label>

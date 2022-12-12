@@ -17,7 +17,7 @@ $email = $assoc["email"];
 
 ?>
 <div class="col-sm-6 col-sm-offset-3">
-    <form class="form-horizontal" role="form" id="form" method="post" action="action/action_edit.php">
+    <form class="form-horizontal" role="form" id="form" method="post" action="action/edit.php">
         <div class="form-group">
             <label class="control-label col-sm-12" for="name" style="text-align: center; padding-bottom: 10px;">Name</label>
             <div class="col-sm-12">
