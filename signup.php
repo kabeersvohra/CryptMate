@@ -16,7 +16,7 @@ include_once 'header.php';
 
 <div class="container mainbody">
     <div class="col-sm-6 col-sm-offset-3">
-        <form class="form-horizontal" role="form" id="form" method="post" action="action_signup.png">
+        <form class="form-horizontal" role="form" id="form" method="post" action="action_signup.php">
             <div class="form-group">
                 <label class="control-label col-sm-12" for="username" style="text-align: center; padding-bottom: 10px;">Username</label>
                 <div class="col-sm-12">
@@ -30,15 +30,15 @@ include_once 'header.php';
                 </div>
             </div>
             <div class="form-group">
-                <label class="control-label col-sm-12" for="password1" style="text-align: center; padding-top: 30px; padding-bottom: 10px;">Password</label>
+                <label class="control-label col-sm-12" for="password" style="text-align: center; padding-top: 30px; padding-bottom: 10px;">Password</label>
                 <div class="col-sm-12">
-                    <input type="password" name="password" class="form-control" id="password1" name="password" style="text-align: center;">
+                    <input type="password" name="password" class="form-control" id="password" style="text-align: center;">
                 </div>
             </div>
             <div class="form-group">
-                <label class="control-label col-sm-12" for="password2" style="text-align: center; padding-top: 30px; padding-bottom: 10px;">Confirm Password</label>
+                <label class="control-label col-sm-12" for="confirmpassword" style="text-align: center; padding-top: 30px; padding-bottom: 10px;">Confirm Password</label>
                 <div class="col-sm-12">
-                    <input type="password" name="password" class="form-control" id="password2" name="password" style="text-align: center;">
+                    <input type="password" name="confirmpassword" class="form-control" id="confirmpassword" style="text-align: center;">
                 </div>
             </div>
             <div class="form-group">

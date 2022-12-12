@@ -70,6 +70,38 @@ class database {
 
     public function createUser($username, $password, $email)
     {
+        $sql1 =
+            "SELECT 1
+             FROM $this->table_user
+             WHERE $this->key_username = ?";
+
+        $stmt1 = $this->connection->prepare($sql1);
+        $stmt1->bind_param("s", $username);
+        $stmt1->execute();
+        $result = $stmt1->fetch();
+        $stmt1->close();
+
+        if ($result)
+        {
+           return "username";
+        }
+
+        $sql2 =
+            "SELECT 1
+             FROM $this->table_user
+             WHERE $this->key_email = ?";
+
+        $stmt2 = $this->connection->prepare($sql2);
+        $stmt2->bind_param("s", $email);
+        $stmt2->execute();
+        $result = $stmt2->fetch();
+        $stmt2->close();
+
+        if ($result)
+        {
+            return "email";
+        }
+
         $salt = mcrypt_create_iv(256, MCRYPT_DEV_URANDOM);
         $token = mcrypt_create_iv(256, MCRYPT_DEV_URANDOM);
         $emailhash = md5(mcrypt_create_iv(32, MCRYPT_DEV_URANDOM));
@@ -80,17 +112,17 @@ class database {
 
         $hash = hash_pbkdf2($this->hashingAlgo, $password, $salt, $iterationCount);
 
-        $sql =
+        $sql3 =
             "INSERT INTO $this->table_user ($this->key_username, $this->key_hash, $this->key_salt,
                          $this->key_iterationcount, $this->key_token, $this->key_emailhash,
                          $this->key_emailverification, $this->key_email)
              VALUES (?, ?, ?, ?, ?, ?, ?, ?);";
 
-        $stmt = $this->connection->prepare($sql);
-        $stmt->bind_param("sssissis", $username, $hash, $salt, $iterationCount,
+        $stmt3 = $this->connection->prepare($sql3);
+        $stmt3->bind_param("sssissis", $username, $hash, $salt, $iterationCount,
             $token, $emailhash, $emailverification, $email);
-        $stmt->execute();
-        $stmt->close();
+        $stmt3->execute();
+        $stmt3->close();
 
         return $token;
     }
