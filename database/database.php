@@ -65,7 +65,14 @@ class database {
         $this->db_user = $user;
         $this->db_pass = $password;
         $this->db_name = $database;
-        $this->connection = new mysqli("", "", "", "");
+        if(!$this->connected)
+        {
+            $this->connection = new mysqli($this->db_host,$this->db_user,$this->db_pass,$this->db_name);
+            if(!($this->connection->connect_errno > 0))
+            {
+                $this->connected = true;
+            }
+        }
     }
 
     public function connect()
@@ -394,11 +401,11 @@ CryptMate';
         $stmt2 = $this->connection->prepare($sql2);
         $stmt2->bind_param("s", $userid);
         $stmt2->execute();
-        $result = $stmt2->get_result();
+        $stmt2->bind_result($result);
         $array = [];
-        for ($i = 0; $i < $result->num_rows; $i++)
+        while ($stmt2->fetch())
         {
-            array_push($array, $result->fetch_array()['Domain']);
+            array_push($array, $result['Domain']);
         }
         $stmt2->close();
 

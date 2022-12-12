@@ -8,7 +8,7 @@
 
 if (!isset($_SESSION)) session_start();
 
-include_once '/connectdatabase.php';
+include_once $_SERVER['DOCUMENT_ROOT'] . '/database/connectdatabase.php';
 
 // STEP 1: Read POST data
 
