@@ -17,18 +17,18 @@ if (isset($_POST["username"]) && isset($_POST["password"]))
     switch($token)
     {
         case "unverified":
-            $_SESSION["error"] = "unverified";
-            $_SESSION["errorusername"] = $_POST["username"];
+            $_SESSION["loginerror"] = "unverified";
+            $_SESSION["loginerrorusername"] = $_POST["username"];
             header('Location: login.php');
             break;
         case "username":
-            $_SESSION["error"] = "username";
-            $_SESSION["errorusername"] = $_POST["username"];
+            $_SESSION["loginerror"] = "username";
+            $_SESSION["loginerrorusername"] = $_POST["username"];
             header('Location: login.php');
             break;
         case "password":
-            $_SESSION["error"] = "password";
-            $_SESSION["errorusername"] = $_POST["username"];
+            $_SESSION["loginerror"] = "password";
+            $_SESSION["loginerrorusername"] = $_POST["username"];
             header('Location: login.php');
             break;
         default:
