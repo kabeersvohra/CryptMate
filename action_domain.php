@@ -23,7 +23,12 @@ if (isset($_POST["password"]) && isset($_POST["subdomain"]) && isset($_POST["hos
     switch($hash)
     {
         case "tokenerror":
-            echo "Token is invalid, please sign in again or if you are having further issues please contact us";
+            $_SESSION["domainerror"] = "Token is invalid, please sign in again or if you are having further issues please contact us";
+            header("location: dashboard.php#newdomain");
+            break;
+        case "domainused":
+            $_SESSION["domainerror"] = "Domain is already used";
+            header("location: dashboard.php#newdomain");
             break;
         default:
             echo "Generated hash is $hash";

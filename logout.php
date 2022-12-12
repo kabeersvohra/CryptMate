@@ -12,9 +12,24 @@ if ($loggedin)
     unset($_SESSION["token"]);
 
 include_once 'header.php';
+?>
+<head>
+    <?php
+        if ($loggedin)
+            echo "<title>Logged Out</title>";
+        else
+            echo "<title>Log Out</title>";
+    ?>
+</head>
+<body>
+<div class="container mainbody" style="text-align: center; font-weight: normal;">
+    <?php
+        if ($loggedin)
+            echo "You have logged out successfully";
+        else
+            echo "You are not logged in, please log in";
+    ?>
+</div>
+</body>
 
-if ($loggedin)
-    echo "You have logged out successfully";
-else
-    echo "You are not logged in, please log in";
 

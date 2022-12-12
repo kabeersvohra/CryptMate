@@ -21,14 +21,13 @@ include_once 'header.php';
     <div class="row">
         <div class="col-sm-3 col-md-2 sidebar">
             <ul class="nav nav-sidebar">
-                <li id="overviewli" class="active"><a id="overview">Overview</a></li>
-                <li id="newdomainli"><a id="newdomain">New Domain</a></li>
-                <li id="newpasswordli"><a id="newpassword">New Password</a></li>
-                <li id="genpasswordli"><a id="genpassword">Generate Password</a></li>
+                <li id="overviewli" class="active"><a href="#overview" id="overview">Overview</a></li>
+                <li id="newdomainli"><a href="#newdomain" id="newdomain">New Domain</a></li>
+                <li id="genpasswordli"><a href="#generatepassword" id="generatepassword">Generate Password</a></li>
             </ul>
         </div>
         <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main" id="main">
-            <h1 class="page-header" style="text-align: center">Dashboard</h1>
+                 <h1 class="page-header" style="text-align: center">Dashboard</h1>
 
             <div class="row placeholders">
                 <div class="col-xs-6 col-sm-3 placeholder">
@@ -46,41 +45,57 @@ include_once 'header.php';
                     <span class="text-muted">Number of Passwords</span>
                 </div>
             </div>
-
         </div>
     </div>
 </div>
 
-</body>
-
 <script>
-    $(document).ready(function(){
-        $("#overview").click(function () {
-            $("#newdomainli").removeClass('active');
-            $("#newpasswordli").removeClass('active');
-            $("#genpasswordli").removeClass('active');
-            $("#overviewli").addClass('active');
-        })
-        $("#newdomain").click(function(){
-            $("#main").load('/safecrypt/newdomain.php');
-            $("#overviewli").removeClass('active');
-            $("#newpasswordli").removeClass('active');
-            $("#genpasswordli").removeClass('active');
-            $("#newdomainli").addClass('active');
-        });
-        $("#newpassword").click(function(){
-            $("#main").load('/safecrypt/newdomain.php');
-            $("#overviewli").removeClass('active');
-            $("#newdomainli").removeClass('active');
-            $("#genpasswordli").removeClass('active');
-            $("#newpasswordli").addClass('active');
-        });
-        $("#genpassword").click(function(){
-            $("#main").load('/safecrypt/generatepassword.php');
-            $("#overviewli").removeClass('active');
-            $("#newpasswordli").removeClass('active');
-            $("#newdomainli").removeClass('active');
-            $("#genpasswordli").addClass('active');
-        });
+
+    function overviewClick() {
+        $("#main").load('/safecrypt/overview.php');
+        $("#newdomainli").removeClass('active');
+        $("#genpasswordli").removeClass('active');
+        $("#overviewli").addClass('active');
+    }
+
+    function newDomainClick() {
+        $("#main").load('/safecrypt/newdomain.php');
+        $("#overviewli").removeClass('active');
+        $("#genpasswordli").removeClass('active');
+        $("#newdomainli").addClass('active');
+    }
+
+    function generatePasswordClick() {
+        $("#main").load('/safecrypt/generatepassword.php');
+        $("#overviewli").removeClass('active');
+        $("#newdomainli").removeClass('active');
+        $("#genpasswordli").addClass('active');
+    }
+
+    $(window).bind("load", function() {
+        if(window.location.hash)
+        {
+            var hash = window.location.hash.substring(1);
+            switch (hash) {
+                case "overview":
+                    overviewClick();
+                    break;
+                case "newdomain":
+                    newDomainClick();
+                    break;
+                case "generatepassword":
+                    generatePasswordClick();
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        $("#overview").click(overviewClick);
+        $("#newdomain").click(newDomainClick);
+        $("#generatepassword").click(generatePasswordClick);
+
     });
 </script>
+
+</body>

@@ -1,16 +1,30 @@
+<?php
+
+    if (isset($_SESSION["domainerror"]))
+    {
+        echo
+        "<div class='alert alert-danger' role='alert'>
+            <span class='glyphicon glyphicon-exclamation-sign' aria-hidden='true'></span>
+            <span class='sr-only'>Error:</span>
+            " . $_SESSION["domainerror"] . "
+        </div>";
+    }
+
+?>
+
 <div class="col-sm-6 col-sm-offset-3">
     <form class="form-horizontal" role="form" id="form" method="post" action="action_domain.php">
         <div class="form-group">
             <label class="control-label col-sm-12" style="text-align: center; padding-bottom: 10px;">Website</label>
-            <div class="col-sm-4" style="margin-right: -2px;">
+            <div class="col-xs-4" style="margin-right: -2px;">
                 <input type="text" name="subdomain" placeholder="www" class="form-control" id="subdomain" style="text-align: center;">
             </div>
             <div style="float: left"> . </div>
-            <div class="col-sm-4" style="margin-left: -2px; margin-right: -2px;">
+            <div class="col-xs-4" style="margin-left: -2px; margin-right: -2px;">
                 <input type="text" name="hostname" placeholder="example" class="form-control" id="hostname" style="text-align: center;">
             </div>
             <div style="float: left"> . </div>
-            <div class="col-sm-4" style="margin-left: -2px;">
+            <div class="col-xs-4" style="margin-left: -2px;">
                 <input type="text" name="tld" placeholder="com" class="form-control" id="tld" style="text-align: center;">
             </div>
         </div>
