@@ -25,6 +25,3 @@ if (isset($_POST["email"]) && isset($_POST["username"]))
 }
 
 ?>
-
-</div>
-</body>
