@@ -7,7 +7,6 @@
  */
 
 include 'header.php';
-
 ?>
 
     <title>Logged In</title>
@@ -15,19 +14,21 @@ include 'header.php';
 <body>
 
 <?php
-
-$token = $db -> verifyUser($_POST["username"], $_POST["password"]);
-
-switch($token)
+if (isset($_POST["username"]) && isset($_POST["password"]))
 {
-    case "username":
-        echo "Sorry username was incorrect";
-        break;
-    case "password":
-        echo "Sorry password was incorrect";
-        break;
-    default:
-        echo "Login successful";
-        $_SESSION["Token"] = $token;
-        break;
+    $token = $db -> verifyUser($_POST["username"], $_POST["password"]);
+
+    switch($token)
+    {
+        case "username":
+            echo "Sorry username was incorrect";
+            break;
+        case "password":
+            echo "Sorry password was incorrect";
+            break;
+        default:
+            echo "Login successful";
+            $_SESSION["token"] = $token;
+            break;
+    }
 }

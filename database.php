@@ -24,6 +24,7 @@ class database {
     private $key_token = "`Token`";
     private $key_userid = "`UserID`";
     private $key_domain = "`Domain`";
+    private $hashingAlgo = "sha256";
 
 
     private $connected = false;
@@ -66,7 +67,7 @@ class database {
         $salt = mcrypt_create_iv(256, MCRYPT_DEV_URANDOM);
         $token = mcrypt_create_iv(256, MCRYPT_DEV_URANDOM);
         $iterationCount = ITERATIONCOUNT;
-        $hash = hash_pbkdf2("sha256", $password, $salt, $iterationCount);
+        $hash = hash_pbkdf2($this->hashingAlgo, $password, $salt, $iterationCount);
 
         $sql =
             "INSERT INTO $this->table_user ($this->key_username, $this->key_hash, $this->key_salt, $this->key_iterationcount, $this->key_token)
@@ -100,7 +101,7 @@ class database {
         {
             return "username";
         }
-        elseif (hash_pbkdf2("sha256", $password, $salt, $iterationcount) == $hash)
+        elseif (hash_pbkdf2($this->hashingAlgo, $password, $salt, $iterationcount) == $hash)
         {
             return $token;
         }
@@ -111,7 +112,7 @@ class database {
 
     }
 
-    public function newEncryption ($token, $password, $subdomain, $hostname, $tld)
+    public function newWebsite ($token, $password, $subdomain, $hostname, $tld)
     {
         $domain = "$subdomain.$hostname.$tld";
 
@@ -144,6 +145,72 @@ class database {
         $stmt2->execute();
         $stmt2->close();
 
-        return hash_pbkdf2("sha256", $password, $salt, $iterationCount);
+        return hash_pbkdf2($this->hashingAlgo, $password, $salt, $iterationCount);
+    }
+
+    public function getKeyedDomains($token)
+    {
+        $sql1 =
+            "SELECT $this->key_id
+             FROM $this->table_user
+             WHERE $this->key_token = ?;";
+
+        $stmt1 = $this->connection->prepare($sql1);
+        $stmt1->bind_param("s", $token);
+        $stmt1->execute();
+        $stmt1->bind_result($userid);
+        $result = $stmt1->fetch();
+        $stmt1->close();
+
+        if(!$result)
+        {
+            return "tokenerror";
+        }
+
+        $sql2 =
+            "SELECT $this->key_domain
+             FROM $this->table_keys
+             WHERE $this->key_userid = ?;";
+
+        $stmt2 = $this->connection->prepare($sql2);
+        $stmt2->bind_param("s", $userid);
+        $stmt2->execute();
+        $array = $stmt2->get_result()->fetch_array();
+        $stmt2->close();
+
+        return $array;
+    }
+
+    public function generatePassword($domain, $password, $token)
+    {
+        $sql1 =
+            "SELECT $this->key_id
+             FROM $this->table_user
+             WHERE $this->key_token = ?;";
+
+        $stmt1 = $this->connection->prepare($sql1);
+        $stmt1->bind_param("s", $token);
+        $stmt1->execute();
+        $stmt1->bind_result($userid);
+        $result = $stmt1->fetch();
+        $stmt1->close();
+
+        if(!$result)
+        {
+            return "tokenerror";
+        }
+
+        $sql2 =
+            "SELECT $this->key_salt, $this->key_iterationcount
+             FROM $this->table_keys
+             WHERE $this->key_userid = ? AND $this->key_domain = ?;";
+
+        $stmt2 = $this->connection->prepare($sql2);
+        $stmt2->bind_param("is", $userid, $domain);
+        $stmt2->execute();
+        $stmt2->bind_result($salt, $iterationCount);
+        $stmt2->fetch();
+        $stmt2->close();
+        return hash_pbkdf2($this->hashingAlgo, $password, $salt, $iterationCount);
     }
 }

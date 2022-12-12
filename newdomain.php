@@ -9,11 +9,11 @@ include 'header.php';
 
 ?>
 
-    <title>New Encryption</title>
+    <title>New Domain</title>
 </head>
 <body>
 
-<form action="action_crypt.php" method="POST" autocomplete="off">
+<form action="action_domain.php" method="POST" autocomplete="off">
     Website:
     <br>
 
