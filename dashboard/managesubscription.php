@@ -26,23 +26,21 @@ include_once $_SERVER['DOCUMENT_ROOT'] . '/database/connectdatabase.php';
 
     <div class="col-sm-6" style="padding-top: 10px;">
         <p>To subscribe monthly for &pound;3 a month please click the button below:</p>
-        <form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_top">
+        <form action="https://www.sandbox.paypal.com/cgi-bin/webscr" method="post" target="_top">
             <input type="hidden" name="cmd" value="_s-xclick">
-            <input type="hidden" name="custom" value="<?= $_SESSION['token'] ?>"/>
-            <input type="hidden" name="hosted_button_id" value="6JC32FUHENKDW">
-            <input type="image" src="https://www.paypalobjects.com/en_US/GB/i/btn/btn_subscribeCC_LG.gif" border="0" name="submit" alt="PayPal – The safer, easier way to pay online.">
-            <img alt="" border="0" src="https://www.paypalobjects.com/en_GB/i/scr/pixel.gif" width="1" height="1">
+            <input type="hidden" name="hosted_button_id" value="D5S4UG668P5P8">
+            <input type="image" src="https://www.sandbox.paypal.com/en_US/GB/i/btn/btn_subscribeCC_LG.gif" border="0" name="submit" alt="PayPal â€“ The safer, easier way to pay online.">
+            <img alt="" border="0" src="https://www.sandbox.paypal.com/en_GB/i/scr/pixel.gif" width="1" height="1">
         </form>
     </div>
 
     <div class="col-sm-6" style="padding-top: 10px;">
         <p>To subscribe annually for &pound;30 a year please click the button below:</p>
-        <form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_top">
+        <form action="https://www.sandbox.paypal.com/cgi-bin/webscr" method="post" target="_top">
             <input type="hidden" name="cmd" value="_s-xclick">
-            <input type="hidden" name="custom" value="<?= $_SESSION['token'] ?>"/>
-            <input type="hidden" name="hosted_button_id" value="544YSVW6REK3U">
-            <input type="image" src="https://www.paypalobjects.com/en_US/GB/i/btn/btn_subscribeCC_LG.gif" border="0" name="submit" alt="PayPal – The safer, easier way to pay online.">
-            <img alt="" border="0" src="https://www.paypalobjects.com/en_GB/i/scr/pixel.gif" width="1" height="1">
+            <input type="hidden" name="hosted_button_id" value="D5S4UG668P5P8">
+            <input type="image" src="https://www.sandbox.paypal.com/en_US/GB/i/btn/btn_subscribeCC_LG.gif" border="0" name="submit" alt="PayPal â€“ The safer, easier way to pay online.">
+            <img alt="" border="0" src="https://www.sandbox.paypal.com/en_GB/i/scr/pixel.gif" width="1" height="1">
         </form>
     </div>
 
@@ -55,3 +53,4 @@ include_once $_SERVER['DOCUMENT_ROOT'] . '/database/connectdatabase.php';
     </div>
 
 </div>
+
