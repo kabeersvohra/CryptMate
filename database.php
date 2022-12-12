@@ -362,12 +362,12 @@ SafeCrypt';
         $passwordhash = md5(mcrypt_create_iv(32, MCRYPT_DEV_URANDOM));
 
         $sql1 =
-            "UPDATE $this->table_user
-             SET $this->key_passwordhash = ?
+            "SELECT *
+             FROM $this->table_user
              WHERE $this->key_email = ? AND $this->key_username = ?;";
 
         $stmt1 = $this->connection->prepare($sql1);
-        $stmt1->bind_param("ssss",$passwordhash, $email, $username);
+        $stmt1->bind_param("ss", $email, $username);
         $stmt1->execute();
         $result = $stmt1->fetch();
 
@@ -379,7 +379,7 @@ SafeCrypt';
                  WHERE $this->key_email = ? AND $this->key_username = ?;";
 
             $stmt2 = $this->connection->prepare($sql2);
-            $stmt2->bind_param("ssss",$passwordhash, $email, $username);
+            $stmt2->bind_param("sss", $passwordhash, $email, $username);
             $stmt2->execute();
             $this->sendPasswordReset($passwordhash, $email, $username);
             return true;
