@@ -232,7 +232,7 @@ SafeCrypt';
         $stmt2 = $this->connection->prepare($sql2);
         $stmt2->bind_param("is", $userid, $domain);
         $stmt2->execute();
-        $result = $stmt1->fetch();
+        $result = $stmt2->fetch();
         $stmt2->close();
 
         if($result)
