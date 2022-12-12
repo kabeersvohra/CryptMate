@@ -44,9 +44,10 @@
 
 <nav class="navbar navbar-fixed-top navbar-light bg-faded topnav" role="navigation" style="padding: 0px;">
     <div class="container topnav">
-        <a class="navbar-brand" style="padding: 10px;" href="/"><img src="img/logo-small.png" style="height: 30px;"></a>
+        <a class="navbar-brand" style="padding: 10px;" href="/"><div id="img" style="height: 30px;"></div></a>
         <ul class="nav navbar-nav navbar-right" style="padding: 10px;">
             <a class="nav-item nav-link" href="#" >Login</a>
+            <span class="fa fa-gear"></span>
 <!--            --><?php
 //            if (isset($_SESSION["token"]))
 //                $user = $db->getLoggedinUser($_SESSION["token"]);
@@ -92,6 +93,17 @@
                 <span class="fa fa-plus" style="color: black;"></span>
             </a>
         </p>
+    </div>
+
+    <div class="col-xs-12">
+        <table style="width: 100%;">
+            <tr style="text-align: center">
+                <td><img src="img/favicon/favicon-16x16.png"/> </td>
+                <td>facebook.com</td>
+                <td><input type="text"/></td>
+                <td><span class="fa fa-minus" style="color: black;"></span></td>
+            </tr>
+        </table>
     </div>
 
 
