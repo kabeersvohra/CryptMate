@@ -46,7 +46,7 @@ elseif (isset($_SESSION["deletedomainerror"]))
                 <select name="domain" class="form-control" id="domain" name="domain"
                         style="text-align: center;">
                     <?php foreach ($domains as $domain): ?>
-                        <option value="<?php echo $domain; ?>"><?php echo $domain; ?></option>
+                        <option value="<?= $domain; ?>"><?= $domain; ?></option>
                     <?php endforeach; ?>
                 </select>
             </div>

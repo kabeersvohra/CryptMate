@@ -1,5 +1,3 @@
-<?php include_once 'connectdatabase.php' ?>
-
 <link href="css/navbar.css" rel="stylesheet">
 
 <nav class="navbar navbar-default navbar-fixed-top topnav" role="navigation">
@@ -19,7 +17,7 @@
                     </li>
                 <?php else : ?>
                     <li>
-                        <a style="color: #777">Logged in as <?php echo $user; ?> </a>
+                        <a style="color: #777">Logged in as <?= $user; ?> </a>
                     </li>
                     <li>
                         <a href="dashboard.php">Dashboard</a>

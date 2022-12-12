@@ -18,6 +18,7 @@ class database {
     private $table_keys = "`keys`";
     private $table_user = "`user`";
     private $table_emailconfirmations = "`emailconfirmations`";
+    private $table_transactions = "`transactions`";
 
     private $key_id = "`ID`";
     private $key_name = "`Name`";
@@ -33,11 +34,24 @@ class database {
     private $key_email = "`Email`";
     private $key_email1 = "`Email1`";
     private $key_email2 = "`Email2`";
+    private $key_subscriptionend = "`SubscriptionEnd`";
     private $key_passwordhash = "`PasswordHash`";
     private $key_hash1 = "`Hash1`";
     private $key_hash2 = "`Hash2`";
     private $key_verification1 = "`Verification1`";
     private $key_verification2 = "`Verification2`";
+    private $key_transactionid = "`TransactionID`";
+    private $key_transactiontype = "`TransactionType`";
+    private $key_paymentstatus = "`PaymentStatus`";
+    private $key_paymentamount = "`PaymentAmount`";
+    private $key_paymentcurrency = "`PaymentCurrency`";
+    private $key_paymentfee = "`PaymentFee`";
+    private $key_payeremail = "`PayerEmail`";
+    private $key_payername = "`PayerName`";
+    private $key_payertoken = "`PayerToken`";
+    private $key_recieveremail = "`RecieverEmail`";
+    private $key_subscriberid = "`SubscriberID`";
+    private $key_verified = "`Verified`";
 
     private $hashingAlgo = "sha256";
 
@@ -111,7 +125,24 @@ class database {
         }
 
         $salt = mcrypt_create_iv(256, MCRYPT_DEV_URANDOM);
-        $token = mcrypt_create_iv(256, MCRYPT_DEV_URANDOM);
+
+        $sql3 =
+            "SELECT *
+             FROM $this->table_user
+             WHERE $this->key_token = ?;";
+        $stmt3 = $this->connection->prepare($sql3);
+
+        while (true)
+        {
+            $token = mcrypt_create_iv(256, MCRYPT_DEV_URANDOM);
+            $stmt3->bind_param("s", $token);
+            $stmt3->execute();
+            $result = $stmt3->fetch();
+            if (!$result) break;
+        }
+
+        $stmt3->close();
+
         $emailhash = md5(mcrypt_create_iv(32, MCRYPT_DEV_URANDOM));
         $emailverification = intval(false);
         $iterationcount = ITERATIONCOUNT;
@@ -120,17 +151,17 @@ class database {
 
         $hash = hash_pbkdf2($this->hashingAlgo, $password, $salt, $iterationcount);
 
-        $sql3 =
+        $sql4 =
             "INSERT INTO $this->table_user ($this->key_name, $this->key_username, $this->key_hash, $this->key_salt,
                          $this->key_iterationcount, $this->key_token, $this->key_emailhash,
-                         $this->key_emailverification, $this->key_email)
-             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);";
+                         $this->key_emailverification, $this->key_email, $this->key_subscriptionend)
+             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, (NOW() + INTERVAL 1 MONTH));";
 
-        $stmt3 = $this->connection->prepare($sql3);
-        $stmt3->bind_param("ssssissis", $name, $username, $hash, $salt, $iterationcount,
+        $stmt4 = $this->connection->prepare($sql4);
+        $stmt4->bind_param("ssssissis", $name, $username, $hash, $salt, $iterationcount,
             $token, $emailhash, $emailverification, $email);
-        $stmt3->execute();
-        $stmt3->close();
+        $stmt4->execute();
+        $stmt4->close();
 
         return $token;
     }
@@ -867,6 +898,53 @@ SafeCrypt';
         {
             return 3;
         }
+    }
+
+    public function getSubscriptionEnd($token)
+    {
+        $sql1 =
+            "SELECT DATE_FORMAT($this->key_subscriptionend,'%D %M %Y')
+             FROM $this->table_user
+             WHERE $this->key_token = ?;";
+        $stmt1 = $this->connection->prepare($sql1);
+        $stmt1->bind_param("s", $token);
+        $stmt1->execute();
+        $stmt1->bind_result($subscriptionend);
+        $result = $stmt1->fetch();
+        $stmt1->close();
+
+        if ($result)
+            return $subscriptionend;
+        else
+            return $result;
+    }
+
+    public function isNewTransaction($txn_id)
+    {
+        $sql1 =
+            "SELECT *
+             FROM $this->table_transactions
+             WHERE $this->key_transactionid = ?;";
+        $stmt1 = $this->connection->prepare($sql1);
+        $stmt1->bind_param("i", $txn_id);
+        $stmt1->execute();
+        $result = $stmt1->fetch();
+        $stmt1->close();
+
+        return !$result;
+    }
+
+    public function createNewTransaction($txn_id, $txn_type, $payment_status, $payment_amount, $payment_currency, $payment_fee, $payer_email, $payer_name, $payer_token, $receiver_email, $subscriber_id, $verified)
+    {
+        $sql1 =
+            "INSERT INTO $this->table_transactions
+                ($this->key_transactionid, $this->key_transactiontype, $this->key_paymentstatus, $this->key_paymentamount, $this->key_paymentcurrency, $this->key_paymentfee, $this->key_payeremail, $this->key_payername, $this->key_payertoken, $this->key_recieveremail, $this->key_subscriberid, $this->key_verified)
+             VALUES
+                (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
+        $stmt1 = $this->connection->prepare($sql1);
+        $stmt1->bind_param("issisissssis", $txn_id, $txn_type, $payment_status, $payment_amount, $payment_currency, $payment_fee, $payer_email, $payer_name, $payer_token, $receiver_email, $subscriber_id, $verified);
+        $stmt1->execute();
+        $stmt1->close();
     }
 
 }

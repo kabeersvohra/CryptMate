@@ -10,7 +10,7 @@
         <div class="row" style="text-align: center">
             <img src="/SafeCrypt/img/domain.png" class="img-responsive col-xs-8 col-xs-offset-2" alt="Domains">
         </div>
-        <h4><?php echo $db->getNumberDomains($_SESSION["token"]); ?></h4>
+        <h4><?= $db->getNumberDomains($_SESSION["token"]); ?></h4>
         <span class="text-muted">Number of Domains</span>
     </div>
     <div class="col-xs-6 col-sm-3 placeholder">
