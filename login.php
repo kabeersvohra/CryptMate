@@ -70,7 +70,7 @@ include_once 'header.php';
     ?>
 
     <div class="col-sm-6 col-sm-offset-3">
-        <form class="form-horizontal" role="form" id="form" method="post" action="action_login.php">
+        <form class="form-horizontal" role="form" id="form" method="post" action="action/action_login.php">
             <div class="form-group">
                 <label class="control-label col-sm-12" for="username" style="text-align: center; padding-bottom: 10px;">Username</label>
                 <div class="col-sm-12">

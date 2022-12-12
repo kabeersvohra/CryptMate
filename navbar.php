@@ -1,4 +1,4 @@
-<?php include_once 'connectDb.php' ?>
+<?php include_once 'connectdatabase.php' ?>
 
 <link href="css/navbar.css" rel="stylesheet">
 

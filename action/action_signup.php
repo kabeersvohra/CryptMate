@@ -6,7 +6,7 @@
  * Time: 16:20
  */
 
-include_once 'connectDb.php';
+include_once 'connectdatabase.php';
 
 if (!isset($_SESSION)) session_start();
 
@@ -29,7 +29,7 @@ switch ($token)
         header("location: signup.php");
         break;
     case "email":
-        $_SESSION["signuperror"] = "You have already signed up with this email address, please <a href='login.php'>log in</a>";
+        $_SESSION["signuperror"] = "You have already signed up with this email address, please <a href='../login.php'>log in</a>";
         $_SESSION["signuperrorusername"] = $_POST["username"];
         $_SESSION["signuperroremail"] = $_POST["email"];
         header("location: signup.php");
