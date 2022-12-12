@@ -13,8 +13,11 @@
 
         <link href="css/font-awesome.min.css" rel="stylesheet" type="text/css">
 
+        <link href="css/tempindex.css" rel="stylesheet" type="text/css">
+
         <script src="js/jquery.js"></script>
         <script src="js/bootstrap.min.js"></script>
+        <script src="js/tempindex.js"></script>
 
         <link rel="apple-touch-icon" sizes="57x57" href="/img/favicon/apple-touch-icon-57x57.png">
         <link rel="apple-touch-icon" sizes="60x60" href="/img/favicon/apple-touch-icon-60x60.png">
@@ -39,50 +42,55 @@
     </head>
 
     <body>
-        
-        <div class="col-md-6 col-sm-8 col-md-offset-1" style="text-align: center;">
-            <div class="col-sm-6 col-sm-offset-3 col-md-offset-8 col-md-offset-2">
-                <img src="img/logo.png" style="width: 100%">
-                <p>Regain control of your security</p>
-                <p>youtube</p>
+        <div class="container" style="padding-top: 20px;">
+
+            <div class="col-md-6 col-sm-12 col-md-offset-1" style="text-align: center;">
+                <div class="col-sm-6 col-sm-offset-3 col-md-8 col-md-offset-2">
+                    <img src="img/logo.png" style="width: 100%">
+                    <p>Regain control of your security</p>
+                    <p>youtube</p>
+                </div>
             </div>
-        </div>
 
-        <div class="col-md-4 col-sm-12" style="text-align: center;">
-            <div class="col-sm-10 col-sm-offset-1">
+            <div class="col-md-4 col-sm-12" style="text-align: center;">
+                <div class="col-sm-10 col-sm-offset-1 col-md-12">
 
-                    <form class="form-horizontal" role="form" id="form" method="post" action="action/login.php" style="padding-top: 20%">
-                        <div class="form-group">
-                            <div class="col-sm-12">
-                                <input type="text" class="form-control" id="username" name="username" style="text-align: center; border-radius: 0px;"
-                                    value="<?php
-                                        if (isset($_SESSION["loginerrorusername"]))
-                                        {
-                                            echo $_SESSION["loginerrorusername"];
-                                            unset($_SESSION["loginerrorusername"]);
-                                        }
-                                    ?>">
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <div class="col-sm-12">
-                                <input type="password" name="password" class="form-control" id="password" style="text-align: center; border-radius: 0px;">
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <div class="col-sm-12" style="text-align: center; padding-top: 20px;">
-                                <button type="submit" class="btn btn-default" style="border-radius: 0px">Login</button>
-                                <button type="submit" class="btn btn-default" style="border-radius: 0px">Register</button>
-                            </div>
-                        </div>
-                    </form>
+<!--                    <form class="form-horizontal" role="form" id="form" method="post" action="action/login.php" style="padding-top: 10%">-->
+<!--                        <div class="form-group">-->
+<!--                            <div class="col-sm-12">-->
+<!--                                <input type="text" class="form-control" id="username" name="username" style="text-align: center; border-radius: 0px;"-->
+<!--                                       value="--><?php
+//                                       if (isset($_SESSION["loginerrorusername"]))
+//                                       {
+//                                           echo $_SESSION["loginerrorusername"];
+//                                           unset($_SESSION["loginerrorusername"]);
+//                                       }
+//                                       ?><!--">-->
+<!--                            </div>-->
+<!--                        </div>-->
+<!--                        <div class="form-group">-->
+<!--                            <div class="col-sm-12">-->
+<!--                                <input type="password" name="password" class="form-control" id="password" style="text-align: center; border-radius: 0px;">-->
+<!--                            </div>-->
+<!--                        </div>-->
+<!--                        <div class="form-group">-->
+<!--                            <div class="col-sm-12" style="text-align: center;">-->
+<!--                                <button type="submit" class="btn btn-default" style="border-radius: 0px">Login</button>-->
+<!--                                <button type="submit" class="btn btn-default" style="border-radius: 0px">Register</button>-->
+<!--                            </div>-->
+<!--                        </div>-->
+<!--                    </form>-->
+<!---->
+<!--                    <div class="col-sm-12" style="text-align: center;padding-top: 20px;line-height: 30px;">-->
+<!--                        <p>Haven't got an account yet? Create one <a href="signup.php">here</a></p>-->
+<!--                        <p>Forgotten your password? Reset it <a href="forgottenpassword.php">here</a></p>-->
+<!--                        <p>Forgotten your username? Request a reminder <a href="forgottenusername.php">here</a></p>-->
+<!--                    </div>-->
 
-                    <div class="col-sm-12" style="text-align: center;padding-top: 20px;line-height: 30px;">
-                        <p>Haven't got an account yet? Create one <a href="signup.php">here</a></p>
-                        <p>Forgotten your password? Reset it <a href="forgottenpassword.php">here</a></p>
-                        <p>Forgotten your username? Request a reminder <a href="forgottenusername.php">here</a></p>
-                    </div>
-            
+                    <?php include_once "loginform.php" ?>
+
+                </div>
+
             </div>
 
         </div>
